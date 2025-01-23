@@ -27,6 +27,29 @@ export class FileService {
     });
   }
 
+  async uploadFiles(
+    files: Express.Multer.File[],
+    folder: string,
+  ): Promise<void> {
+    const uploadPromises = files.map((file) => {
+      const key = `${Date.now()}-${file.originalname}`;
+      const uploadParams = {
+        Bucket: this.configService.get('AWS_BUCKET'),
+        Key: `${folder}/${key}`,
+        Body: file.buffer,
+      };
+
+      const upload = new Upload({
+        client: this.s3Client,
+        params: uploadParams,
+      });
+
+      return upload.done();
+    });
+
+    await Promise.all(uploadPromises);
+  }
+
   async uploadFile(
     file: Express.Multer.File,
     key: string,

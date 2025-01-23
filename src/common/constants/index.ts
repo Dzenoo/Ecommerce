@@ -1,3 +1,4 @@
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { CookieOptions } from 'express';
 
 /**
@@ -26,4 +27,31 @@ export const cookieOptions: CookieOptions = {
   //   sameSite: 'strict',
   maxAge: 3600000,
   path: '/',
+};
+
+/**
+ * Options for Multer, a middleware for handling multipart/form-data requests.
+ * @see https://github.com/expressjs/multer
+ */
+export const multerOptions: MulterOptions = {
+  /**
+   * The maximum file size for each uploaded file.
+   * @see https://github.com/expressjs/multer#limits
+   */
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit per file
+
+  /**
+   * A function to filter out files that are not images.
+   * @param {Request} req - The ExpressJS request object.
+   * @param {File} file - The file being uploaded.
+   * @param {Function} callback - The callback function to call with the result.
+   * @see https://github.com/expressjs/multer#filefilter
+   */
+  fileFilter: (req, file, callback) => {
+    if (file.mimetype.startsWith('image/')) {
+      callback(null, true); // Accept the file
+    } else {
+      callback(new Error('Only image files are allowed'), false); // Reject the file
+    }
+  },
 };
