@@ -13,8 +13,16 @@ import { CategoryModule } from '@/models/category/category.module';
 import { CartModule } from '@/models/cart/cart.module';
 import { AuthModule } from './authentication/auth.module';
 
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 25,
+      },
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -38,7 +46,11 @@ import { AuthModule } from './authentication/auth.module';
     CategoryModule,
     CartModule,
   ],
-  controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: 'APP_GUARD',
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
