@@ -32,10 +32,10 @@ export class Product {
   @Prop({ required: true, type: [String] })
   images: string[];
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   stock: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   discount?: number;
 
   @Prop({ type: Number, default: 0 })

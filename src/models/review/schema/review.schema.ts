@@ -22,7 +22,7 @@ export class Review {
   })
   product: Product & mongoose.Types.ObjectId;
 
-  @Prop({ required: true, min: 1, max: 5 })
+  @Prop({ type: Number, required: true, min: 1, max: 5 })
   rating: number;
 
   @Prop({ type: String, default: '' })
