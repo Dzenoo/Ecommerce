@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   MaxFileSizeValidator,
   Param,
@@ -48,7 +49,10 @@ export class ProductController {
     return await this.productService.update({ body, id });
   }
 
-  async deleteProduct() {}
+  @Delete('/delete/:id')
+  async deleteProduct(@Param('id') id: string) {
+    return await this.productService.delete(id);
+  }
 
   async getAllProducts() {}
 

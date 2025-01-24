@@ -80,7 +80,24 @@ export class ProductService {
     };
   }
 
-  async delete() {}
+  async delete(id: string) {
+    const productExists = await this.productModel.findById(id);
+
+    if (!productExists) {
+      throw new NotAcceptableException('Product does not exist.');
+    }
+
+    const product = await this.productModel.findByIdAndDelete(id);
+
+    if (!product) {
+      throw new NotAcceptableException('Product could not be deleted.');
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Product deleted successfully.',
+    };
+  }
 
   async getAll() {}
 
