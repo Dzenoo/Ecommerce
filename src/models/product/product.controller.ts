@@ -3,11 +3,13 @@ import {
   Controller,
   Delete,
   FileTypeValidator,
+  Get,
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,6 +20,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { GetProductsDto } from './dto/get-products.dto';
 
 @Controller('/product')
 export class ProductController {
@@ -54,7 +57,10 @@ export class ProductController {
     return await this.productService.delete(id);
   }
 
-  async getAllProducts() {}
+  @Get('/all')
+  async getAllProducts(@Query() query: GetProductsDto) {
+    return await this.productService.getAll(query);
+  }
 
   async getOneProduct() {}
 }

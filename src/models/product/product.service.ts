@@ -8,6 +8,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import { FileService } from '@/common/modules/file/file.service';
+import { GetProductsDto } from './dto/get-products.dto';
 
 @Injectable()
 export class ProductService {
@@ -99,7 +100,64 @@ export class ProductService {
     };
   }
 
-  async getAll() {}
+  async getAll({
+    page = 1,
+    limit = 10,
+    search,
+    sort,
+    category,
+    attributes,
+    price,
+  }: GetProductsDto): Promise<ResponseObject> {
+    const conditions: any = {};
+
+    if (search) {
+      const regexSearch = new RegExp(String(search), 'i');
+      conditions.$or = [
+        { name: { $regex: regexSearch } },
+        { description: { $regex: regexSearch } },
+      ];
+    }
+
+    if (category) {
+      conditions.category = category;
+    }
+
+    if (attributes && attributes.length > 0) {
+      attributes.forEach((attr) => {
+        const [key, value] = attr.split(':');
+        conditions[`attributes.${key}`] = value;
+      });
+    }
+
+    if (price) {
+      conditions.price = {};
+      if (price.min !== undefined) {
+        conditions.price.$gte = price.min;
+      }
+      if (price.max !== undefined) {
+        conditions.price.$lte = price.max;
+      }
+    }
+
+    const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
+
+    const products = await this.productModel
+      .find(conditions)
+      .sort(sortOptions)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean()
+      .exec();
+
+    const totalProducts = await this.productModel.countDocuments(conditions);
+
+    return {
+      statusCode: HttpStatus.OK,
+      products,
+      totalProducts,
+    };
+  }
 
   async getOne() {}
 }
