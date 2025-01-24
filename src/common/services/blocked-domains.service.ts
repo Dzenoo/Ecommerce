@@ -11,7 +11,7 @@ export class BlockedDomainsService {
 
   constructor() {
     // Optionally add your own custom exact domains here
-    const customExactDomains: string[] = ['fileexp.com'];
+    const customExactDomains: string[] = [];
 
     // Optionally add your own wildcard patterns here
     // For example: "*.abc-disposables.com"
