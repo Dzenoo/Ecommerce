@@ -1,14 +1,8 @@
 import { Injectable } from '@nestjs/common';
-
 import { ConfigService } from '@nestjs/config';
 
-import {
-  S3Client,
-  DeleteObjectCommand,
-  GetObjectCommand,
-} from '@aws-sdk/client-s3';
+import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class FileService {
@@ -30,8 +24,8 @@ export class FileService {
   async uploadFiles(
     files: Express.Multer.File[],
     folder: string,
-  ): Promise<void> {
-    const uploadPromises = files.map((file) => {
+  ): Promise<{ key: string; url: string }[]> {
+    const uploadPromises = files.map(async (file) => {
       const key = `${Date.now()}-${file.originalname}`;
       const uploadParams = {
         Bucket: this.configService.get('AWS_BUCKET'),
@@ -44,10 +38,16 @@ export class FileService {
         params: uploadParams,
       });
 
-      return upload.done();
+      await upload.done();
+
+      const url = `https://${this.configService.get('AWS_BUCKET')}.s3.${this.configService.get(
+        'AWS_REGION',
+      )}.amazonaws.com/${folder}/${key}`;
+
+      return { key, url };
     });
 
-    await Promise.all(uploadPromises);
+    return Promise.all(uploadPromises);
   }
 
   async uploadFile(
@@ -69,6 +69,19 @@ export class FileService {
     await upload.done();
   }
 
+  async deleteFiles(keys: string[], folder: string): Promise<void> {
+    const deletePromises = keys.map(async (key) => {
+      const deleteParams = {
+        Bucket: this.configService.get('AWS_BUCKET'),
+        Key: `${folder}/${key}`,
+      };
+      const command = new DeleteObjectCommand(deleteParams);
+      await this.s3Client.send(command);
+    });
+
+    await Promise.all(deletePromises);
+  }
+
   async deleteFile(key: string, folder: string): Promise<void> {
     const deleteParams = {
       Bucket: this.configService.get('AWS_BUCKET'),
@@ -76,24 +89,5 @@ export class FileService {
     };
     const command = new DeleteObjectCommand(deleteParams);
     await this.s3Client.send(command);
-  }
-
-  async generatePresignedUrl(
-    key: string,
-    folder: string,
-    expiresIn = 3600,
-  ): Promise<string> {
-    const command = new GetObjectCommand({
-      Bucket: this.configService.get('AWS_BUCKET'),
-      Key: `${folder}/${key}`,
-      ResponseContentDisposition: 'inline',
-      ResponseContentType: 'application/jpg',
-      ResponseCacheControl: 'no-cache',
-    });
-
-    const url = await getSignedUrl(this.s3Client as any, command, {
-      expiresIn,
-    });
-    return url;
   }
 }

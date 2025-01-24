@@ -9,21 +9,17 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { FileService } from '@/common/modules/file/file.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto } from './dto/create-product.dto';
 
 @Controller('/product')
 export class ProductController {
-  constructor(
-    private readonly productService: ProductService,
-    private readonly fileService: FileService,
-  ) {}
+  constructor(private readonly productService: ProductService) {}
 
-  @Post()
+  @Post('/create')
   @UseInterceptors(FilesInterceptor('images', 10))
   async createProduct(
-    @Body() createProductDto: CreateProductDto,
+    @Body() body: CreateProductDto,
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
@@ -37,7 +33,9 @@ export class ProductController {
       }),
     )
     images: Express.Multer.File[],
-  ) {}
+  ) {
+    return await this.productService.create({ body, images });
+  }
 
   async updateProduct() {}
 
