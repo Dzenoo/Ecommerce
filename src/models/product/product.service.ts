@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Product } from './schema/product.schema';
 
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 import { FileService } from '@/common/modules/file/file.service';
 
@@ -47,7 +48,37 @@ export class ProductService {
     };
   }
 
-  async update() {}
+  async update(data: {
+    body: UpdateProductDto;
+    id: string;
+  }): Promise<ResponseObject> {
+    const { body, id } = data;
+
+    const productExists = await this.productModel.findById(id);
+
+    if (!productExists) {
+      throw new NotAcceptableException('Product does not exist.');
+    }
+
+    const product = await this.productModel.findByIdAndUpdate(
+      id,
+      { $set: body },
+      {
+        new: true,
+        runValidators: true,
+        strict: true,
+      },
+    );
+
+    if (!product) {
+      throw new NotAcceptableException('Product could not be updated.');
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Product updated successfully.',
+    };
+  }
 
   async delete() {}
 
