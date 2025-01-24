@@ -33,7 +33,7 @@ export class Product {
   images: string[];
 
   @Prop({ type: Number, default: 0 })
-  stock: number;
+  stock?: number;
 
   @Prop({ type: Number, default: 0 })
   discount?: number;
