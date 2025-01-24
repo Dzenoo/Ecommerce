@@ -62,5 +62,8 @@ export class ProductController {
     return await this.productService.getAll(query);
   }
 
-  async getOneProduct() {}
+  @Get('/:id')
+  async getOneProduct(@Param('id') id: string) {
+    return await this.productService.getOne(id);
+  }
 }

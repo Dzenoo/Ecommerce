@@ -6,9 +6,9 @@ import { Product } from './schema/product.schema';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { GetProductsDto } from './dto/get-products.dto';
 
 import { FileService } from '@/common/modules/file/file.service';
-import { GetProductsDto } from './dto/get-products.dto';
 
 @Injectable()
 export class ProductService {
@@ -159,5 +159,16 @@ export class ProductService {
     };
   }
 
-  async getOne() {}
+  async getOne(id: string) {
+    const product = await this.productModel.findById(id).lean().exec();
+
+    if (!product) {
+      throw new NotAcceptableException('Product does not exist.');
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      product,
+    };
+  }
 }
