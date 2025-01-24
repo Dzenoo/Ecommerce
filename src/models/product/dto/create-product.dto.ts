@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import {
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsObject,
@@ -24,7 +25,7 @@ export class CreateProductDto {
   @IsNotEmpty()
   @Min(0)
   @Max(100000)
-  @Transform(({ value }) => sanitizeInput(value))
+  @Transform(({ value }) => Number(value))
   price: number;
 
   @IsString()
@@ -36,21 +37,22 @@ export class CreateProductDto {
 
   @IsNumber()
   @IsOptional()
-  @Transform(({ value }) => sanitizeInput(value))
+  @Transform(({ value }) => Number(value))
   stock?: number;
 
   @IsNumber()
   @IsOptional()
-  @Transform(({ value }) => sanitizeInput(value))
+  @Transform(({ value }) => Number(value))
   discount?: number;
 
-  @IsString()
+  @IsMongoId()
   @IsNotEmpty()
   @Transform(({ value }) => sanitizeInput(value))
   category: string;
 
   @IsObject()
   @IsNotEmpty()
+  @Transform(({ value }) => JSON.parse(value))
   attributes: Record<string, any>;
 
   //   @IsObject()

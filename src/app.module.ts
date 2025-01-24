@@ -11,7 +11,7 @@ import { OrderModule } from '@/models/order/order.module';
 import { CouponModule } from '@/models/coupon/coupon.module';
 import { CategoryModule } from '@/models/category/category.module';
 import { CartModule } from '@/models/cart/cart.module';
-import { AuthModule } from './authentication/auth.module';
+// import { AuthModule } from './authentication/auth.module';
 
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
@@ -35,7 +35,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
         dbName: configService.get<string>('MONGO_DB_NAME'),
       }),
     }),
-    AuthModule,
+    // AuthModule,
     ProductModule,
     UserModule,
     AddressModule,
