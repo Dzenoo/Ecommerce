@@ -17,6 +17,10 @@ export class ProductService {
     private readonly fileService: FileService,
   ) {}
 
+  public async findById(id: string) {
+    return this.productModel.findById(id).lean().exec();
+  }
+
   async create(data: {
     body: CreateProductDto;
     images: Express.Multer.File[];

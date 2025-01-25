@@ -22,7 +22,7 @@ export class Cart {
     },
   ])
   items: {
-    product: Product & mongoose.Types.ObjectId;
+    product: Product | mongoose.Types.ObjectId;
     quantity: number;
   }[];
 
