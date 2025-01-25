@@ -9,7 +9,6 @@ import { ReviewModule } from '@/models/review/review.module';
 import { WishlistModule } from '@/models/wishlist/wishlist.module';
 import { OrderModule } from '@/models/order/order.module';
 import { CouponModule } from '@/models/coupon/coupon.module';
-import { CategoryModule } from '@/models/category/category.module';
 import { CartModule } from '@/models/cart/cart.module';
 // import { AuthModule } from './authentication/auth.module';
 
@@ -43,7 +42,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     WishlistModule,
     OrderModule,
     CouponModule,
-    CategoryModule,
     CartModule,
   ],
   providers: [

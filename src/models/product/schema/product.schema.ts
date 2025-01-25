@@ -1,7 +1,6 @@
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { Category } from '@/models/category/schema/category.schema';
 import { Review } from '@/models/review/schema/review.schema';
 
 export type ProductDocument = HydratedDocument<Product>;
@@ -42,11 +41,10 @@ export class Product {
   averageRating?: number;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    type: String,
     required: true,
   })
-  category: Category & mongoose.Types.ObjectId;
+  category: string;
 
   @Prop({
     type: mongoose.Schema.Types.Mixed, // Stores dynamic attributes
