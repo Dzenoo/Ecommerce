@@ -31,6 +31,9 @@ export class Cart {
 
   @Prop({ type: Boolean, default: false })
   isActive?: boolean;
+
+  @Prop({ type: String, default: null })
+  couponApplied?: string;
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);

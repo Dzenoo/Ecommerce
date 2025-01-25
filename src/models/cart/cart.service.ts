@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cart } from './schema/cart.schema';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { ProductService } from '../product/product.service';
 
 @Injectable()
@@ -10,6 +10,17 @@ export class CartService {
     @InjectModel(Cart.name) private readonly cartModel: Model<Cart>,
     private readonly productService: ProductService,
   ) {}
+
+  async findOneByIdAndUpdate(
+    id: string,
+    update: UpdateQuery<Cart> = {},
+  ): Promise<void> {
+    await this.cartModel.findByIdAndUpdate(id, update).exec();
+  }
+
+  async findOne(query: FilterQuery<Cart>): Promise<Cart> {
+    return this.cartModel.findOne(query).lean().exec();
+  }
 
   async add(
     userId: string,

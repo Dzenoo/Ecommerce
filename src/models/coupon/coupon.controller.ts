@@ -1,9 +1,12 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 
@@ -13,6 +16,9 @@ import { Admin } from '@/common/decorators/admin.decorator';
 import { AdminGuard } from '@/authentication/guards/admin-auth.guard';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 
+import { CreateCouponDto } from './dto/create-coupon.dto';
+import { UpdateCouponDto } from './dto/update-coupon.dto';
+
 @Controller('/coupon')
 export class CouponController {
   constructor(private readonly couponService: CouponService) {}
@@ -20,32 +26,43 @@ export class CouponController {
   @Post('/create')
   @UseGuards(AdminGuard)
   @Admin()
-  async createCoupon() {}
+  async createCoupon(@Body() body: CreateCouponDto) {
+    return this.couponService.create(body);
+  }
 
   @Patch('/update/:id')
   @UseGuards(AdminGuard)
   @Admin()
-  async updateCoupon() {}
+  async updateCoupon(@Body() body: UpdateCouponDto, @Param('id') id: string) {
+    return this.couponService.update(id, body);
+  }
 
   @Delete('/delete/:id')
   @UseGuards(AdminGuard)
   @Admin()
-  async deleteCoupon() {}
+  async deleteCoupon(@Param('id') id: string) {
+    return this.couponService.delete(id);
+  }
 
   @Get('/all')
   @UseGuards(AdminGuard)
   @Admin()
-  async getCoupons() {}
+  async getCoupons(@Query('active') active?: boolean) {
+    return this.couponService.getAll(active);
+  }
 
   @Get('/:id')
   @UseGuards(JwtAuthGuard)
-  async getCoupon() {}
+  async getCoupon(@Param('id') id: string) {
+    return this.couponService.getOne(id);
+  }
 
-  @Post('/apply')
+  @Post('/apply/:cartId')
   @UseGuards(JwtAuthGuard)
-  async applyCoupon() {}
-
-  @Post('/validate')
-  @UseGuards(JwtAuthGuard)
-  async validateCoupon() {}
+  async applyCoupon(
+    @Param('cartId') cartId: string,
+    @Body('couponCode') couponCode: string,
+  ) {
+    return this.couponService.apply(cartId, couponCode);
+  }
 }
