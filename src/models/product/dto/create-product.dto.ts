@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
 import {
-  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsObject,
@@ -45,7 +44,7 @@ export class CreateProductDto {
   @Transform(({ value }) => Number(value))
   discount?: number;
 
-  @IsMongoId()
+  @IsString()
   @IsNotEmpty()
   @Transform(({ value }) => sanitizeInput(value))
   category: string;
