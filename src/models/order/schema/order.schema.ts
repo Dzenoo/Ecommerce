@@ -4,7 +4,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from '@/models/user/schema/user.schema';
 import { Product } from '@/models/product/schema/product.schema';
 import { Address } from '@/models/address/schema/address.schema';
-import { Coupon } from '@/models/coupon/schema/coupon.schema';
 
 export type OrderDocument = HydratedDocument<Order>;
 
@@ -75,12 +74,6 @@ export class Order {
     postalCode: string;
     country: string;
   };
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' })
-  coupon?: Coupon & mongoose.Types.ObjectId;
-
-  @Prop({ type: Boolean, default: false })
-  isDelivered: boolean;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
