@@ -53,10 +53,4 @@ export class CreateProductDto {
   @IsNotEmpty()
   @Transform(({ value }) => JSON.parse(value))
   attributes: Record<string, any>;
-
-  //   @IsObject()
-  //   @IsNotEmpty()
-  //   @ValidateNested()
-  //   @Type(() => AttributeDto) // A separate DTO for attributes
-  //   attributes: AttributeDto;
 }

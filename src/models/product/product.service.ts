@@ -88,6 +88,12 @@ export class ProductService {
       throw new NotAcceptableException('Product does not exist.');
     }
 
+    const imageKeys = productExists.images.map((image) =>
+      image.split('/').pop(),
+    );
+
+    await this.fileService.deleteFiles(imageKeys, 'product-images');
+
     const product = await this.productModel.findByIdAndDelete(id);
 
     if (!product) {
@@ -120,7 +126,7 @@ export class ProductService {
     }
 
     if (category) {
-      conditions.category = category;
+      conditions.category = { $regex: `^${category}` }; // Match any category ID starting with the given category ID
     }
 
     if (attributes && attributes.length > 0) {

@@ -15,11 +15,13 @@ class RangeFilterDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
+  @Transform(({ value }) => Number(value))
   readonly min?: number;
 
   @IsOptional()
   @IsNumber()
   @IsPositive()
+  @Transform(({ value }) => Number(value))
   readonly max?: number;
 }
 
