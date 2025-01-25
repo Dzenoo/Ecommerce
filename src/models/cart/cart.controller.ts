@@ -6,48 +6,57 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 
 import { CartService } from './cart.service';
 
 import { AddItemDto } from './dto/add-item.dto';
 
+import { User } from '@/common/decorators/user.decorator';
+import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+
 @Controller('/cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Post('/add/:userId')
+  @Post('/add')
+  @UseGuards(JwtAuthGuard)
   async addItem(
-    @Param('userId') userId: string,
+    @User('userId') userId: string,
     @Body() { productId, quantity }: AddItemDto,
   ) {
     return this.cartService.add(userId, productId, quantity);
   }
 
-  @Delete('/remove/:userId/:productId')
+  @Delete('/remove/:productId')
+  @UseGuards(JwtAuthGuard)
   async removeItem(
-    @Param('userId') userId: string,
+    @User('userId') userId: string,
     @Param('productId') productId: string,
   ) {
     return this.cartService.remove(userId, productId);
   }
 
-  @Patch('/update/:userId/:productId')
+  @Patch('/update/:productId')
+  @UseGuards(JwtAuthGuard)
   async updateItem(
-    @Param('userId') userId: string,
+    @User('userId') userId: string,
     @Param('productId') productId: string,
     @Body('quantity') quantity: number,
   ) {
     return this.cartService.update(userId, productId, quantity);
   }
 
-  @Get('/:userId')
-  async getCart(@Param('userId') userId: string) {
+  @Get('/get')
+  @UseGuards(JwtAuthGuard)
+  async getCart(@User('userId') userId: string) {
     return this.cartService.get(userId);
   }
 
-  @Delete('/clear/:userId')
-  async clearCart(@Param('userId') userId: string) {
+  @Delete('/clear')
+  @UseGuards(JwtAuthGuard)
+  async clearCart(@User('userId') userId: string) {
     return this.cartService.clear(userId);
   }
 }
