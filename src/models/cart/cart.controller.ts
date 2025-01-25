@@ -15,6 +15,7 @@ import { AddItemDto } from './dto/add-item.dto';
 
 import { User } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+import { UpdateItemDto } from './dto/update-item.dto';
 
 @Controller('/cart')
 export class CartController {
@@ -43,9 +44,9 @@ export class CartController {
   async updateItem(
     @User('userId') userId: string,
     @Param('productId') productId: string,
-    @Body('quantity') quantity: number,
+    @Body() { quantity, action }: UpdateItemDto,
   ) {
-    return this.cartService.update(userId, productId, quantity);
+    return this.cartService.update(userId, productId, quantity, action);
   }
 
   @Get('/get')

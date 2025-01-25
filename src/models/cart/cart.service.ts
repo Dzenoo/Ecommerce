@@ -39,6 +39,9 @@ export class CartService {
       });
     }
 
+    cart.totalPrice = await this.calculateTotalPrice(cart);
+    cart.isActive = cart.items.length > 0;
+
     await cart.save();
 
     return {
@@ -62,6 +65,9 @@ export class CartService {
 
     cart.items.splice(itemIndex, 1);
 
+    cart.totalPrice = await this.calculateTotalPrice(cart);
+    cart.isActive = cart.items.length > 0;
+
     await cart.save();
 
     return {
@@ -74,6 +80,7 @@ export class CartService {
     userId: string,
     productId: string,
     quantity: number,
+    action: 'increment' | 'decrement',
   ): Promise<ResponseObject> {
     const cart = await this.cartModel.findOne({ user: userId });
     if (!cart) {
@@ -87,7 +94,20 @@ export class CartService {
       throw new NotFoundException('Product not found in cart');
     }
 
-    item.quantity = quantity;
+    if (action === 'increment') {
+      item.quantity += quantity;
+    } else if (action === 'decrement') {
+      item.quantity -= quantity;
+
+      if (item.quantity <= 0) {
+        cart.items = cart.items.filter(
+          (item: any) => item.product._id.toString() !== productId,
+        );
+      }
+    }
+
+    cart.totalPrice = await this.calculateTotalPrice(cart);
+    cart.isActive = cart.items.length > 0;
 
     await cart.save();
 
@@ -121,5 +141,18 @@ export class CartService {
       statusCode: HttpStatus.OK,
       message: 'Cart cleared',
     };
+  }
+
+  private async calculateTotalPrice(cart: Cart): Promise<number> {
+    let totalPrice = 0;
+    for (const item of cart.items) {
+      const product = await this.productService.findById(
+        item.product.toString(),
+      );
+      if (product) {
+        totalPrice += product.price * item.quantity; // Assume `price` exists on Product
+      }
+    }
+    return totalPrice;
   }
 }

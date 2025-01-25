@@ -18,7 +18,7 @@ export class Cart {
         ref: 'Product',
         required: true,
       },
-      quantity: { type: Number, required: true, default: 1 },
+      quantity: { type: Number, min: 1, required: true, default: 1 },
     },
   ])
   items: {

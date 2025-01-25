@@ -1,13 +1,14 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
 
 export class AddItemDto {
-  @IsString()
+  @IsMongoId()
   @IsNotEmpty()
   productId: string;
 
   @IsNumber()
   @IsNotEmpty()
+  @IsPositive()
   @Transform(({ value }) => Number(value))
   quantity: number;
 }
