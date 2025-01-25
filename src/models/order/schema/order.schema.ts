@@ -24,13 +24,11 @@ export class Order {
         required: true,
       },
       quantity: { type: Number, required: true, min: 1 },
-      price: { type: Number, required: true, min: 0.01 },
     },
   ])
   items: {
     product: Product & mongoose.Types.ObjectId;
     quantity: number;
-    price: number;
   }[];
 
   @Prop({ type: Number, required: true, min: 0.01 })
