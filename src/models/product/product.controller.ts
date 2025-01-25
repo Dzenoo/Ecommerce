@@ -11,6 +11,7 @@ import {
   Post,
   Query,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 
@@ -22,12 +23,17 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetProductsDto } from './dto/get-products.dto';
 
+import { AdminGuard } from '@/authentication/guards/admin-auth.guard';
+import { Admin } from '@/common/decorators/admin.decorator';
+
 @Controller('/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('/create')
   @UseInterceptors(FilesInterceptor('images', 10))
+  @UseGuards(AdminGuard)
+  @Admin()
   async createProduct(
     @Body() body: CreateProductDto,
     @UploadedFiles(
@@ -48,11 +54,15 @@ export class ProductController {
   }
 
   @Patch('/update/:id')
+  @UseGuards(AdminGuard)
+  @Admin()
   async updateProduct(@Body() body: UpdateProductDto, @Param('id') id: string) {
     return await this.productService.update({ body, id });
   }
 
   @Delete('/delete/:id')
+  @UseGuards(AdminGuard)
+  @Admin()
   async deleteProduct(@Param('id') id: string) {
     return await this.productService.delete(id);
   }
