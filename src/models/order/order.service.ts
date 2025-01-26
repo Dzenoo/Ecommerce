@@ -117,8 +117,20 @@ export class OrderService {
   }
 
   async updateStatus(id: string, status: string): Promise<ResponseObject> {
+    const order = await this.orderModel.findByIdAndUpdate(
+      id,
+      {
+        status: status,
+      },
+      { new: true },
+    );
+
+    if (!order)
+      throw new NotAcceptableException('Order cannot be updated right now');
+
     return {
       statusCode: HttpStatus.CREATED,
+      order,
     };
   }
 

@@ -14,6 +14,7 @@ import { OrderService } from './order.service';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 import { User } from '@/common/decorators/user.decorator';
 import { Admin } from '@/common/decorators/admin.decorator';
@@ -62,12 +63,12 @@ export class OrderController {
   }
 
   @Patch('/update/:id')
-  @UseGuards(AdminGuard)
-  @Admin()
+  // @UseGuards(AdminGuard)
+  // @Admin()
   async updateOrderStatus(
     @Param('id') id: string,
-    @Body('status') status: string,
+    @Body() body: UpdateOrderDto,
   ) {
-    return this.orderService.updateStatus(id, status);
+    return this.orderService.updateStatus(id, body.status);
   }
 }
