@@ -37,9 +37,36 @@ export class OrderService {
     };
   }
 
-  async getAll(query: GetOrdersDto): Promise<ResponseObject> {
+  async getAll({
+    page = 1,
+    limit = 10,
+    sort,
+    status,
+  }: GetOrdersDto): Promise<ResponseObject> {
+    const conditions: any = {};
+
+    if (status) {
+      conditions.status = status;
+    }
+
+    const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
+
+    const orders = await this.orderModel
+      .find(conditions)
+      .sort(sortOptions)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate('user', 'first_name last_name image')
+      .populate('items.product', 'name image price')
+      .lean()
+      .exec();
+
+    const totalOrders = await this.orderModel.countDocuments(conditions);
+
     return {
       statusCode: HttpStatus.OK,
+      orders,
+      totalOrders,
     };
   }
 
