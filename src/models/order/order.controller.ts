@@ -41,7 +41,7 @@ export class OrderController {
   }
 
   @Get('/:id')
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   async getOrder(@Param('id') id: string) {
     return this.orderService.getOne(id);
   }

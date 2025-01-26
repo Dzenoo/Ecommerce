@@ -71,8 +71,18 @@ export class OrderService {
   }
 
   async getOne(id: string): Promise<ResponseObject> {
+    const order = await this.orderModel
+      .findById(id)
+      .populate('user', 'first_name last_name image')
+      .populate('items.product', 'name image price')
+      .lean()
+      .exec();
+
+    if (!order) throw new NotAcceptableException('Order not found');
+
     return {
       statusCode: HttpStatus.OK,
+      order,
     };
   }
 
