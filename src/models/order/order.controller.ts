@@ -33,6 +33,21 @@ export class OrderController {
     return this.orderService.create(body, userId);
   }
 
+  @Get('/user')
+  @UseGuards(JwtAuthGuard)
+  async getOrdersByUser(
+    @Query() query: GetOrdersDto,
+    @User('userId') userId: string,
+  ) {
+    return this.orderService.getAllByUser(query, userId);
+  }
+
+  @Delete('/delete/:id')
+  @UseGuards(JwtAuthGuard)
+  async cancelOrder(@Param('id') id: string) {
+    return this.orderService.cancel(id);
+  }
+
   @Get('/all')
   @UseGuards(AdminGuard)
   @Admin()
@@ -46,12 +61,6 @@ export class OrderController {
     return this.orderService.getOne(id);
   }
 
-  @Get('/user')
-  @UseGuards(JwtAuthGuard)
-  async getOrdersByUser(@User('userId') userId: string) {
-    return this.orderService.getAllByUser(userId);
-  }
-
   @Patch('/update/:id')
   @UseGuards(AdminGuard)
   @Admin()
@@ -60,11 +69,5 @@ export class OrderController {
     @Body('status') status: string,
   ) {
     return this.orderService.updateStatus(id, status);
-  }
-
-  @Delete('/delete/:id')
-  @UseGuards(JwtAuthGuard)
-  async cancelOrder(@Param('id') id: string) {
-    return this.orderService.cancel(id);
   }
 }

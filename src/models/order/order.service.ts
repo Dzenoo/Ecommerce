@@ -86,9 +86,33 @@ export class OrderService {
     };
   }
 
-  async getAllByUser(userId: string): Promise<ResponseObject> {
+  async getAllByUser(
+    { page = 1, limit = 10, sort, status }: GetOrdersDto,
+    userId: string,
+  ): Promise<ResponseObject> {
+    const conditions: any = {
+      user: new mongoose.Types.ObjectId(userId),
+    };
+
+    if (status) {
+      conditions.status = status;
+    }
+
+    const orders = await this.orderModel
+      .find(conditions)
+      .sort({ createdAt: sort === 'desc' ? -1 : 1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate('items.product', 'name image price')
+      .select('-user')
+      .lean()
+      .exec();
+
+    if (!orders) throw new NotAcceptableException('Orders not found');
+
     return {
       statusCode: HttpStatus.OK,
+      orders,
     };
   }
 
