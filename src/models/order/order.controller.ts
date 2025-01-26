@@ -63,8 +63,8 @@ export class OrderController {
   }
 
   @Patch('/update/:id')
-  // @UseGuards(AdminGuard)
-  // @Admin()
+  @UseGuards(AdminGuard)
+  @Admin()
   async updateOrderStatus(
     @Param('id') id: string,
     @Body() body: UpdateOrderDto,

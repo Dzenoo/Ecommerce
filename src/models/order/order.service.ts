@@ -135,8 +135,19 @@ export class OrderService {
   }
 
   async cancel(id: string): Promise<ResponseObject> {
+    const order = await this.orderModel.findByIdAndUpdate(
+      id,
+      {
+        status: 'Cancelled',
+      },
+      { new: true },
+    );
+
+    if (!order) throw new NotAcceptableException('Order cannot be cancelled');
+
     return {
       statusCode: HttpStatus.OK,
+      order,
     };
   }
 }
