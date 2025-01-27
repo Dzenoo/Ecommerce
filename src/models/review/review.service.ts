@@ -52,7 +52,6 @@ export class ReviewService {
       ...body,
       product: productId,
       user: userId,
-      replies: [],
     });
 
     await Promise.all([
