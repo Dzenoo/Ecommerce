@@ -19,7 +19,7 @@ export class Wishlist {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     required: true,
   })
-  products: (Product & mongoose.Types.ObjectId)[];
+  products: (Product | mongoose.Types.ObjectId)[];
 }
 
 export const WishlistSchema = SchemaFactory.createForClass(Wishlist);
