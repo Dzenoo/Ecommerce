@@ -91,6 +91,6 @@ export class AuthController {
   async getCurrentUser(@Req() req: Request) {
     const user = req.user as User;
     if (!user) throw new UnauthorizedException('Unauthorized!');
-    return { isAdmin: user.isAdmin };
+    return { user };
   }
 }
