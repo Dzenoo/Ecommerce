@@ -5,12 +5,14 @@ import mongoose, { Model } from 'mongoose';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
 import { CartService } from '../cart/cart.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
     private readonly cartService: CartService,
+    private readonly userService: UserService,
   ) {}
 
   async create(body: CreateOrderDto, userId: string): Promise<ResponseObject> {
@@ -30,6 +32,9 @@ export class OrderService {
     if (!order) throw new NotAcceptableException('Order could not be created');
 
     await this.cartService.clear(userId);
+    await this.userService.findOneByIdAndUpdate(userId, {
+      $push: { orders: order._id },
+    });
 
     return {
       statusCode: HttpStatus.CREATED,

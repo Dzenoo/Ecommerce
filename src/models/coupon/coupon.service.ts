@@ -48,8 +48,14 @@ export class CouponService {
   }
 
   async delete(id: string): Promise<ResponseObject> {
-    const result = await this.couponModel.findByIdAndDelete(id);
-    if (!result) throw new NotFoundException('Coupon not found');
+    const coupon = await this.couponModel.findById(id);
+    if (!coupon) throw new NotFoundException('Coupon not found');
+
+    await this.cartService.findAndUpdateMany(
+      {},
+      { $unset: { couponApplied: '' } },
+    );
+    await this.couponModel.findByIdAndDelete(id);
 
     return {
       statusCode: HttpStatus.OK,

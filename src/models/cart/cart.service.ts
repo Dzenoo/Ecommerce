@@ -1,15 +1,29 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cart } from './schema/cart.schema';
-import mongoose, { FilterQuery, Model, UpdateQuery } from 'mongoose';
+import mongoose, {
+  FilterQuery,
+  Model,
+  UpdateQuery,
+  UpdateWriteOpResult,
+} from 'mongoose';
 import { ProductService } from '../product/product.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class CartService {
   constructor(
     @InjectModel(Cart.name) private readonly cartModel: Model<Cart>,
     private readonly productService: ProductService,
+    private readonly userService: UserService,
   ) {}
+
+  async findAndUpdateMany(
+    query: FilterQuery<Cart> = {},
+    update: UpdateQuery<Cart> = {},
+  ): Promise<UpdateWriteOpResult> {
+    return await this.cartModel.updateMany(query, update).exec();
+  }
 
   async findOneByIdAndUpdate(
     id: string,
@@ -35,6 +49,9 @@ export class CartService {
     let cart = await this.cartModel.findOne({ user: userId });
     if (!cart) {
       cart = await this.cartModel.create({ user: userId, items: [] });
+      await this.userService.findOneByIdAndUpdate(userId, {
+        $set: { cart: cart._id },
+      });
     }
 
     const existingProduct = cart.items.find(
@@ -146,6 +163,9 @@ export class CartService {
       throw new NotFoundException('Cart not found');
     }
 
+    await this.userService.findOneByIdAndUpdate(userId, {
+      $set: { cart: null },
+    });
     await this.cartModel.deleteOne({ user: userId });
 
     return {
@@ -161,7 +181,7 @@ export class CartService {
         item.product.toString(),
       );
       if (product) {
-        totalPrice += product.price * item.quantity; // Assume `price` exists on Product
+        totalPrice += product.price * item.quantity;
       }
     }
     return totalPrice;
