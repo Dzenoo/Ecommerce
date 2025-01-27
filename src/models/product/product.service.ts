@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, UpdateQuery } from 'mongoose';
 
 import { Product } from './schema/product.schema';
 
@@ -17,7 +17,14 @@ export class ProductService {
     private readonly fileService: FileService,
   ) {}
 
-  public async findById(id: string) {
+  async findOneByIdAndUpdate(
+    id: string,
+    update: UpdateQuery<Product> = {},
+  ): Promise<void> {
+    await this.productModel.findByIdAndUpdate(id, update).exec();
+  }
+
+  async findById(id: string): Promise<Product> {
     return this.productModel.findById(id).lean().exec();
   }
 
