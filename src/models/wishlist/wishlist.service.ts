@@ -3,6 +3,7 @@ import {
   Injectable,
   NotAcceptableException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Wishlist } from './schema/wishlist.schema';
@@ -57,6 +58,8 @@ export class WishlistService {
     const wishlist = await this.wishlistModel.findOne({ user: userId });
     if (!wishlist) throw new NotFoundException('Wishlist not found');
 
+    if (wishlist.user.toString() !== userId) throw new UnauthorizedException();
+
     const mongooseProductId = new mongoose.Types.ObjectId(productId);
     if (!wishlist.products.includes(mongooseProductId)) {
       throw new NotAcceptableException('Product is not in the wishlist');
@@ -75,9 +78,16 @@ export class WishlistService {
     };
   }
 
-  async get(): Promise<ResponseObject> {
+  async get(userId: string): Promise<ResponseObject> {
+    const wishlist = await this.wishlistModel
+      .findOne({ user: userId })
+      .populate('products');
+
+    if (!wishlist) throw new NotFoundException('Wishlist not found');
+
     return {
       statusCode: HttpStatus.OK,
+      wishlist,
     };
   }
 }

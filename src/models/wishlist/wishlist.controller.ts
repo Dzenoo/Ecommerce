@@ -1,4 +1,4 @@
-import { Controller, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 import { User } from '@/common/decorators/user.decorator';
@@ -23,5 +23,11 @@ export class WishlistController {
     @Param('productId') productId: string,
   ) {
     return await this.wishlistService.remove(userId, productId);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getWishlist(@User('userId') userId: string) {
+    return await this.wishlistService.get(userId);
   }
 }
