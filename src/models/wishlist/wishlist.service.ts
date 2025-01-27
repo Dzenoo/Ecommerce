@@ -53,9 +53,25 @@ export class WishlistService {
     };
   }
 
-  async remove(): Promise<ResponseObject> {
+  async remove(userId: string, productId: string): Promise<ResponseObject> {
+    const wishlist = await this.wishlistModel.findOne({ user: userId });
+    if (!wishlist) throw new NotFoundException('Wishlist not found');
+
+    const mongooseProductId = new mongoose.Types.ObjectId(productId);
+    if (!wishlist.products.includes(mongooseProductId)) {
+      throw new NotAcceptableException('Product is not in the wishlist');
+    }
+
+    const updatedWishlist = await this.wishlistModel.findByIdAndUpdate(
+      wishlist._id,
+      { $pull: { products: mongooseProductId } },
+      { new: true, runValidators: true },
+    );
+
     return {
       statusCode: HttpStatus.OK,
+      message: 'Product removed from wishlist',
+      wishlist: updatedWishlist,
     };
   }
 
