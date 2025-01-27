@@ -1,4 +1,10 @@
-import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateQuery } from 'mongoose';
 
@@ -9,12 +15,17 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { GetProductsDto } from './dto/get-products.dto';
 
 import { FileService } from '@/common/modules/file/file.service';
+import { ReviewService } from '../review/review.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
     private readonly fileService: FileService,
+    private readonly userService: UserService,
+    @Inject(forwardRef(() => ReviewService))
+    private readonly reviewService: ReviewService,
   ) {}
 
   async findOneByIdAndUpdate(
@@ -94,10 +105,8 @@ export class ProductService {
 
   async delete(id: string) {
     const productExists = await this.productModel.findById(id);
-
-    if (!productExists) {
+    if (!productExists)
       throw new NotAcceptableException('Product does not exist.');
-    }
 
     const imageKeys = productExists.images.map((image) =>
       image.split('/').pop(),
@@ -105,11 +114,17 @@ export class ProductService {
 
     await this.fileService.deleteFiles(imageKeys, 'product-images');
 
-    const product = await this.productModel.findByIdAndDelete(id);
+    const reviews = await this.reviewService.find({ product: id });
+    const userIds = reviews.map((review) => review.user);
 
-    if (!product) {
-      throw new NotAcceptableException('Product could not be deleted.');
-    }
+    await Promise.all([
+      this.productModel.findByIdAndDelete(id),
+      this.reviewService.findAndDeleteMany({ product: id }),
+      this.userService.findAndUpdateMany({
+        _id: { $in: userIds },
+        $pull: { reviews: { product: id } },
+      }),
+    ]);
 
     return {
       statusCode: HttpStatus.OK,

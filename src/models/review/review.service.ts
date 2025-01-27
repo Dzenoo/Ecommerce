@@ -1,7 +1,13 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Review } from './schema/review.schema';
-import { Model } from 'mongoose';
+import { Review, ReviewDocument } from './schema/review.schema';
+import { DeleteResult, FilterQuery, Model } from 'mongoose';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { GetReviewsDto } from './dto/get-reviews.dto';
@@ -12,9 +18,22 @@ import { UserService } from '../user/user.service';
 export class ReviewService {
   constructor(
     @InjectModel(Review.name) private readonly reviewModel: Model<Review>,
-    private readonly productService: ProductService,
     private readonly userService: UserService,
+    @Inject(forwardRef(() => ProductService))
+    private readonly productService: ProductService,
   ) {}
+
+  async find(
+    query: FilterQuery<Review> = {},
+  ): Promise<Review[] | ReviewDocument[]> {
+    return await this.reviewModel.find(query).exec();
+  }
+
+  async findAndDeleteMany(
+    query: FilterQuery<Review> = {},
+  ): Promise<DeleteResult> {
+    return await this.reviewModel.deleteMany(query).exec();
+  }
 
   async create(
     body: CreateReviewDto,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateQuery } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
 import { User } from './schema/user.schema';
 
 @Injectable()
@@ -8,6 +8,13 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
+
+  async findAndUpdateMany(
+    query: FilterQuery<User> = {},
+    update: UpdateQuery<User> = {},
+  ): Promise<UpdateWriteOpResult> {
+    return await this.userModel.updateMany(query, update).exec();
+  }
 
   async findOneByIdAndUpdate(
     id: string,
