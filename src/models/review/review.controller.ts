@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
@@ -12,6 +14,7 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 import { User } from '@/common/decorators/user.decorator';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { GetReviewsDto } from './dto/get-reviews.dto';
 
 @Controller('/review')
 export class ReviewController {
@@ -45,5 +48,14 @@ export class ReviewController {
     @User('userId') userId: string,
   ) {
     return await this.reviewService.delete(reviewId, productId, userId);
+  }
+
+  @Get('/all/:productId')
+  @UseGuards(JwtAuthGuard)
+  async getReviews(
+    @Query() query: GetReviewsDto,
+    @Param('productId') productId: string,
+  ) {
+    return await this.reviewService.getAll(query, productId);
   }
 }

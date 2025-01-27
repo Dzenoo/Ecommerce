@@ -103,9 +103,30 @@ export class ReviewService {
     };
   }
 
-  async getAll(query: GetReviewsDto): Promise<ResponseObject> {
+  async getAll(
+    query: GetReviewsDto,
+    productId: string,
+  ): Promise<ResponseObject> {
+    const { skip = 0, limit = 10 } = query;
+
+    const reviews = await this.reviewModel
+      .find({
+        product: productId,
+      })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const totalReviews = await this.reviewModel.countDocuments();
+
     return {
       statusCode: HttpStatus.OK,
+      data: {
+        reviews,
+        totalReviews,
+        skip,
+        limit,
+      },
     };
   }
 }
