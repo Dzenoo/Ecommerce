@@ -17,9 +17,10 @@ import { GetOrdersDto } from './dto/get-orders.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
 import { User } from '@/common/decorators/user.decorator';
-import { Admin } from '@/common/decorators/admin.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
-import { AdminGuard } from '@/authentication/guards/admin-auth.guard';
+import { Role } from '@/types';
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
 
 @Controller('/order')
 export class OrderController {
@@ -50,21 +51,20 @@ export class OrderController {
   }
 
   @Get('/all')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async getOrders(@Query() query: GetOrdersDto) {
     return this.orderService.getAll(query);
   }
 
   @Get('/:id')
-  @UseGuards(AdminGuard)
   async getOrder(@Param('id') id: string) {
     return this.orderService.getOne(id);
   }
 
   @Patch('/update/:id')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async updateOrderStatus(
     @Param('id') id: string,
     @Body() body: UpdateOrderDto,

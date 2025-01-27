@@ -8,6 +8,7 @@ import { Order } from '@/models/order/schema/order.schema';
 import { Address } from '@/models/address/schema/address.schema';
 import { Review } from '@/models/review/schema/review.schema';
 import { Wishlist } from '@/models/wishlist/schema/wishlist.schema';
+import { Role } from '@/types';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -91,10 +92,8 @@ export class User {
   })
   reviews: (Review | mongoose.Types.ObjectId)[];
 
-  @Prop({
-    default: false,
-  })
-  isAdmin: boolean;
+  @Prop({ type: String, default: 'user', enum: Role })
+  role: Role;
 
   @Prop({ default: false })
   isGoogleAccount: boolean;

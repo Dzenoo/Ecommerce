@@ -36,13 +36,13 @@ export class GoogleAuthService {
 
       // Do the 2FA pending approach
 
-      const payload = { sub: user._id, isAdmin: user.isAdmin };
+      const payload = { sub: user._id, role: user.role };
       const jwt = await this.jwtService.signAsync(payload);
 
       return {
         message: 'Login successful',
         access_token: jwt,
-        isAdmin: payload.isAdmin,
+        role: payload.role,
       };
     }
 

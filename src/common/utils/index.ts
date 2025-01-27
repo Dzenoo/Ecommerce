@@ -2,11 +2,12 @@ import * as sanitizeHtml from 'sanitize-html';
 
 /**
  * Returns the redirect URL based on the user's role.
- * @param isAdmin - The role of the user, either 'user' or 'isAdmin'.
+ *
+ * @param role - The role of the user, either 'user' or 'admin'.
  * @returns The redirect URL corresponding to the user's role.
  */
-export const getRedirectUrl = (isAdmin: boolean): string => {
-  return `${process.env.FRONTEND_URL}/${isAdmin ? 'admin' : 'user'}`;
+export const getRedirectUrl = (role: 'user' | 'admin'): string => {
+  return `${process.env.FRONTEND_URL}/${role === 'admin' ? 'admin' : 'user'}`;
 };
 
 /**

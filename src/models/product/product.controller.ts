@@ -23,8 +23,10 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetProductsDto } from './dto/get-products.dto';
 
-import { AdminGuard } from '@/authentication/guards/admin-auth.guard';
-import { Admin } from '@/common/decorators/admin.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/types';
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 
 @Controller('/product')
 export class ProductController {
@@ -32,8 +34,8 @@ export class ProductController {
 
   @Post('/create')
   @UseInterceptors(FilesInterceptor('images', 10))
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async createProduct(
     @Body() body: CreateProductDto,
     @UploadedFiles(
@@ -54,15 +56,15 @@ export class ProductController {
   }
 
   @Patch('/update/:id')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async updateProduct(@Body() body: UpdateProductDto, @Param('id') id: string) {
     return await this.productService.update({ body, id });
   }
 
   @Delete('/delete/:id')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async deleteProduct(@Param('id') id: string) {
     return await this.productService.delete(id);
   }

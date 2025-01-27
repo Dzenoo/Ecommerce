@@ -12,41 +12,42 @@ import {
 
 import { CouponService } from './coupon.service';
 
-import { Admin } from '@/common/decorators/admin.decorator';
-import { AdminGuard } from '@/authentication/guards/admin-auth.guard';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/types';
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
 
 @Controller('/coupon')
 export class CouponController {
   constructor(private readonly couponService: CouponService) {}
 
   @Post('/create')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async createCoupon(@Body() body: CreateCouponDto) {
     return this.couponService.create(body);
   }
 
   @Patch('/update/:id')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async updateCoupon(@Body() body: UpdateCouponDto, @Param('id') id: string) {
     return this.couponService.update(id, body);
   }
 
   @Delete('/delete/:id')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async deleteCoupon(@Param('id') id: string) {
     return this.couponService.delete(id);
   }
 
   @Get('/all')
-  @UseGuards(AdminGuard)
-  @Admin()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async getCoupons(@Query('active') active?: boolean) {
     return this.couponService.getAll(active);
   }

@@ -57,12 +57,12 @@ export class LocalAuthService {
   async login(user: any) {
     const payload = {
       sub: user._doc._id.toString(),
-      isAdmin: user._doc.isAdmin,
+      role: user._doc.role,
     };
 
     const access_token = await this.jwtService.signAsync(payload);
 
-    const redirectUrl = getRedirectUrl(payload.isAdmin);
+    const redirectUrl = getRedirectUrl(payload.role);
 
     return { access_token, redirectUrl };
   }

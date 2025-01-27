@@ -42,7 +42,7 @@ export class AuthController {
     try {
       const authResult = await this.googleAuthService.googleLogin(req);
       res.cookie('access_token', authResult.access_token, cookieOptions);
-      const redirectUrl = getRedirectUrl(authResult.isAdmin);
+      const redirectUrl = getRedirectUrl(authResult.role);
       return res.redirect(redirectUrl);
     } catch (error) {
       const message = encodeURIComponent(error.message);
