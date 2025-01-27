@@ -36,13 +36,14 @@ export class ReviewService {
       replies: [],
     });
 
-    await this.userService.findOneByIdAndUpdate(userId, {
-      $push: { reviews: review._id },
-    });
-
-    await this.productService.findOneByIdAndUpdate(productId, {
-      $push: { reviews: review._id },
-    });
+    await Promise.all([
+      await this.userService.findOneByIdAndUpdate(userId, {
+        $push: { reviews: review._id },
+      }),
+      await this.productService.findOneByIdAndUpdate(productId, {
+        $push: { reviews: review._id },
+      }),
+    ]);
 
     return {
       statusCode: HttpStatus.CREATED,
