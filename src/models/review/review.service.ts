@@ -70,9 +70,36 @@ export class ReviewService {
     };
   }
 
-  async delete(id: string): Promise<ResponseObject> {
+  async delete(
+    id: string,
+    productId: string,
+    userId: string,
+  ): Promise<ResponseObject> {
+    const [user, product, review] = await Promise.all([
+      this.userService.findById(userId),
+      this.productService.findById(productId),
+      this.reviewModel.findOne({ _id: id, user: userId }),
+    ]);
+
+    if (!user || !product)
+      throw new NotFoundException('User or product not found');
+
+    if (!review)
+      throw new NotFoundException('Review not found or unauthorized');
+
+    await Promise.all([
+      this.reviewModel.deleteOne({ _id: id, user: userId }),
+      this.productService.findOneByIdAndUpdate(productId, {
+        $pull: { reviews: id },
+      }),
+      this.userService.findOneByIdAndUpdate(userId, {
+        $pull: { reviews: id },
+      }),
+    ]);
+
     return {
       statusCode: HttpStatus.OK,
+      message: 'Review deleted successfully',
     };
   }
 

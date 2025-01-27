@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Patch,
   Post,
@@ -34,5 +35,15 @@ export class ReviewController {
     @Param('reviewId') reviewId: string,
   ) {
     return await this.reviewService.update(body, reviewId, userId);
+  }
+
+  @Delete('/delete/:reviewId/:productId')
+  @UseGuards(JwtAuthGuard)
+  async deleteReview(
+    @Param('reviewId') reviewId: string,
+    @Param('productId') productId: string,
+    @User('userId') userId: string,
+  ) {
+    return await this.reviewService.delete(reviewId, productId, userId);
   }
 }
