@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
+import { UserModule } from '../user/user.module';
+
+import { Address, AddressSchema } from './schema/address.schema';
 import { AddressService } from './address.service';
 import { AddressController } from './address.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Address, AddressSchema } from './schema/address.schema';
-import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [

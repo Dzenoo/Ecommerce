@@ -1,11 +1,13 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
+import { FileModule } from '@/common/modules/file/file.module';
+import { UserModule } from '../user/user.module';
+import { ReviewModule } from '../review/review.module';
+
+import { Product, ProductSchema } from './schema/product.schema';
 import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Product, ProductSchema } from './schema/product.schema';
-import { FileModule } from '@/common/modules/file/file.module';
-import { ReviewModule } from '../review/review.module';
-import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [

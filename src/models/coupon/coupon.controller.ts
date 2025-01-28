@@ -13,12 +13,13 @@ import {
 import { CouponService } from './coupon.service';
 
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/types';
 
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
-import { Roles } from '@/common/decorators/roles.decorator';
-import { Role } from '@/types';
-import { RolesGuard } from '@/authentication/guards/role-auth.guard';
 
 @Controller('/coupon')
 export class CouponController {

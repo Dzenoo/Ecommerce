@@ -1,9 +1,12 @@
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Address } from './schema/address.schema';
 import { Model } from 'mongoose';
-import { CreateAddressDto } from './dto/create-address.dto';
+
+import { Address } from './schema/address.schema';
+
 import { UserService } from '../user/user.service';
+
+import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { GetAddressesDto } from './dto/get-addresses.dto';
 

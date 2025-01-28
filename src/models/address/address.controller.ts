@@ -9,9 +9,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+
 import { AddressService } from './address.service';
+
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 import { User } from '@/common/decorators/user.decorator';
+
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { GetAddressesDto } from './dto/get-addresses.dto';

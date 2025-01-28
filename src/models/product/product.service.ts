@@ -10,13 +10,13 @@ import { Model, UpdateQuery } from 'mongoose';
 
 import { Product } from './schema/product.schema';
 
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { GetProductsDto } from './dto/get-products.dto';
-
 import { FileService } from '@/common/modules/file/file.service';
 import { ReviewService } from '../review/review.service';
 import { UserService } from '../user/user.service';
+
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { GetProductsDto } from './dto/get-products.dto';
 
 @Injectable()
 export class ProductService {

@@ -1,11 +1,14 @@
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Order } from './schema/order.schema';
 import mongoose, { Model } from 'mongoose';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { GetOrdersDto } from './dto/get-orders.dto';
+
+import { Order } from './schema/order.schema';
+
 import { CartService } from '../cart/cart.service';
 import { UserService } from '../user/user.service';
+
+import { CreateOrderDto } from './dto/create-order.dto';
+import { GetOrdersDto } from './dto/get-orders.dto';
 
 @Injectable()
 export class OrderService {

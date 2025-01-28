@@ -6,10 +6,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Wishlist } from './schema/wishlist.schema';
 import mongoose, { Model } from 'mongoose';
+
+import { Wishlist } from './schema/wishlist.schema';
+
 import { ProductService } from '../product/product.service';
 import { UserService } from '../user/user.service';
+
 import { GetWishlistDto } from './dto/get-wishlist.dto';
 
 @Injectable()

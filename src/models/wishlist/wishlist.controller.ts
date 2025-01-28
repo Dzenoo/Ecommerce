@@ -7,9 +7,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+
 import { WishlistService } from './wishlist.service';
+
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+
 import { User } from '@/common/decorators/user.decorator';
+
 import { GetWishlistDto } from './dto/get-wishlist.dto';
 
 @Controller('/wishlist')

@@ -7,12 +7,12 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 
+import { CartService } from '../cart/cart.service';
+
 import { Coupon, CouponDocument } from './schema/coupon.schema';
 
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
-
-import { CartService } from '../cart/cart.service';
 
 @Injectable()
 export class CouponService {

@@ -12,15 +12,16 @@ import {
 
 import { OrderService } from './order.service';
 
+import { User } from '@/common/decorators/user.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/types';
+
+import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-
-import { User } from '@/common/decorators/user.decorator';
-import { Roles } from '@/common/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
-import { Role } from '@/types';
-import { RolesGuard } from '@/authentication/guards/role-auth.guard';
 
 @Controller('/order')
 export class OrderController {

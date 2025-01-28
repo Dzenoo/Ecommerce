@@ -19,14 +19,15 @@ import { ProductService } from './product.service';
 
 import { FilesInterceptor } from '@nestjs/platform-express';
 
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/types';
+
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetProductsDto } from './dto/get-products.dto';
-
-import { Roles } from '@/common/decorators/roles.decorator';
-import { Role } from '@/types';
-import { RolesGuard } from '@/authentication/guards/role-auth.guard';
-import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 
 @Controller('/product')
 export class ProductController {

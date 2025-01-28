@@ -1,7 +1,9 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
+
 import { User } from './schema/user.schema';
+
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()

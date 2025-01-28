@@ -9,10 +9,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+
 import { ReviewService } from './review.service';
-import { CreateReviewDto } from './dto/create-review.dto';
+
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 import { User } from '@/common/decorators/user.decorator';
+
+import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { GetReviewsDto } from './dto/get-reviews.dto';
 

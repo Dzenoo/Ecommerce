@@ -11,11 +11,11 @@ import {
 
 import { CartService } from './cart.service';
 
-import { AddItemDto } from './dto/add-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
-
 import { User } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+
+import { AddItemDto } from './dto/add-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 
 @Controller('/cart')
 export class CartController {

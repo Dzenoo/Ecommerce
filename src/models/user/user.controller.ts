@@ -1,7 +1,11 @@
 import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
+
 import { UserService } from './user.service';
+
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+
 import { User } from '@/common/decorators/user.decorator';
+
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('/user')

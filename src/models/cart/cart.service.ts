@@ -1,12 +1,14 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Cart } from './schema/cart.schema';
 import mongoose, {
   FilterQuery,
   Model,
   UpdateQuery,
   UpdateWriteOpResult,
 } from 'mongoose';
+
+import { Cart } from './schema/cart.schema';
+
 import { ProductService } from '../product/product.service';
 import { UserService } from '../user/user.service';
 
