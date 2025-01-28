@@ -58,12 +58,6 @@ export class User {
   })
   password?: string;
 
-  @Prop({
-    default: '',
-    trim: true,
-  })
-  image: string;
-
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Cart', default: null })
   cart: Cart | mongoose.Types.ObjectId;
 

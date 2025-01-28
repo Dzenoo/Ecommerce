@@ -1,6 +1,15 @@
-import { Controller, Delete, Get, Patch, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+import { User } from '@/common/decorators/user.decorator';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('/user')
 export class UserController {
@@ -8,13 +17,18 @@ export class UserController {
 
   @Patch('/update')
   @UseGuards(JwtAuthGuard)
-  async updateProfile() {}
+  async updateProfile(
+    @Body() body: UpdateProfileDto,
+    @User('userId') userId: string,
+  ) {
+    return await this.userService.updateOne(userId, body);
+  }
 
   @Delete('/delete')
   @UseGuards(JwtAuthGuard)
-  async deleteProfile() {}
+  async deleteProfile(@User('userId') userId: string) {}
 
   @Get('/profile')
   @UseGuards(JwtAuthGuard)
-  async getProfile() {}
+  async getProfile(@User('userId') userId: string) {}
 }
