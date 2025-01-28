@@ -9,7 +9,7 @@ const RootLayoutWrapper: React.FC<{
 
   return (
     <div
-      className={`bg-white dark:bg-black flex flex-col min-h-screen ${
+      className={`flex flex-col min-h-screen ${
         isZoomedOut ? 'm-auto max-w-screen-2xl' : ''
       }`}
     >
