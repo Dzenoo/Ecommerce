@@ -15,7 +15,11 @@ const DEFAULT_API_URL = process.env.NEXT_PUBLIC_API_URL;
  */
 export const postApiHandler = <T>(
   url: string,
-  data: {} | FormData,
+  data:
+    | {
+        [key: string]: unknown;
+      }
+    | FormData,
   contentType: string = 'application/json',
 ): Promise<T> => {
   const headers: AxiosHeadersConfig = {
@@ -39,7 +43,11 @@ export const postApiHandler = <T>(
  */
 export const patchApiHandler = <T>(
   url: string,
-  data: {} | FormData,
+  data:
+    | {
+        [key: string]: unknown;
+      }
+    | FormData,
   contentType: string = 'application/json',
 ): Promise<T> => {
   const headers: AxiosHeadersConfig = {
