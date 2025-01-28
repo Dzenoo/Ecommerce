@@ -58,4 +58,15 @@ export class UserService {
       message: 'Profile updated successfully',
     };
   }
+
+  async getOne(id: string): Promise<ResponseObject> {
+    const user = await this.userModel.findById(id).select('-role');
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return {
+      statusCode: HttpStatus.OK,
+      user,
+    };
+  }
 }
