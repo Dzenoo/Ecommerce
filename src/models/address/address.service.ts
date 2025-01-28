@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UserService } from '../user/user.service';
 import { UpdateAddressDto } from './dto/update-address.dto';
+import { GetAddressesDto } from './dto/get-addresses.dto';
 
 @Injectable()
 export class AddressService {
@@ -77,12 +78,23 @@ export class AddressService {
     };
   }
 
-  async getAll(userId: string): Promise<ResponseObject> {
-    const addresses = await this.addressModel.find({ user: userId });
+  async getAll(
+    query: GetAddressesDto,
+    userId: string,
+  ): Promise<ResponseObject> {
+    const addresses = await this.addressModel
+      .find({ user: userId })
+      .select('-user')
+      .skip((query.page - 1) * query.limit)
+      .limit(query.limit)
+      .exec();
+
+    if (!addresses) throw new NotAcceptableException('Addresses not found');
 
     return {
       statusCode: HttpStatus.OK,
       addresses,
+      totalAddresses: addresses.length,
     };
   }
 }

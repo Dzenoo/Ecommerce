@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AddressService } from './address.service';
@@ -13,6 +14,7 @@ import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 import { User } from '@/common/decorators/user.decorator';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
+import { GetAddressesDto } from './dto/get-addresses.dto';
 
 @Controller('/address')
 export class AddressController {
@@ -48,7 +50,10 @@ export class AddressController {
 
   @Get('/all')
   @UseGuards(JwtAuthGuard)
-  async getAddresses(@User('userId') userId: string) {
-    return this.addressService.getAll(userId);
+  async getAddresses(
+    @Query() query: GetAddressesDto,
+    @User('userId') userId: string,
+  ) {
+    return this.addressService.getAll(query, userId);
   }
 }

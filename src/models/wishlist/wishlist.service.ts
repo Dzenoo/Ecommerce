@@ -10,6 +10,7 @@ import { Wishlist } from './schema/wishlist.schema';
 import mongoose, { Model } from 'mongoose';
 import { ProductService } from '../product/product.service';
 import { UserService } from '../user/user.service';
+import { GetWishlistDto } from './dto/get-wishlist.dto';
 
 @Injectable()
 export class WishlistService {
@@ -78,16 +79,25 @@ export class WishlistService {
     };
   }
 
-  async get(userId: string): Promise<ResponseObject> {
+  async get(query: GetWishlistDto, userId: string): Promise<ResponseObject> {
     const wishlist = await this.wishlistModel
       .findOne({ user: userId })
-      .populate('products');
+      .select('_id products')
+      .populate({
+        path: 'products',
+        options: {
+          skip: (query.page - 1) * query.limit,
+          limit: query.limit,
+        },
+      })
+      .exec();
 
     if (!wishlist) throw new NotFoundException('Wishlist not found');
 
     return {
       statusCode: HttpStatus.OK,
       wishlist,
+      totalProducts: wishlist.products.length,
     };
   }
 }
