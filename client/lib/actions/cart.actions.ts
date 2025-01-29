@@ -1,4 +1,4 @@
-import { AddItemToCartDto } from '@/types';
+import { AddItemToCartDto, ICart } from '@/types';
 
 import {
   deleteApiHandler,
@@ -11,7 +11,7 @@ export const addItem = async (
   data: AddItemToCartDto,
 ): Promise<
   ServerResponse<{
-    cart: any;
+    cart: ICart;
   }>
 > => {
   return await postApiHandler('cart/add', data);
@@ -19,7 +19,7 @@ export const addItem = async (
 
 export const removeItem = async (
   productId: string,
-): Promise<ServerResponse<{ cart: any }>> => {
+): Promise<ServerResponse<{ cart: ICart }>> => {
   return deleteApiHandler(`cart/remove/${productId}`);
 };
 
@@ -31,7 +31,7 @@ export const updateItem = async (
   productId: string,
 ): Promise<
   ServerResponse<{
-    cart: any;
+    cart: ICart;
   }>
 > => {
   return await patchApiHandler(`cart/update/${productId}`, data);
@@ -39,7 +39,7 @@ export const updateItem = async (
 
 export const getCart = async (): Promise<
   ServerResponse<{
-    cart: any;
+    cart: ICart;
   }>
 > => {
   return getApiHandler('cart/get');

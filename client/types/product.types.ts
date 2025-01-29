@@ -1,3 +1,5 @@
+import { IReview } from './review.types';
+
 export type CreateProductDto = {
   name: string;
   price: number;
@@ -18,3 +20,19 @@ export type GetProductsDto = {
   attributes?: string[];
   price?: { min: number; max: number };
 };
+
+export interface IProduct {
+  _id: string;
+  name: string;
+  price: number;
+  description: string;
+  images: string[];
+  stock: number;
+  discount: number;
+  averageRating: number;
+  category: string;
+  attributes: Record<string, any>;
+  reviews: IReview[] | [];
+  createdAt: Date;
+  updatedAt: Date;
+}

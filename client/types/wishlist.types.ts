@@ -1,22 +1,15 @@
 import { IProduct } from './product.types';
 import { IUser } from './user.types';
 
-export type CreateReviewDto = {
-  rating: number;
-  comment: string;
-};
-
-export type GetReviewsDto = {
+export type GetWishlistDto = {
   page?: number;
   limit?: number;
 };
 
-export interface IReview {
+export interface IWishlist {
   _id: string;
   user: IUser | string;
-  product: IProduct | string;
-  rating: number;
-  comment?: string;
+  products: IProduct[] | string[];
   createdAt: Date;
   updatedAt: Date;
 }

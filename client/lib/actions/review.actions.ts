@@ -1,4 +1,4 @@
-import { CreateReviewDto, GetReviewsDto } from '@/types';
+import { CreateReviewDto, GetReviewsDto, IReview } from '@/types';
 
 import {
   deleteApiHandler,
@@ -12,7 +12,7 @@ export const createReview = async (
   productId: string,
 ): Promise<
   ServerResponse<{
-    review: any;
+    review: IReview;
   }>
 > => {
   return await postApiHandler(`review/create/${productId}`, data);
@@ -23,7 +23,7 @@ export const updateReview = async (
   reviewId: string,
 ): Promise<
   ServerResponse<{
-    updatedReview: any;
+    updatedReview: IReview;
   }>
 > => {
   return patchApiHandler(`review/update/${reviewId}`, data);
@@ -42,7 +42,7 @@ export const getReviews = async (
 ): Promise<
   ServerResponse<{
     data: {
-      reviews: any[];
+      reviews: IReview[];
       totalReviews: number;
       skip: number;
       limit: number;

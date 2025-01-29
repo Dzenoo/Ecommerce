@@ -1,4 +1,4 @@
-import { CreateOrderDto, GetOrdersDto } from '@/types';
+import { CreateOrderDto, GetOrdersDto, IOrder } from '@/types';
 
 import {
   deleteApiHandler,
@@ -11,7 +11,7 @@ export const createOrder = async (
   data: CreateOrderDto,
 ): Promise<
   ServerResponse<{
-    order: any;
+    order: IOrder;
   }>
 > => {
   return await postApiHandler('order/create', data);
@@ -21,7 +21,7 @@ export const getOrdersByUser = async (
   query: GetOrdersDto,
 ): Promise<
   ServerResponse<{
-    orders: any;
+    orders: IOrder[];
   }>
 > => {
   return await getApiHandler(
@@ -33,7 +33,7 @@ export const cancelOrder = async (
   orderId: string,
 ): Promise<
   ServerResponse<{
-    order: any;
+    order: IOrder;
   }>
 > => {
   return await deleteApiHandler(`order/delete/${orderId}`);
@@ -43,7 +43,7 @@ export const getOrders = async (
   query: GetOrdersDto,
 ): Promise<
   ServerResponse<{
-    orders: any;
+    orders: IOrder[];
     totalOrders: number;
   }>
 > => {
@@ -56,7 +56,7 @@ export const getOrder = async (
   orderId: string,
 ): Promise<
   ServerResponse<{
-    order: any;
+    order: IOrder;
   }>
 > => {
   return await getApiHandler(`order/${orderId}`);
@@ -67,7 +67,7 @@ export const updateOrderStatus = async (
   orderId: string,
 ): Promise<
   ServerResponse<{
-    order: any;
+    order: IOrder;
   }>
 > => {
   return await patchApiHandler(`order/update/${orderId}`, data);

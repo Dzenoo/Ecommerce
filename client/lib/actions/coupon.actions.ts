@@ -1,17 +1,17 @@
-import { CreateCouponDto } from '@/types';
+import { CreateCouponDto, ICoupon } from '@/types';
 
 import { deleteApiHandler, getApiHandler, postApiHandler } from '../api';
 
 export const createCoupon = async (
   data: CreateCouponDto,
-): Promise<ServerResponse<{ coupon: any }>> => {
+): Promise<ServerResponse<{ coupon: ICoupon }>> => {
   return await postApiHandler('coupon/create', data);
 };
 
 export const updateCoupon = async (
   data: Partial<CreateCouponDto>,
   couponId: string,
-): Promise<ServerResponse<{ coupon: any }>> => {
+): Promise<ServerResponse<{ coupon: ICoupon }>> => {
   return await postApiHandler(`coupon/update/${couponId}`, data);
 };
 
@@ -25,7 +25,7 @@ export const getCoupons = async (query: {
   active?: boolean;
 }): Promise<
   ServerResponse<{
-    coupons: any;
+    coupons: ICoupon;
   }>
 > => {
   return getApiHandler(`coupon/all?active=${query.active}`);
@@ -35,7 +35,7 @@ export const getCoupon = async (
   couponId: string,
 ): Promise<
   ServerResponse<{
-    coupon: any;
+    coupon: ICoupon;
   }>
 > => {
   return getApiHandler(`coupon/${couponId}`);

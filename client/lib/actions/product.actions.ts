@@ -1,4 +1,4 @@
-import { CreateProductDto, GetProductsDto } from '@/types';
+import { CreateProductDto, GetProductsDto, IProduct } from '@/types';
 
 import {
   deleteApiHandler,
@@ -30,7 +30,7 @@ export const getAllProducts = async (
   query: GetProductsDto,
 ): Promise<
   ServerResponse<{
-    products: any;
+    products: IProduct[];
     totalProducts: number;
   }>
 > => {
@@ -44,7 +44,7 @@ export const getOneProduct = async (
   productId: string,
 ): Promise<
   ServerResponse<{
-    product: any;
+    product: IProduct;
   }>
 > => {
   return await getApiHandler(`product/${productId}`, {

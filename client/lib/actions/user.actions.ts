@@ -1,4 +1,4 @@
-import { UpdateProfileDto } from '@/types';
+import { IUser, UpdateProfileDto } from '@/types';
 import { getApiHandler, patchApiHandler } from '../api';
 
 export const updateProfile = async (
@@ -9,7 +9,7 @@ export const updateProfile = async (
 
 export const getProfile = async (): Promise<
   ServerResponse<{
-    user: any;
+    user: IUser;
   }>
 > => {
   return await getApiHandler('user/profile');

@@ -1,3 +1,5 @@
+import { IUser } from './user.types';
+
 export type CreateAddressDto = {
   addressLine1: string;
   addressLine2?: string;
@@ -12,3 +14,10 @@ export type GetAddressesDto = {
   page?: number;
   limit?: number;
 };
+
+export interface IAddress extends CreateAddressDto {
+  _id: string;
+  user: IUser | string;
+  createdAt: Date;
+  updatedAt: Date;
+}

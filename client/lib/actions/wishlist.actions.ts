@@ -1,4 +1,4 @@
-import { GetWishlistDto } from '@/types/wishlist.type';
+import { GetWishlistDto, IWishlist } from '@/types/wishlist.types';
 
 import { getApiHandler, patchApiHandler, postApiHandler } from '../api';
 
@@ -12,7 +12,7 @@ export const removeFromWishlist = async (
   productId: string,
 ): Promise<
   ServerResponse<{
-    wishlist: any;
+    wishlist: IWishlist;
   }>
 > => {
   return await patchApiHandler(`wishlist/remove/${productId}`, {});
@@ -22,7 +22,7 @@ export const getWishlist = async (
   query: GetWishlistDto,
 ): Promise<
   ServerResponse<{
-    wishlist: any;
+    wishlist: IWishlist;
     totalProducts: number;
   }>
 > => {

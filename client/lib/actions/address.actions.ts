@@ -1,4 +1,4 @@
-import { CreateAddressDto, GetAddressesDto } from '@/types';
+import { CreateAddressDto, GetAddressesDto, IAddress } from '@/types';
 
 import {
   postApiHandler,
@@ -9,14 +9,14 @@ import {
 
 export const createAddress = async (
   data: CreateAddressDto,
-): Promise<ServerResponse<{ address: Readonly<CreateAddressDto> }>> => {
+): Promise<ServerResponse<{ address: IAddress }>> => {
   return await postApiHandler('address/create', data);
 };
 
 export const updateAddress = async (
   data: Partial<CreateAddressDto>,
   addressId: string,
-): Promise<ServerResponse<{ address: Readonly<CreateAddressDto> }>> => {
+): Promise<ServerResponse<{ address: IAddress }>> => {
   return await patchApiHandler(`address/update/${addressId}`, data);
 };
 
@@ -31,7 +31,7 @@ export const getAddresses = async ({
   limit = 10,
 }: GetAddressesDto): Promise<
   ServerResponse<{
-    addresses: Readonly<CreateAddressDto[]>;
+    addresses: IAddress[];
     totalAddresses: number;
   }>
 > => {
