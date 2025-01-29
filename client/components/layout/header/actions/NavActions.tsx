@@ -48,10 +48,12 @@ const NavActions: React.FC = () => {
       <div className="flex items-center gap-5">
         {NavActionsLinks.map(({ id, icon, text, href }) =>
           id === 3 ? (
-            <Button key={id}>
-              {icon}
-              {text}
-            </Button>
+            <Link href={href} key={id}>
+              <Button>
+                {icon}
+                {text}
+              </Button>
+            </Link>
           ) : (
             <TooltipProvider key={id} delayDuration={400}>
               <Tooltip>
