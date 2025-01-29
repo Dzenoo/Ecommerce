@@ -1,102 +1,60 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-type AxiosHeadersConfig = {
-  [key: string]: string;
-};
+type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 const DEFAULT_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-/**
- * Handles POST API requests.
- * @param url - The API endpoint to post to.
- * @param data - The data to be sent in the request body.
- * @param contentType - The content type of the request (default: "application/json").
- * @returns A promise resolving to the response data.
- */
+const apiClient = axios.create({
+  baseURL: DEFAULT_API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+async function request<T>(
+  method: HttpMethod,
+  url: string,
+  data?: unknown,
+  config?: AxiosRequestConfig,
+): Promise<T> {
+  const headers: any = { ...config?.headers };
+
+  if (data instanceof FormData) {
+    delete headers['Content-Type'];
+  }
+
+  try {
+    const response: AxiosResponse<T> = await apiClient.request({
+      method,
+      url,
+      data,
+      ...config,
+      headers: {
+        ...headers,
+        ...config?.headers,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getApiHandler = <T>(url: string, config?: AxiosRequestConfig) =>
+  request<T>('GET', url, undefined, config);
+
 export const postApiHandler = <T>(
   url: string,
-  data:
-    | {
-        [key: string]: unknown;
-      }
-    | FormData,
-  contentType: string = 'application/json',
-): Promise<T> => {
-  const headers: AxiosHeadersConfig = {
-    'Content-Type': contentType,
-  };
+  data: unknown,
+  config?: AxiosRequestConfig,
+) => request<T>('POST', url, data, config);
 
-  return axios
-    .post(`${DEFAULT_API_URL}/${url}`, data, { headers, withCredentials: true })
-    .then((response) => response.data)
-    .catch((error) => {
-      throw error;
-    });
-};
-
-/**
- * Handles PATCH API requests.
- * @param url - The API endpoint to patch to.
- * @param data - The data to be sent in the request body.
- * @param contentType - The content type of the request (default: "application/json").
- * @returns A promise resolving to the response data.
- */
 export const patchApiHandler = <T>(
   url: string,
-  data:
-    | {
-        [key: string]: unknown;
-      }
-    | FormData,
-  contentType: string = 'application/json',
-): Promise<T> => {
-  const headers: AxiosHeadersConfig = {
-    'Content-Type': contentType,
-  };
+  data: unknown,
+  config?: AxiosRequestConfig,
+) => request<T>('PATCH', url, data, config);
 
-  return axios
-    .patch(`${DEFAULT_API_URL}/${url}`, data, {
-      headers,
-      withCredentials: true,
-    })
-    .then((response) => response.data)
-    .catch((error) => {
-      throw error;
-    });
-};
-
-/**
- * Handles DELETE API requests.
- * @param url - The API endpoint to delete from.
- * @returns A promise resolving to the response data.
- */
-export const deleteApiHandler = <T>(url: string): Promise<T> => {
-  const headers: AxiosHeadersConfig = {
-    'Content-Type': 'application/json',
-  };
-
-  return axios
-    .delete(`${DEFAULT_API_URL}/${url}`, { headers, withCredentials: true })
-    .then((response) => response.data)
-    .catch((error) => {
-      throw error;
-    });
-};
-
-/**
- * Handles GET API requests.
- * @param url - The API endpoint to get data from.
- * @returns A promise resolving to the response data.
- */
-export const getApiHandler = <T>(url: string): Promise<T> => {
-  const headers: AxiosHeadersConfig = {
-    'Content-Type': 'application/json',
-  };
-
-  return axios
-    .get(`${DEFAULT_API_URL}/${url}`, { headers, withCredentials: true })
-    .then((response) => response.data)
-    .catch((error) => {
-      throw error;
-    });
-};
+export const deleteApiHandler = <T>(url: string, config?: AxiosRequestConfig) =>
+  request<T>('DELETE', url, undefined, config);
