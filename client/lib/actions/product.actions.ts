@@ -47,5 +47,7 @@ export const getOneProduct = async (
     product: any;
   }>
 > => {
-  return await getApiHandler(`product/${productId}`);
+  return await getApiHandler(`product/${productId}`, {
+    withCredentials: false,
+  });
 };
