@@ -4,6 +4,8 @@ import React from 'react';
 
 import { useZoomLevel } from '@/hooks/core/useZoomLevel.hook';
 
+import Header from '@/components/layout/header/Header';
+
 const UserLayoutWrapper: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -15,8 +17,8 @@ const UserLayoutWrapper: React.FC<{
         isZoomedOut ? 'm-auto max-w-screen-2xl' : ''
       }`}
     >
-      <p>Navbar</p>
-      <main className="flex-1 base-margin">{children}</main>
+      <Header />
+      <main className="flex-1 base-padding">{children}</main>
       <p>Footer</p>
     </div>
   );
