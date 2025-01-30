@@ -23,12 +23,12 @@ type AddressMutationPayload =
     }
   | {
       type: AddressMutationType.UPDATE;
-      id: string;
+      addressId: string;
       data: Partial<CreateAddressDto>;
     }
   | {
       type: AddressMutationType.DELETE;
-      id: string;
+      addressId: string;
     };
 
 const useAddressMutation = (
@@ -44,9 +44,9 @@ const useAddressMutation = (
       case AddressMutationType.CREATE:
         return createAddress(payload.data);
       case AddressMutationType.UPDATE:
-        return updateAddress(payload.data, payload.id);
+        return updateAddress(payload.data, payload.addressId);
       case AddressMutationType.DELETE:
-        return deleteAddress(payload.id);
+        return deleteAddress(payload.addressId);
       default:
         throw new Error('Invalid mutation type');
     }
