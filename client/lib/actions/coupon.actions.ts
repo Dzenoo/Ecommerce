@@ -21,14 +21,14 @@ export const deleteCoupon = async (
   return await deleteApiHandler(`coupon/delete/${couponId}`);
 };
 
-export const getCoupons = async (query: {
+export const getCoupons = async (query?: {
   active?: boolean;
 }): Promise<
   ServerResponse<{
     coupons: ICoupon;
   }>
 > => {
-  return getApiHandler(`coupon/all?active=${query.active}`);
+  return getApiHandler(`coupon/all?active=${query?.active}`);
 };
 
 export const getCoupon = async (
