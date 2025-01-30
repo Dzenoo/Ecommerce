@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
-
 import { DropzoneOptions, useDropzone } from 'react-dropzone';
 
 const useUpload = (options: DropzoneOptions) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const onDrop = React.useCallback((acceptedFiles: File[]) => {
-    setSelectedFile(acceptedFiles[0]);
-  }, []);
+  const onDrop = React.useCallback(
+    (acceptedFiles: File[]) => {
+      if (options.multiple) {
+        setSelectedFiles((prev) => [...prev, ...acceptedFiles]);
+      } else {
+        setSelectedFiles(acceptedFiles);
+      }
+    },
+    [options.multiple],
+  );
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, ...options });
+  const { getRootProps, getInputProps } = useDropzone({
+    ...options,
+    onDrop,
+  });
 
   const restart = () => {
-    setSelectedFile(null);
+    setSelectedFiles([]);
   };
 
   return {
-    selectedFile,
+    selectedFiles,
     getInputProps,
     getRootProps,
     restart,
