@@ -36,7 +36,7 @@ const NavActions: React.FC = () => {
   ];
 
   return (
-    <div className="base-padding bg-white py-5 flex items-center justify-between gap-10">
+    <div className="base-padding flex items-center justify-between gap-10 bg-white py-5">
       <div>
         <Logo />
       </div>

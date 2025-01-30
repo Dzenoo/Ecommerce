@@ -19,7 +19,7 @@ const NavBanner: React.FC = () => {
   ];
 
   return (
-    <div className="base-padding bg-[#F5F5F5] py-2 flex items-center justify-between gap-5">
+    <div className="base-padding flex items-center justify-between gap-5 bg-[#F5F5F5] py-2">
       <div>
         <h2 className="text-muted-foreground font-light">
           Welcome to DzenvoShop!
