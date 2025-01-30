@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 
-import AuthLayoutWrapper from './_AuthLayoutWrapper';
 import '../globals.css';
+import AuthLayoutWrapper from './_AuthLayoutWrapper';
+import { Toaster } from '@/components/ui/info/toaster';
 
 export const metadata: Metadata = {
   icons: 'favicon.ico',
@@ -21,6 +22,7 @@ export default function AuthLayout({
     <html lang="en">
       <body className={GeistSans.className}>
         <AuthLayoutWrapper>{children}</AuthLayoutWrapper>
+        <Toaster />
       </body>
     </html>
   );

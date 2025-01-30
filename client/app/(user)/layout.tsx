@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans';
 
 import '../globals.css';
 import UserLayoutWrapper from './_UserLayoutWrapper';
+import { Toaster } from '@/components/ui/info/toaster';
 
 export const metadata: Metadata = {
   icons: 'favicon.ico',
@@ -21,6 +22,7 @@ export default function SeekersLayout({
     <html lang="en">
       <body className={GeistSans.className}>
         <UserLayoutWrapper>{children}</UserLayoutWrapper>
+        <Toaster />
       </body>
     </html>
   );

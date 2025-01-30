@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 
-import AdminLayoutWrapper from './_AdminLayoutWrapper';
 import '../globals.css';
+import AdminLayoutWrapper from './_AdminLayoutWrapper';
+import { Toaster } from '@/components/ui/info/toaster';
 
 export const metadata: Metadata = {
   icons: 'favicon.ico',
@@ -21,6 +22,7 @@ export default function AdminLayout({
     <html lang="en">
       <body className={GeistSans.className}>
         <AdminLayoutWrapper>{children}</AdminLayoutWrapper>
+        <Toaster />
       </body>
     </html>
   );
