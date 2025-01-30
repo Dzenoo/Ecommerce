@@ -1,18 +1,36 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 import { getAddresses } from '@/lib/actions/address.actions';
+
 import { GetAddressesDto } from '@/types';
 
-const useAddressQuery = (query?: GetAddressesDto) => {
+enum AddressQueryType {
+  GET_ADDRESSES = 'GET_ADDRESSES',
+}
+
+type AddressQueryPayload = {
+  type: AddressQueryType.GET_ADDRESSES;
+  query: GetAddressesDto;
+};
+
+const useAddressQuery = (
+  payload: AddressQueryPayload,
+  options?: Omit<UseQueryOptions<any, any, any>, 'queryKey' | 'queryFn'>,
+) => {
   return useQuery({
-    queryFn: () => {
-      return getAddresses({
-        page: Number(query?.page) || 1,
-        limit: Number(query?.limit) || 10,
-      });
+    queryKey: ['address', payload] as const,
+    queryFn: async ({ queryKey }) => {
+      const [, payload] = queryKey as [string, AddressQueryPayload];
+
+      switch (payload.type) {
+        case AddressQueryType.GET_ADDRESSES:
+          return getAddresses(payload.query);
+        default:
+          throw new Error('Invalid query type');
+      }
     },
-    queryKey: ['address'],
+    ...options,
   });
 };
 
-export { useAddressQuery };
+export { useAddressQuery, AddressQueryType };

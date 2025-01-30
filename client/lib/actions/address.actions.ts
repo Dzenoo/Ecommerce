@@ -26,14 +26,15 @@ export const deleteAddress = async (
   return await deleteApiHandler(`address/delete/${addressId}`);
 };
 
-export const getAddresses = async ({
-  page = 1,
-  limit = 10,
-}: GetAddressesDto): Promise<
+export const getAddresses = async (
+  query: GetAddressesDto,
+): Promise<
   ServerResponse<{
     addresses: IAddress[];
     totalAddresses: number;
   }>
 > => {
-  return await getApiHandler(`address/all?page=${page}&limit=${limit}`);
+  return await getApiHandler(
+    `address/all?page=${query.page}&limit=${query.limit}`,
+  );
 };

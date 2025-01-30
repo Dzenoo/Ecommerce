@@ -24,7 +24,7 @@ const useProductQuery = (
   options?: Omit<UseQueryOptions<any, any, any>, 'queryKey' | 'queryFn'>,
 ) => {
   return useQuery({
-    queryKey: ['coupons', payload] as const,
+    queryKey: ['products', payload] as const,
     queryFn: async ({ queryKey }) => {
       const [, payload] = queryKey as [string, ProductQueryPayload];
 
