@@ -1,4 +1,4 @@
-import { CreateOrderDto, GetOrdersDto, IOrder } from '@/types';
+import { CreateOrderDto, GetOrdersDto, IOrder, UpdateOrderDto } from '@/types';
 
 import {
   deleteApiHandler,
@@ -63,7 +63,7 @@ export const getOrder = async (
 };
 
 export const updateOrderStatus = async (
-  data: {},
+  data: UpdateOrderDto,
   orderId: string,
 ): Promise<
   ServerResponse<{

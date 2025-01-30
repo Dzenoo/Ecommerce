@@ -15,6 +15,10 @@ export type CreateOrderDto = {
   manualShippingAddress?: any;
 };
 
+export type UpdateOrderDto = {
+  status?: 'Pending' | 'Processing' | 'Shipped' | 'Delivered';
+};
+
 export interface IOrder {
   _id: string;
   user: IUser | string;
