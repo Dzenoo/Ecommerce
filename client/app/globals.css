@@ -68,6 +68,6 @@
   }
 
   .base-padding {
-    @apply px-28 overflow-auto;
+    @apply overflow-auto px-28;
   }
 }

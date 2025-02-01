@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBanner from './NavBanner';
 import NavActions from './actions/NavActions';
-import NavList from './NavList';
+import NavList from './list/NavList';
 
 const Header: React.FC = () => {
   return (
