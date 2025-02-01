@@ -11,12 +11,12 @@ const RootLayoutWrapper: React.FC<{
 
   return (
     <div
-      className={`flex flex-col min-h-screen ${
+      className={`flex min-h-screen flex-col ${
         isZoomedOut ? 'm-auto max-w-screen-2xl' : ''
       }`}
     >
       <Header />
-      <main className="base-padding flex-1">{children}</main>
+      <main className="base-padding flex-1 py-5">{children}</main>
     </div>
   );
 };
