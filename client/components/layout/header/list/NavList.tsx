@@ -18,7 +18,7 @@ const NavList: React.FC = () => {
       <NavigationMenu>
         <NavigationMenuList>
           {CATEGORY_LIST.map(({ id, name, subcategories }) => (
-            <NavigationMenuItem key={id} className="relative">
+            <NavigationMenuItem key={id}>
               <NavigationMenuTrigger>{name}</NavigationMenuTrigger>
               <NavigationMenuContent className="p-4">
                 <ul className="flex min-w-52 flex-col gap-2">
