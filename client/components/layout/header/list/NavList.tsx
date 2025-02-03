@@ -14,7 +14,7 @@ import {
 
 const NavList: React.FC = () => {
   return (
-    <nav className="border-y px-24 py-5">
+    <nav className="border-y bg-white px-24 py-5">
       <NavigationMenu>
         <NavigationMenuList>
           {CATEGORY_LIST.map(({ id, name, subcategories }) => (
