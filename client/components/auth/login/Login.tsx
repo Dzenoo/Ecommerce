@@ -7,22 +7,15 @@ import Logo from '@/components/layout/header/Logo';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/layout/card';
 
 const Login: React.FC = () => {
   return (
     <Card className="flex flex-col sm:w-[450px]">
-      <CardHeader className="space-y-4">
+      <CardHeader className="m-auto space-y-4">
         <Logo />
-        <CardTitle>Login</CardTitle>
-        <CardDescription>
-          Welcome back! Please enter your email and password to access your
-          account.
-        </CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <LoginForm />

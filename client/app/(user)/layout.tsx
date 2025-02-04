@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SeekersLayout({
+export default function UsersLayout({
   children,
 }: {
   children: React.ReactNode;
