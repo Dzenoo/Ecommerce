@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 
+import { QueryContextProvider } from '@/context/react-query-client';
+
 import '../globals.css';
 import UserLayoutWrapper from './_UserLayoutWrapper';
 import { Toaster } from '@/components/ui/info/toaster';
@@ -21,8 +23,10 @@ export default function UsersLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <UserLayoutWrapper>{children}</UserLayoutWrapper>
-        <Toaster />
+        <QueryContextProvider>
+          <UserLayoutWrapper>{children}</UserLayoutWrapper>
+          <Toaster />
+        </QueryContextProvider>
       </body>
     </html>
   );

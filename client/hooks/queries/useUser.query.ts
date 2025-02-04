@@ -15,7 +15,7 @@ const useUserQuery = (
   options?: Omit<UseQueryOptions<any, any, any>, 'queryKey' | 'queryFn'>,
 ) => {
   return useQuery({
-    queryKey: ['users', payload] as const,
+    queryKey: ['user', payload] as const,
     queryFn: async ({ queryKey }) => {
       const [, payload] = queryKey as [string, UserQueryPayload];
 

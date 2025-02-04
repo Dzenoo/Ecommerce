@@ -22,13 +22,18 @@ export const signin = async (
   return await postApiHandler('auth/signin', data);
 };
 
-export const getCurrentUser = async (): Promise<
-  ServerResponse<{
-    userId: string;
-    role: 'user' | 'admin';
-  }>
-> => {
-  return await getApiHandler('auth/me');
+export const getCurrentUser = async (): Promise<ServerResponse<{
+  userId: string;
+  role: 'user' | 'admin';
+}> | null> => {
+  try {
+    return await getApiHandler('auth/me');
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      return null;
+    }
+    throw error;
+  }
 };
 
 export const logout = async (): Promise<ServerResponse> => {
