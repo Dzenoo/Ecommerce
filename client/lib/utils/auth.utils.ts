@@ -1,3 +1,4 @@
+import { AdminNavbarActions, UserNavbarActions } from '@/constants';
 import { jwtDecode } from 'jwt-decode';
 
 /**
@@ -8,3 +9,9 @@ import { jwtDecode } from 'jwt-decode';
 export function decodeToken(token: string): any {
   return jwtDecode(token);
 }
+
+export const getRoleSpecificData = (isAdmin: boolean) => {
+  return {
+    actions: isAdmin ? AdminNavbarActions : UserNavbarActions,
+  };
+};

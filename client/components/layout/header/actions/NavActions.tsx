@@ -2,41 +2,25 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Heart, ShoppingBag, User } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 
 import { useCurrentUser } from '@/hooks/queries/useCurrentUser.query';
+import { useAuth } from '@/hooks/core/useAuth.hook';
+import { getRoleSpecificData } from '@/lib/utils';
 
 import Logo from '../Logo';
 
 import { Input } from '@/components/ui/form/input';
 import { Button } from '@/components/ui/buttons/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/info/tooltip';
+import { TooltipWrapper } from '@/components/ui/info/tooltip-wrapper';
 
 const NavActions: React.FC = () => {
   const { data: currentUser } = useCurrentUser();
+  const { logout } = useAuth();
 
   const isAuthenticated = currentUser !== null;
   const isAdmin = currentUser?.role === 'admin';
-
-  const NavActionsLinks = [
-    {
-      id: 1,
-      icon: <Heart width={20} height={20} />,
-      text: 'Wishlist',
-      href: '/wishlist',
-    },
-    {
-      id: 2,
-      icon: <ShoppingBag width={20} height={20} />,
-      text: 'Cart',
-      href: '/cart',
-    },
-  ];
+  const roleData = getRoleSpecificData(isAdmin);
 
   return (
     <div className="base-padding flex items-center justify-between gap-10 bg-white py-5">
@@ -49,24 +33,25 @@ const NavActions: React.FC = () => {
       </div>
 
       <div className="flex items-center gap-5">
-        {NavActionsLinks.map(({ id, icon, text, href }) => (
-          <TooltipProvider key={id} delayDuration={400}>
-            <Tooltip>
-              <TooltipTrigger>
-                <Link href={href}>{icon}</Link>
-              </TooltipTrigger>
-              <TooltipContent>{text}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        {roleData.actions.map(({ id, icon, text, href }) => (
+          <TooltipWrapper key={id} tooltip={text}>
+            <Link href={href}>{React.createElement(icon)}</Link>
+          </TooltipWrapper>
         ))}
 
         {!isAuthenticated && (
           <Link href="/signup">
             <Button>
-              <User width={20} height={20} />
+              <User />
               Signup
             </Button>
           </Link>
+        )}
+
+        {isAuthenticated && (
+          <button onClick={logout}>
+            <LogOut />
+          </button>
         )}
       </div>
     </div>
