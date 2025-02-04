@@ -19,7 +19,7 @@ const NavActions: React.FC = () => {
   const { logout } = useAuth();
 
   const isAuthenticated = currentUser !== null;
-  const isAdmin = currentUser?.role === 'admin';
+  const isAdmin = currentUser?.user.role === 'admin';
   const roleData = getRoleSpecificData(isAdmin);
 
   return (

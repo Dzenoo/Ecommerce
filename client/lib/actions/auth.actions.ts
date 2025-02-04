@@ -23,8 +23,10 @@ export const signin = async (
 };
 
 export const getCurrentUser = async (): Promise<ServerResponse<{
-  userId: string;
-  role: 'user' | 'admin';
+  user: {
+    userId: string;
+    role: 'user' | 'admin';
+  };
 }> | null> => {
   try {
     return await getApiHandler('auth/me');
