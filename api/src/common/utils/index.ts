@@ -7,7 +7,7 @@ import * as sanitizeHtml from 'sanitize-html';
  * @returns The redirect URL corresponding to the user's role.
  */
 export const getRedirectUrl = (role: 'user' | 'admin'): string => {
-  return `${process.env.FRONTEND_URL}/${role === 'admin' ? 'admin' : 'user'}`;
+  return `${process.env.FRONTEND_URL}/${role === 'admin' ? 'dashboard' : ''}`;
 };
 
 /**

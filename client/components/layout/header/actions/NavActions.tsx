@@ -30,8 +30,8 @@ const NavActions: React.FC = () => {
     {
       id: 3,
       icon: <User width={20} height={20} />,
-      text: 'Register',
-      href: '/register',
+      text: 'Signup',
+      href: '/signup',
     },
   ];
 
