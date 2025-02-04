@@ -56,8 +56,8 @@ export class GoogleAuthService {
     firstName: string,
     lastName: string,
   ) {
-    const existingUser = this.userService.findOneByEmail(email);
-
+    const existingUser = await this.userService.findOneByEmail(email);
+    
     if (existingUser) {
       throw new ConflictException(
         'This email is already registered. Please log in instead.',
