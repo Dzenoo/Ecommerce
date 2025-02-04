@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 
+import { QueryContextProvider } from '@/context/react-query-client';
+
 import '../globals.css';
 import AuthLayoutWrapper from './_AuthLayoutWrapper';
 import { Toaster } from '@/components/ui/info/toaster';
@@ -21,8 +23,10 @@ export default function AuthLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <AuthLayoutWrapper>{children}</AuthLayoutWrapper>
-        <Toaster />
+        <QueryContextProvider>
+          <AuthLayoutWrapper>{children}</AuthLayoutWrapper>
+          <Toaster />
+        </QueryContextProvider>
       </body>
     </html>
   );

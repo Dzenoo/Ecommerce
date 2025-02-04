@@ -12,7 +12,13 @@ export const signup = async (
   return await postApiHandler('auth/signup', data);
 };
 
-export const signin = async (data: SigninDto): Promise<ServerResponse> => {
+export const signin = async (
+  data: SigninDto,
+): Promise<
+  ServerResponse<{
+    redirectUrl?: string;
+  }>
+> => {
   return await postApiHandler('auth/signin', data);
 };
 
