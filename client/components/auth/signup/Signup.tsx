@@ -13,7 +13,7 @@ import {
 
 const Signup: React.FC = () => {
   return (
-    <Card className="flex flex-col lg:w-[600px]">
+    <Card className="flex flex-col lg:w-[500px]">
       <CardHeader className="m-auto space-y-4">
         <Logo />
       </CardHeader>
