@@ -4,6 +4,8 @@ import React from 'react';
 
 import { useZoomLevel } from '@/hooks/core/useZoomLevel.hook';
 
+import NavActions from '@/components/layout/header/actions/NavActions';
+
 const AdminLayoutWrapper: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -11,11 +13,12 @@ const AdminLayoutWrapper: React.FC<{
 
   return (
     <div
-      className={`flex flex-col min-h-screen ${
+      className={`flex min-h-screen flex-col ${
         isZoomedOut ? 'm-auto max-w-screen-2xl' : ''
       }`}
     >
-      <main className="flex-1">{children}</main>
+      <NavActions showSearch={false} />
+      <main className="base-padding flex-1 py-5">{children}</main>
     </div>
   );
 };

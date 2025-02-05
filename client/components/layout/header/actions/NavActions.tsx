@@ -14,7 +14,9 @@ import { NavSearch } from './search/NavSearch';
 import { Button } from '@/components/ui/buttons/button';
 import { TooltipWrapper } from '@/components/ui/info/tooltip-wrapper';
 
-const NavActions: React.FC = () => {
+const NavActions: React.FC<{
+  showSearch?: boolean;
+}> = ({ showSearch = true }) => {
   const { data: currentUser } = useCurrentUser();
   const { logout } = useAuth();
 
@@ -28,9 +30,11 @@ const NavActions: React.FC = () => {
         <Logo />
       </div>
 
-      <div className="basis-1/3">
-        <NavSearch />
-      </div>
+      {showSearch && (
+        <div className="basis-1/3">
+          <NavSearch />
+        </div>
+      )}
 
       <div className="flex items-center gap-5">
         {roleData.actions.map(({ id, icon, text, href }) => (

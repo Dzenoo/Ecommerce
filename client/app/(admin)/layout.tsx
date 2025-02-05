@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans';
 import '../globals.css';
 import AdminLayoutWrapper from './_AdminLayoutWrapper';
 import { Toaster } from '@/components/ui/info/toaster';
+import { QueryContextProvider } from '@/context/react-query-client';
 
 export const metadata: Metadata = {
   icons: 'favicon.ico',
@@ -21,8 +22,10 @@ export default function AdminLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <AdminLayoutWrapper>{children}</AdminLayoutWrapper>
-        <Toaster />
+        <QueryContextProvider>
+          <AdminLayoutWrapper>{children}</AdminLayoutWrapper>
+          <Toaster />
+        </QueryContextProvider>
       </body>
     </html>
   );

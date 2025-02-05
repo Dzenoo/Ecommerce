@@ -1,59 +1,85 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-import { decodeToken } from './lib/utils';
+import { getValidUserRole } from './lib/utils';
 
-const protectedRoutes = {
-  '/dashboard': ['admin'],
-  '/products': ['user'],
-};
+type UserRole = 'admin' | 'user' | null;
 
+const rootConfig = {
+  protectedRoutes: [
+    {
+      pattern: /^\/dashboard(\/.*)?$/,
+      allowedRoles: new Set(['admin']),
+      redirect: '/login',
+    },
+  ],
+  authPages: new Set(['/login', '/signup']),
+  roleRedirects: new Map([
+    ['admin', '/dashboard'],
+    ['user', '/'],
+  ]),
+  defaultRedirect: '/',
+  authRedirect: '/login',
+} as const;
+
+// ==================== Middleware ====================
 export default function middleware(req: NextRequest) {
-  const token = req.cookies.get('access_token');
+  const currentPath = req.nextUrl.pathname;
+  const token = req.cookies.get('access_token')?.value;
+  const userRole = getValidUserRole(token);
 
-  const userType = token ? decodeToken(token.value)?.role : null;
-  const pathname = req.nextUrl.pathname;
+  if (!token) return handleUnauthenticated(currentPath, req);
 
-  if (!token) {
-    return handleUnauthenticatedAccess(pathname, req);
+  if (isAuthPage(currentPath)) {
+    return redirectAuthenticatedUser(userRole, req);
   }
 
-  if (isAuthPage(pathname)) {
-    return redirectLoggedInUser(userType, req);
+  const routeAccess = checkRouteAccess(currentPath, userRole);
+  if (!routeAccess.isAllowed) {
+    return NextResponse.redirect(
+      new URL(routeAccess.redirectPath || rootConfig.authRedirect, req.url),
+    );
   }
 
-  return handleProtectedRoutes(pathname, userType, req);
-}
-
-function handleUnauthenticatedAccess(pathname: string, req: NextRequest) {
-  if (isAuthPage(pathname)) {
-    return NextResponse.next();
-  }
-  return NextResponse.redirect(new URL('/login', req.url));
-}
-
-function isAuthPage(pathname: string) {
-  return pathname === '/login' || pathname === '/signup';
-}
-
-function redirectLoggedInUser(userType: string, req: NextRequest) {
-  const redirectUrl = userType === 'admin' ? '/dashboard' : '/';
-  return NextResponse.redirect(new URL(redirectUrl, req.url));
-}
-
-function handleProtectedRoutes(
-  pathname: string,
-  userType: string,
-  req: NextRequest,
-) {
-  for (const [route, roles] of Object.entries(protectedRoutes)) {
-    if (pathname.startsWith(route) && !roles.includes(userType)) {
-      const redirectUrl = userType === 'admin' ? '/dashboard' : '/';
-      return NextResponse.redirect(new URL(redirectUrl, req.url));
-    }
-  }
   return NextResponse.next();
 }
 
+function isAuthPage(path: string): boolean {
+  return rootConfig.authPages.has(path);
+}
+
+function handleUnauthenticated(path: string, req: NextRequest): NextResponse {
+  return isAuthPage(path)
+    ? NextResponse.next()
+    : NextResponse.redirect(new URL(rootConfig.authRedirect, req.url));
+}
+
+function redirectAuthenticatedUser(
+  role: UserRole,
+  req: NextRequest,
+): NextResponse {
+  const redirectPath =
+    rootConfig.roleRedirects.get(role || 'user') || rootConfig.defaultRedirect;
+  return NextResponse.redirect(new URL(redirectPath, req.url));
+}
+
+function checkRouteAccess(
+  path: string,
+  role: UserRole,
+): {
+  isAllowed: boolean;
+  redirectPath?: string;
+} {
+  for (const route of rootConfig.protectedRoutes) {
+    if (route.pattern.test(path)) {
+      return {
+        isAllowed: route.allowedRoles.has(role || ''),
+        redirectPath: route.redirect,
+      };
+    }
+  }
+  return { isAllowed: true };
+}
+
 export const config = {
-  matcher: ['/login', '/signup'],
+  matcher: ['/login', '/signup', '/dashboard/:path*'],
 };
