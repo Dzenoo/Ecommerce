@@ -9,8 +9,8 @@ import { useAuth } from '@/hooks/core/useAuth.hook';
 import { getRoleSpecificData } from '@/lib/utils';
 
 import Logo from '../Logo';
+import { NavSearch } from './search/NavSearch';
 
-import { Input } from '@/components/ui/form/input';
 import { Button } from '@/components/ui/buttons/button';
 import { TooltipWrapper } from '@/components/ui/info/tooltip-wrapper';
 
@@ -23,13 +23,13 @@ const NavActions: React.FC = () => {
   const roleData = getRoleSpecificData(isAdmin);
 
   return (
-    <div className="base-padding flex items-center justify-between gap-10 bg-white py-5">
+    <div className="base-padding hide-scrollbar flex items-center justify-between gap-10 bg-white py-5">
       <div>
         <Logo />
       </div>
 
       <div className="basis-1/3">
-        <Input showSearchIcon placeholder="Enter concept to search...." />
+        <NavSearch />
       </div>
 
       <div className="flex items-center gap-5">
