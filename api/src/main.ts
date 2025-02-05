@@ -1,3 +1,4 @@
+import * as csrf from 'csurf';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import helmet from 'helmet';
@@ -13,12 +14,13 @@ async function initializeServer() {
   app.enableCors({
     origin: ['http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
     credentials: true,
   });
 
   app.use(helmet());
   app.use(cookieParser());
+  app.use(csrf({ cookie: true }));
   app.use(compression());
   app.useGlobalPipes(
     new ValidationPipe({

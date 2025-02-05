@@ -12,28 +12,46 @@ const apiClient = axios.create({
   },
 });
 
+let csrfToken: string | null = null;
+async function fetchCsrfToken() {
+  if (!csrfToken) {
+    try {
+      const response = await apiClient.get<{ csrfToken: string }>(
+        '/auth/csrf-token',
+      );
+      csrfToken = response.data.csrfToken;
+    } catch (error) {
+      console.error('Failed to fetch CSRF token:', error);
+      throw error;
+    }
+  }
+  return csrfToken;
+}
+
+apiClient.interceptors.request.use(
+  async (config) => {
+    const method = config.method?.toUpperCase();
+    if (method === 'POST' || method === 'PATCH' || method === 'DELETE') {
+      const token = await fetchCsrfToken();
+      config.headers['X-CSRF-Token'] = token;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
 async function request<T>(
   method: HttpMethod,
   url: string,
   data?: unknown,
   config?: AxiosRequestConfig,
 ): Promise<T> {
-  const headers: any = { ...config?.headers };
-
-  if (data instanceof FormData) {
-    delete headers['Content-Type'];
-  }
-
   try {
     const response: AxiosResponse<T> = await apiClient.request({
       method,
       url,
       data,
       ...config,
-      headers: {
-        ...headers,
-        ...config?.headers,
-      },
     });
     return response.data;
   } catch (error) {

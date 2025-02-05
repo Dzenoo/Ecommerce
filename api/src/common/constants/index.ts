@@ -21,9 +21,9 @@ export const PASSWORD_REGEX =
  * @property {number} maxAge - The maximum age of the cookie in milliseconds.
  */
 export const cookieOptions: CookieOptions = {
-  httpOnly: false, // Set to true in production
-  secure: false, // Set to true in production
-  //   sameSite: 'strict',
+  httpOnly: false, // 🚨 Change to true in production
+  secure: false, // 🚨 Change to true in production
+  // sameSite: 'strict',
   maxAge: 3600000,
   path: '/',
 };

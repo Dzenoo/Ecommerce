@@ -93,4 +93,10 @@ export class AuthController {
     if (!user) throw new UnauthorizedException('Unauthorized!');
     return { user };
   }
+
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
+  @Get('/csrf-token')
+  getCsrfToken(@Req() req: Request) {
+    return { csrfToken: req.csrfToken() };
+  }
 }
