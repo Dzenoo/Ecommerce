@@ -13,7 +13,7 @@ const AdminLayoutWrapper: React.FC<{
       <DashboardSidebar />
       <SidebarInset>
         <AdminHeader />
-        <main className="flex flex-1 p-4 pt-0">{children}</main>
+        <div className="flex-1 p-4 pt-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
