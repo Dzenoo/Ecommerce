@@ -38,14 +38,6 @@ const Overview: React.FC<OverviewProps> = ({
     return 'neutral';
   };
 
-  const formatCurrency = (value: number): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
   const formatIncrementValue = (value: number): string => {
     return `${value > 0 ? '+' : ''}${value}`;
   };
@@ -64,7 +56,6 @@ const Overview: React.FC<OverviewProps> = ({
       increment: ordersThisMonth,
       icon: ClipboardList,
       iconColor: '#008ECC',
-      formatter: (v: number) => v.toLocaleString(),
     },
     {
       id: 2,
@@ -73,7 +64,6 @@ const Overview: React.FC<OverviewProps> = ({
       increment: productsThisMonth,
       icon: ShoppingBag,
       iconColor: '#F59E0B',
-      formatter: (v: number) => v.toLocaleString(),
     },
     {
       id: 3,
@@ -82,7 +72,6 @@ const Overview: React.FC<OverviewProps> = ({
       increment: revenueThisMonth,
       icon: DollarSign,
       iconColor: '#10B981',
-      formatter: formatCurrency,
     },
     {
       id: 4,
@@ -91,16 +80,14 @@ const Overview: React.FC<OverviewProps> = ({
       increment: usersThisMonth,
       icon: Users,
       iconColor: '#EF4444',
-      formatter: (v: number) => v.toLocaleString(),
     },
   ];
 
   return (
     <div className="grid grid-cols-4 gap-5 max-xl:grid-cols-2 max-md:grid-cols-1">
       {cardConfig.map(
-        ({ id, title, value, increment, icon: Icon, iconColor, formatter }) => {
+        ({ id, title, value, increment, icon: Icon, iconColor }) => {
           const status = getIncrementStatus(increment);
-          const displayValue = formatter(value);
 
           return (
             <Card className="shadow-none" key={id}>
@@ -118,7 +105,7 @@ const Overview: React.FC<OverviewProps> = ({
                     >
                       <Icon className="size-5" />
                     </div>
-                    <p className="text-xl font-semibold">{displayValue}</p>
+                    <p className="text-xl font-semibold">${value}</p>
                   </div>
                   <div>
                     <p
