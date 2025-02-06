@@ -96,7 +96,7 @@ const Overview: React.FC<OverviewProps> = ({
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-3 max-xl:grid-cols-2 max-md:grid-cols-1">
+    <div className="grid grid-cols-4 gap-5 max-xl:grid-cols-2 max-md:grid-cols-1">
       {cardConfig.map(
         ({ id, title, value, increment, icon: Icon, iconColor, formatter }) => {
           const status = getIncrementStatus(increment);
