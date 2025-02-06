@@ -37,11 +37,12 @@ const NavActions: React.FC<{
       )}
 
       <div className="flex items-center gap-5">
-        {roleData.actions.map(({ id, icon, text, href }) => (
-          <TooltipWrapper key={id} tooltip={text}>
-            <Link href={href}>{React.createElement(icon)}</Link>
-          </TooltipWrapper>
-        ))}
+        {isAuthenticated &&
+          roleData.actions.map(({ id, icon, text, href }) => (
+            <TooltipWrapper key={id} tooltip={text}>
+              <Link href={href}>{React.createElement(icon)}</Link>
+            </TooltipWrapper>
+          ))}
 
         {!isAuthenticated && (
           <Link href="/signup">

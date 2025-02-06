@@ -1,25 +1,21 @@
-'use client';
-
 import React from 'react';
 
-import { useZoomLevel } from '@/hooks/core/useZoomLevel.hook';
+import DashboardSidebar from '@/components/admin/dashboard/sidebar/DashboardSidebar';
+import AdminHeader from '@/components/admin/dashboard/sidebar/AdminHeader';
 
-import NavActions from '@/components/layout/header/actions/NavActions';
+import { SidebarInset, SidebarProvider } from '@/components/ui/layout/sidebar';
 
 const AdminLayoutWrapper: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const isZoomedOut = useZoomLevel();
-
   return (
-    <div
-      className={`flex min-h-screen flex-col ${
-        isZoomedOut ? 'm-auto max-w-screen-2xl' : ''
-      }`}
-    >
-      <NavActions showSearch={false} />
-      <main className="base-padding flex-1 py-5">{children}</main>
-    </div>
+    <SidebarProvider>
+      <DashboardSidebar />
+      <SidebarInset>
+        <AdminHeader />
+        <main className="flex flex-1 p-4 pt-0">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 
