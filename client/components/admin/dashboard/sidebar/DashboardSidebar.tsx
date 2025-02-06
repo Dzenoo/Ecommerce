@@ -17,13 +17,13 @@ import {
 const DashboardSidebar: React.FC = () => {
   return (
     <Sidebar>
-      <SidebarHeader className="pt-5">
+      <SidebarHeader>
         <Branding />
       </SidebarHeader>
       <SidebarContent>
         <SidebarNav />
       </SidebarContent>
-      <SidebarFooter className="pb-5">
+      <SidebarFooter>
         <UserInfo />
       </SidebarFooter>
       <SidebarRail />
