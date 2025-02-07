@@ -54,7 +54,7 @@ const transformData = (customers: typeof SampleCustomers) => {
 const chartConfig = {
   newCustomers: {
     label: 'New Customers',
-    color: 'hsl(var(--chart-1))',
+    color: '#2563eb',
   },
 } satisfies ChartConfig;
 

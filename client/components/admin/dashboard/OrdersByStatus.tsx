@@ -40,19 +40,19 @@ const pieChartData = Object.entries(groupedData).map(([status, count]) => ({
 const chartConfig = {
   pending: {
     label: 'Pending',
-    color: 'hsl(var(--chart-1))',
+    color: '#2563eb',
   },
   completed: {
     label: 'Completed',
-    color: 'hsl(var(--chart-2))',
+    color: '#60a8fb',
   },
   shipped: {
     label: 'Shipped',
-    color: 'hsl(var(--chart-3))',
+    color: '#3b86f7',
   },
   cancelled: {
     label: 'Cancelled',
-    color: 'hsl(var(--chart-4))',
+    color: '#bedcfe',
   },
 } satisfies ChartConfig;
 

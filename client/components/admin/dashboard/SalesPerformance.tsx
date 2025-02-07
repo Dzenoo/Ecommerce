@@ -63,7 +63,7 @@ const chartData = aggregateOrdersByMonth(SampleOrders);
 const chartConfig = {
   totalSales: {
     label: 'Total Sales',
-    color: 'hsl(var(--chart-1))',
+    color: '#2563eb',
   },
 } satisfies ChartConfig;
 
@@ -106,7 +106,7 @@ const SalesPerformance: React.FC = () => {
               dataKey="totalSales"
               type="monotone"
               fill="var(--color-totalSales)"
-              fillOpacity={0.4}
+              fillOpacity={0.2}
               stroke="var(--color-totalSales)"
               stackId="a"
             />
