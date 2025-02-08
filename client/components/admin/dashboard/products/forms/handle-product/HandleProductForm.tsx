@@ -183,19 +183,21 @@ const HandleProductForm: React.FC = () => {
               </FormItem>
             )}
           />
-          <Separator />
           {selectedCategory?.fields && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-medium">Product Attributes</h3>
-              {selectedCategory.fields.map((field) => (
-                <FormFieldRenderer<ProductFormValues>
-                  key={field.name}
-                  control={form.control}
-                  name={`attributes.${field.name}`}
-                  fieldConfig={field}
-                />
-              ))}
-            </div>
+            <>
+              <Separator />
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium">Product Attributes</h3>
+                {selectedCategory.fields.map((field) => (
+                  <FormFieldRenderer<ProductFormValues>
+                    key={field.name}
+                    control={form.control}
+                    name={`attributes.${field.name}`}
+                    fieldConfig={field}
+                  />
+                ))}
+              </div>
+            </>
           )}
         </div>
         <div></div>
