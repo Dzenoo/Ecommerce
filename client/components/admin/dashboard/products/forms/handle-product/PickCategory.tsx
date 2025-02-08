@@ -16,7 +16,7 @@ import {
 
 type PickCategoryProps = {
   categories: Category[];
-  selectedCategory: number | null;
+  selectedCategory: number;
   onSelect: (category: Category) => void;
   triggerLabel?: string;
 };

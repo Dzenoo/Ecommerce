@@ -99,13 +99,12 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
+  .tiptap-bulletlist {
+    @apply list-disc pl-5;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  .tiptap-bulletlist li {
+    @apply list-item;
   }
 }
