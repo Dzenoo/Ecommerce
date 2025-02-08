@@ -11,6 +11,9 @@ export type CategoryField = {
   type: FieldType;
   required?: boolean;
   options?: string[];
+  defaultValue?: string | number;
+  description?: string;
+  placeholder?: string;
 };
 
 export type Category = {

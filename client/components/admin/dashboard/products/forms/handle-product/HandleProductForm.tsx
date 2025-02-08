@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,10 +8,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Category } from '@/types';
 import { CATEGORY_LIST } from '@/constants';
 import { CreateProductSchema } from '@/lib/zod/product.zod';
+import { getCategoryById } from '@/lib/utils';
 
 import PickCategory from './PickCategory';
 import Description from './Description';
+import FormFieldRenderer from './FormFieldRenderer';
 
+import { Separator } from '@/components/ui/layout/separator';
 import { Input } from '@/components/ui/form/input';
 import {
   Form,
@@ -23,10 +26,10 @@ import {
   FormMessage,
 } from '@/components/ui/form/form';
 
-type HandleProductFormProps = {};
+type ProductFormValues = z.infer<typeof CreateProductSchema>;
 
-const HandleProductForm: React.FC<HandleProductFormProps> = () => {
-  const form = useForm<z.infer<typeof CreateProductSchema>>({
+const HandleProductForm: React.FC = () => {
+  const form = useForm<ProductFormValues>({
     mode: 'onChange',
     resolver: zodResolver(CreateProductSchema),
     defaultValues: {
@@ -40,11 +43,32 @@ const HandleProductForm: React.FC<HandleProductFormProps> = () => {
     },
   });
 
+  const selectedCategoryId = form.watch('category');
+
+  const selectedCategory = React.useMemo(
+    () => getCategoryById(selectedCategoryId, CATEGORY_LIST),
+    [selectedCategoryId],
+  );
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const initialAttributes = selectedCategory.fields?.reduce(
+        (acc, field) => {
+          acc[field.name] = field.defaultValue || '';
+          return acc;
+        },
+        {} as Record<string, any>,
+      );
+
+      form.setValue('attributes', initialAttributes || {});
+    }
+  }, [selectedCategory, form]);
+
   const handleCategorySelect = (category: Category) => {
     form.setValue('category', category.id);
   };
 
-  const handleFormSubmit = (data: z.infer<typeof CreateProductSchema>) => {
+  const handleFormSubmit = (data: ProductFormValues) => {
     console.log(data);
   };
 
@@ -159,6 +183,20 @@ const HandleProductForm: React.FC<HandleProductFormProps> = () => {
               </FormItem>
             )}
           />
+          <Separator />
+          {selectedCategory?.fields && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-medium">Product Attributes</h3>
+              {selectedCategory.fields.map((field) => (
+                <FormFieldRenderer<ProductFormValues>
+                  key={field.name}
+                  control={form.control}
+                  name={`attributes.${field.name}`}
+                  fieldConfig={field}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div></div>
       </form>
