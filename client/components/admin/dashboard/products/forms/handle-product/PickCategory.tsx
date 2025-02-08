@@ -51,13 +51,16 @@ const PickCategory: React.FC<PickCategoryProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="min-w-[150px]">
+        <Button
+          variant="outline"
+          className="min-w-[150px] justify-start px-3 py-1 text-sm"
+        >
           {selectedCategory
             ? getCategoryById(selectedCategory)?.name
             : triggerLabel}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] max-w-none p-0">
         {renderMenuItems(categories)}
       </DropdownMenuContent>
     </DropdownMenu>

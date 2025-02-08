@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,8 +26,6 @@ import {
 type HandleProductFormProps = {};
 
 const HandleProductForm: React.FC<HandleProductFormProps> = () => {
-  const [selectedCategory, setSelectedCategory] = useState<number>(0);
-
   const form = useForm<z.infer<typeof CreateProductSchema>>({
     mode: 'onChange',
     resolver: zodResolver(CreateProductSchema),
@@ -37,13 +35,13 @@ const HandleProductForm: React.FC<HandleProductFormProps> = () => {
       description: '',
       stock: 0,
       discount: 0,
-      category: '',
+      category: 0,
       attributes: {},
     },
   });
 
   const handleCategorySelect = (category: Category) => {
-    setSelectedCategory(category.id);
+    form.setValue('category', category.id);
   };
 
   const handleFormSubmit = (data: z.infer<typeof CreateProductSchema>) => {
@@ -91,6 +89,76 @@ const HandleProductForm: React.FC<HandleProductFormProps> = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Please enter starting price of product.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="grid grid-cols-2 gap-5">
+            <FormField
+              control={form.control}
+              name="stock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock Quantity</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    You can add stock quantity of product.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="discount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Add potential discount for this product.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormField
+            control={form.control}
+            name="category"
+            render={() => (
+              <FormItem className="flex flex-col space-y-3">
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <PickCategory
+                    categories={CATEGORY_LIST}
+                    selectedCategory={form.getValues('category')}
+                    onSelect={handleCategorySelect}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Select a category for this product.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div></div>
       </form>
@@ -99,11 +167,3 @@ const HandleProductForm: React.FC<HandleProductFormProps> = () => {
 };
 
 export default HandleProductForm;
-
-{
-  /* <PickCategory
-        categories={CATEGORY_LIST}
-        selectedCategory={selectedCategory}
-        onSelect={handleCategorySelect}
-      /> */
-}

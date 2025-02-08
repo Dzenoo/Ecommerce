@@ -44,9 +44,9 @@ export class CreateProductDto {
   @Transform(({ value }) => Number(value))
   discount?: number;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  @Transform(({ value }) => sanitizeInput(value))
+  @Transform(({ value }) => Number(value))
   category: string;
 
   @IsObject()
