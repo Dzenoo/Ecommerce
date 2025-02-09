@@ -199,8 +199,7 @@ const HandleProductForm: React.FC = () => {
             </>
           )}
         </div>
-        <button type="submit">Submit</button>
-        <div></div>
+        <div>Images Upload</div>
       </form>
     </Form>
   );
