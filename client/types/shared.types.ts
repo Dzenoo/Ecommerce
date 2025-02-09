@@ -10,12 +10,10 @@ export type CategoryField = {
   label: string;
   type: FieldType;
   required?: boolean;
-  options?:
-    | string[]
-    | {
-        label: string;
-        value: string;
-      }[];
+  options?: {
+    label: string;
+    value: string;
+  }[];
   defaultValue?: string | number;
   description?: string;
   placeholder?: string;

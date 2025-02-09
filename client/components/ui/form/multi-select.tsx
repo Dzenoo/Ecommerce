@@ -80,7 +80,6 @@ export const MultiSelect = React.forwardRef<
     const [selectedValues, setSelectedValues] =
       React.useState<string[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-    const [isAnimating, setIsAnimating] = React.useState(false);
 
     const handleInputKeyDown = (
       event: React.KeyboardEvent<HTMLInputElement>,
@@ -153,10 +152,7 @@ export const MultiSelect = React.forwardRef<
                     return (
                       <Badge
                         key={value}
-                        className={cn(
-                          isAnimating ? 'animate-bounce' : '',
-                          multiSelectVariants({ variant }),
-                        )}
+                        className={cn(multiSelectVariants({ variant }))}
                       >
                         {IconComponent && (
                           <IconComponent className="mr-2 h-4 w-4" />
@@ -176,7 +172,6 @@ export const MultiSelect = React.forwardRef<
                     <Badge
                       className={cn(
                         'border-foreground/1 bg-transparent text-foreground hover:bg-transparent',
-                        isAnimating ? 'animate-bounce' : '',
                         multiSelectVariants({ variant }),
                       )}
                     >
