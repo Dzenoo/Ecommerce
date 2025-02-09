@@ -1,5 +1,5 @@
 import { Category } from '@/types';
-import { getColorsLabelAndValue } from '@/lib/utils';
+import { getColorsLabelAndValue, getSizesLabelAndValue } from '@/lib/utils';
 
 export const CATEGORY_LIST: Category[] = [
   {
@@ -19,13 +19,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: [
-              { label: 'S', value: 'small' },
-              { label: 'M', value: 'medium' },
-              { label: 'L', value: 'large' },
-              { label: 'XL', value: 'extra-large' },
-              { label: 'XXL', value: 'extra-extra-large' },
-            ],
+            options: getSizesLabelAndValue(),
             description: 'Choose the appropriate size for the t-shirt.',
           },
           {
@@ -74,13 +68,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: [
-              { label: 'S', value: 'small' },
-              { label: 'M', value: 'medium' },
-              { label: 'L', value: 'large' },
-              { label: 'XL', value: 'extra-large' },
-              { label: 'XXL', value: 'extra-extra-large' },
-            ],
+            options: getSizesLabelAndValue(),
             description: 'Choose the appropriate size for the hoodie.',
           },
           {
@@ -127,13 +115,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: [
-              { label: 'S', value: 'small' },
-              { label: 'M', value: 'medium' },
-              { label: 'L', value: 'large' },
-              { label: 'XL', value: 'extra-large' },
-              { label: 'XXL', value: 'extra-extra-large' },
-            ],
+            options: getSizesLabelAndValue(),
             description: 'Choose the appropriate size for the jacket.',
           },
           {
@@ -170,13 +152,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: [
-              { label: 'S', value: 'small' },
-              { label: 'M', value: 'medium' },
-              { label: 'L', value: 'large' },
-              { label: 'XL', value: 'extra-large' },
-              { label: 'XXL', value: 'extra-extra-large' },
-            ],
+            options: getSizesLabelAndValue(),
             description: 'Choose the appropriate size for the tracksuit.',
           },
           {
