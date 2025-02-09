@@ -19,11 +19,11 @@ export const CreateProductSchema = z.object({
     .min(10, 'Minimum 10 characters')
     .max(1000, 'Maximum 1000 characters'),
 
-  stock: z.coerce.number().min(0).optional(),
+  stock: z.coerce.number().min(0).max(100).optional(),
 
   discount: z.coerce.number().min(0).max(100).optional(),
 
-  category: z.coerce.number(),
+  category: z.coerce.number().min(1, 'Category must be selected'),
 
   attributes: z.any(),
 });

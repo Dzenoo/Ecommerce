@@ -3,14 +3,19 @@ export enum Role {
   Admin = 'admin',
 }
 
-export type FieldType = 'text' | 'number' | 'select' | 'checkbox';
+export type FieldType = 'text' | 'select' | 'multi';
 
 export type CategoryField = {
   name: string;
   label: string;
   type: FieldType;
   required?: boolean;
-  options?: string[];
+  options?:
+    | string[]
+    | {
+        label: string;
+        value: string;
+      }[];
   defaultValue?: string | number;
   description?: string;
   placeholder?: string;

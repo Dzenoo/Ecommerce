@@ -30,7 +30,6 @@ type ProductFormValues = z.infer<typeof CreateProductSchema>;
 
 const HandleProductForm: React.FC = () => {
   const form = useForm<ProductFormValues>({
-    mode: 'onChange',
     resolver: zodResolver(CreateProductSchema),
     defaultValues: {
       name: '',
@@ -200,6 +199,7 @@ const HandleProductForm: React.FC = () => {
             </>
           )}
         </div>
+        <button type="submit">Submit</button>
         <div></div>
       </form>
     </Form>

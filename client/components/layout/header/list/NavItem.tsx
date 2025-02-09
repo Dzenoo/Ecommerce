@@ -26,7 +26,7 @@ const NavItem: React.FC<NavItemProps> = ({ category, depth = 0 }) => {
       <Link
         href={category.href}
         className={cn(
-          'hover:bg-accent hover:text-accent-foreground flex w-full items-center justify-between rounded-xl py-2 text-sm font-medium transition-colors',
+          'flex w-full items-center justify-between rounded-md py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
           depth > 0 ? 'pl-4 pr-2' : 'px-4',
         )}
         tabIndex={depth > 0 ? -1 : 0}
@@ -40,7 +40,7 @@ const NavItem: React.FC<NavItemProps> = ({ category, depth = 0 }) => {
       {hasSubcategories && (
         <ul
           className={cn(
-            'bg-popover absolute top-0 min-w-52 rounded-xl border p-2 shadow-lg transition-opacity',
+            'absolute top-0 min-w-52 rounded-md border bg-popover p-2 shadow-lg transition-opacity',
             depth === 0 ? 'left-full ml-1' : 'right-full -ml-1',
             isOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
           )}

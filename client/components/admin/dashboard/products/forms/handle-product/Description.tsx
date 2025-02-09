@@ -42,7 +42,7 @@ const Description: React.FC<DescriptionProps> = ({ form }) => {
     editorProps: {
       attributes: {
         class:
-          'flex h-52 w-full max-w-full rounded-xl border border-input bg-transparent px-3 py-4 text-sm overflow-auto shadow-sm transition-colors break-words whitespace-break-spaces hover:border-gray-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring',
+          'flex h-52 w-full max-w-full rounded-md border border-input bg-transparent px-3 py-4 text-sm overflow-auto shadow-sm transition-colors hover:border-gray-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring',
       },
     },
     content: '<p>Type description here</p>',

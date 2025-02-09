@@ -2,6 +2,7 @@ import { Controller, Control, FieldPath, FieldValues } from 'react-hook-form';
 
 import { CategoryField } from '@/types';
 
+import { MultiSelect } from '@/components/ui/form/multi-select';
 import { Input } from '@/components/ui/form/input';
 import {
   FormItem,
@@ -36,39 +37,7 @@ const FormFieldRenderer = <T extends FieldValues>({
     render={({ field }) => (
       <FormItem>
         <FormLabel>{fieldConfig.label || fieldConfig.name}</FormLabel>
-        <FormControl>
-          {fieldConfig.type === 'select' ? (
-            <Select
-              onValueChange={field.onChange}
-              value={field.value?.toString() ?? ''}
-              defaultValue={fieldConfig.defaultValue?.toString()}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={`Select ${fieldConfig.label}`} />
-              </SelectTrigger>
-              <SelectContent>
-                {fieldConfig.options?.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <Input
-              type={fieldConfig.type}
-              placeholder={fieldConfig.placeholder}
-              value={field.value ?? ''}
-              onChange={(e) => {
-                if (fieldConfig.type === 'number') {
-                  field.onChange(e.target.valueAsNumber);
-                } else {
-                  field.onChange(e.target.value);
-                }
-              }}
-            />
-          )}
-        </FormControl>
+        <FormControl>{renderComponent(fieldConfig, field)}</FormControl>
         {fieldConfig.description && (
           <FormDescription>{fieldConfig.description}</FormDescription>
         )}
@@ -77,5 +46,70 @@ const FormFieldRenderer = <T extends FieldValues>({
     )}
   />
 );
+
+const renderComponent = (fieldConfig: CategoryField, field: any) => {
+  switch (fieldConfig.type) {
+    case 'text': {
+      return (
+        <Input
+          type={fieldConfig.type}
+          placeholder={fieldConfig.placeholder}
+          value={field.value ?? ''}
+          onChange={(e) => field.onChange(e.target.value)}
+        />
+      );
+    }
+
+    case 'select': {
+      return (
+        <Select
+          onValueChange={field.onChange}
+          value={field.value?.toString() ?? ''}
+          defaultValue={fieldConfig.defaultValue?.toString()}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={`Select ${fieldConfig.label}`} />
+          </SelectTrigger>
+          <SelectContent>
+            {fieldConfig.options?.map((option) =>
+              typeof option === 'string' ? (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ) : (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ),
+            )}
+          </SelectContent>
+        </Select>
+      );
+    }
+
+    case 'multi': {
+      const options =
+        fieldConfig.options?.map((option) =>
+          typeof option === 'string'
+            ? { label: option, value: option }
+            : option,
+        ) ?? [];
+
+      return (
+        <MultiSelect
+          options={options}
+          onValueChange={field.onChange}
+          placeholder={fieldConfig.placeholder}
+          variant="inverted"
+          maxCount={3}
+        />
+      );
+    }
+
+    default: {
+      return null;
+    }
+  }
+};
 
 export default FormFieldRenderer;

@@ -30,8 +30,19 @@ export const CATEGORY_LIST: Category[] = [
               {
                 name: 'material',
                 label: 'Material',
-                type: 'text',
+                type: 'multi',
                 required: true,
+                placeholder: 'Select material',
+                options: [
+                  {
+                    label: 'Cloth',
+                    value: 'cloth',
+                  },
+                  {
+                    label: 'Leather',
+                    value: 'leather',
+                  },
+                ],
               },
             ],
           },
