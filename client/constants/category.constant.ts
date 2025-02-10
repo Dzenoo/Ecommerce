@@ -35,7 +35,7 @@ export const CATEGORY_LIST: Category[] = [
             name: 'fit',
             label: 'Fit',
             type: 'select',
-            required: false,
+            required: true,
             options: [
               { label: 'Regular', value: 'regular' },
               { label: 'Slim', value: 'slim' },
@@ -83,7 +83,7 @@ export const CATEGORY_LIST: Category[] = [
             name: 'material',
             label: 'Material',
             type: 'select',
-            required: false,
+            required: true,
             options: [
               { label: 'Cotton', value: 'cotton' },
               { label: 'Fleece', value: 'fleece' },
@@ -95,7 +95,7 @@ export const CATEGORY_LIST: Category[] = [
             name: 'style',
             label: 'Style',
             type: 'select',
-            required: false,
+            required: true,
             options: [
               { label: 'Pullover', value: 'pullover' },
               { label: 'Zip-Up', value: 'zip-up' },

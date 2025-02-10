@@ -42,11 +42,7 @@ export const CreateProductSchema = z
       })
       .min(1, 'Category must be selected.'),
 
-    attributes: z
-      .record(z.union([z.string(), z.number(), z.boolean()]), {
-        invalid_type_error: 'Attributes must be an object.',
-      })
-      .default({}),
+    attributes: z.record(z.any()).optional(),
   })
   .superRefine((data, ctx) => {
     if (data.discount !== undefined && data.discount > data.price) {

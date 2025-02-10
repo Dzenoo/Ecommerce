@@ -9,10 +9,12 @@ import { Category } from '@/types';
 import { CATEGORY_LIST } from '@/constants';
 import { CreateProductSchema } from '@/lib/zod/product.zod';
 import { getCategoryById } from '@/lib/utils';
+import { useToast } from '@/hooks/core/use-toast';
+import { validateObject } from '@/validations/validate-object';
 
 import PickCategory from './PickCategory';
 import Description from './Description';
-import FormFieldRenderer from './FormFieldRenderer';
+import FormFieldRenderer from '../../../../../../helpers/FormFieldRenderer';
 
 import { Separator } from '@/components/ui/layout/separator';
 import { Input } from '@/components/ui/form/input';
@@ -29,6 +31,8 @@ import {
 type ProductFormValues = z.infer<typeof CreateProductSchema>;
 
 const HandleProductForm: React.FC = () => {
+  const { toast } = useToast();
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(CreateProductSchema),
     defaultValues: {
@@ -68,7 +72,25 @@ const HandleProductForm: React.FC = () => {
   };
 
   const handleFormSubmit = (data: ProductFormValues) => {
-    console.log(data);
+    const attributes = form.getValues('attributes') as Record<string, any>;
+    let errors: string[] = [];
+
+    if (selectedCategory?.fields && selectedCategory.fields.length > 0) {
+      errors = validateObject(attributes, selectedCategory.fields);
+    }
+
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast({
+          title: 'Error',
+          description: error,
+          variant: 'destructive',
+        });
+      });
+      return;
+    }
+
+    console.log('Form submitted successfully with data:', data);
   };
 
   return (
@@ -199,7 +221,9 @@ const HandleProductForm: React.FC = () => {
             </>
           )}
         </div>
-        <div>Images Upload</div>
+        <div>
+          <button type="submit">Submit</button>Images Upload
+        </div>
       </form>
     </Form>
   );

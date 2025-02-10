@@ -49,6 +49,7 @@ const Description: React.FC<DescriptionProps> = ({ form }) => {
     onUpdate: ({ editor }) => {
       form.setValue('description', editor.getHTML());
     },
+    immediatelyRender: false,
   });
 
   if (!editor) return null;

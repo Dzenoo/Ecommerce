@@ -56,6 +56,12 @@ export class ProductService {
 
     const imagesUrls = uploadedImages.map((image) => image.url);
 
+    if (body.discount > body.price) {
+      throw new NotAcceptableException(
+        'Discount cannot be greater than price.',
+      );
+    }
+
     const product = await this.productModel.create({
       ...body,
       images: imagesUrls,
