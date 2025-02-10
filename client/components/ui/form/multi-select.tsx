@@ -54,7 +54,6 @@ interface MultiSelectProps
   placeholder?: string;
   maxCount?: number;
   modalPopover?: boolean;
-  asChild?: boolean;
   className?: string;
 }
 
@@ -71,7 +70,6 @@ export const MultiSelect = React.forwardRef<
       placeholder = 'Select options',
       maxCount = 3,
       modalPopover = false,
-      asChild = false,
       className,
       ...props
     },

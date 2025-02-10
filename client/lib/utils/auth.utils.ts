@@ -37,6 +37,7 @@ export const getValidUserRole = (token?: string) => {
     const payload = decodeToken(token);
     return payload?.role || null;
   } catch (error) {
+    console.error(error);
     return null;
   }
 };
