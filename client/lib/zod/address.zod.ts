@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import { z } from 'zod';
 
 export const CreateAddressSchema = z.object({
   addressLine1: z

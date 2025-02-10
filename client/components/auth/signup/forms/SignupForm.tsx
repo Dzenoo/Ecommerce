@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
-import zod from 'zod';
+import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,7 +27,7 @@ import {
 
 const SignupForm: React.FC = () => {
   const { toast } = useToast();
-  const form = useForm<zod.infer<typeof SignupSchema>>({
+  const form = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
       first_name: '',
@@ -51,7 +52,7 @@ const SignupForm: React.FC = () => {
     },
   });
 
-  const onSubmit = async (values: zod.infer<typeof SignupSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SignupSchema>) => {
     await signupMutation(values);
   };
 
@@ -144,9 +145,11 @@ const SignupForm: React.FC = () => {
             type="button"
             onClick={() => handleGoogleSignUp()}
           >
-            <img
+            <Image
               src="/icons/google-icon-logo-transparent.png"
               alt="google-logo"
+              width={20}
+              height={20}
             />
             Sign up with Google
           </Button>

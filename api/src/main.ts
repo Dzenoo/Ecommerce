@@ -1,6 +1,6 @@
-import * as csrf from 'csurf';
-import * as cookieParser from 'cookie-parser';
-import * as compression from 'compression';
+import csrf from 'csurf';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
 import helmet from 'helmet';
 
 import { NestFactory } from '@nestjs/core';

@@ -1,6 +1,7 @@
 import React from 'react';
+import Image from 'next/image';
 
-import zod from 'zod';
+import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,7 +28,7 @@ const LoginForm: React.FC = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const form = useForm<zod.infer<typeof LoginSchema>>({
+  const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
@@ -52,7 +53,7 @@ const LoginForm: React.FC = () => {
     },
   });
 
-  const onSubmit = async (data: zod.infer<typeof LoginSchema>) => {
+  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     await loginToAccount(data);
   };
 
@@ -112,9 +113,11 @@ const LoginForm: React.FC = () => {
             type="button"
             onClick={() => handleGoogleSignIn()}
           >
-            <img
+            <Image
               src="/icons/google-icon-logo-transparent.png"
               alt="google-logo"
+              width={20}
+              height={20}
             />
             Sign in with Google
           </Button>
