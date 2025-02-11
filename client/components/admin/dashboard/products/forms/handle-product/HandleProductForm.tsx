@@ -28,6 +28,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form/form';
+import { Button } from '@/components/ui/buttons/button';
 
 type ProductFormValues = z.infer<typeof CreateProductSchema>;
 
@@ -239,7 +240,7 @@ const HandleProductForm: React.FC = () => {
             </>
           )}
         </div>
-        <div>
+        <div className="space-y-5">
           <FormField
             control={form.control}
             name="images"
@@ -257,7 +258,10 @@ const HandleProductForm: React.FC = () => {
               </FormItem>
             )}
           />
-          <button type="submit">Submit</button>
+
+          <Button type="submit" disabled={!form.formState.isValid}>
+            {form.formState.isSubmitting ? 'Submitting...' : 'Save'}
+          </Button>
         </div>
       </form>
     </Form>
