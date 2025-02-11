@@ -1,11 +1,13 @@
 import { z } from 'zod';
+import { sanitizeInput } from '../utils';
 
 export const CreateProductSchema = z
   .object({
     name: z
       .string({ required_error: 'Product name is required.' })
       .min(2, 'Product name must have at least 2 characters.')
-      .max(25, 'Product name must have at most 25 characters.'),
+      .max(25, 'Product name must have at most 25 characters.')
+      .transform((value) => sanitizeInput(value)),
 
     price: z.coerce
       .number({

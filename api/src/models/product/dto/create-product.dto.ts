@@ -47,7 +47,7 @@ export class CreateProductDto {
   @IsNumber()
   @IsNotEmpty()
   @Transform(({ value }) => Number(value))
-  category: string;
+  category: number;
 
   @IsObject()
   @IsNotEmpty()
