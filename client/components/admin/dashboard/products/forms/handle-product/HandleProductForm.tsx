@@ -38,23 +38,6 @@ type ProductFormValues = z.infer<typeof CreateProductSchema>;
 const HandleProductForm: React.FC = () => {
   const { toast } = useToast();
 
-  const { mutateAsync: createProductMutation, status } = useMutation({
-    mutationFn: (data: FormData) => createProduct(data),
-    onSuccess: (response) => {
-      toast({
-        title: `Success ${response.statusCode} 🚀`,
-        description: response.message,
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: (error as any)?.response?.data?.message,
-        variant: 'destructive',
-      });
-    },
-  });
-
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(CreateProductSchema),
     defaultValues: {
@@ -66,6 +49,25 @@ const HandleProductForm: React.FC = () => {
       category: 0,
       attributes: {},
       images: [],
+    },
+  });
+
+  const { mutateAsync: createProductMutation, status } = useMutation({
+    mutationFn: (data: FormData) => createProduct(data),
+    onSuccess: (response) => {
+      form.reset();
+
+      toast({
+        title: `Success ${response.statusCode} 🚀`,
+        description: response.message,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: (error as any)?.response?.data?.message,
+        variant: 'destructive',
+      });
     },
   });
 
