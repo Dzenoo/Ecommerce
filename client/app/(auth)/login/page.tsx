@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { useMounted } from '@/hooks/core/useMounted.hook';
@@ -31,4 +31,12 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const SuspenseLoginPage = () => {
+  return (
+    <Suspense>
+      <LoginPage />
+    </Suspense>
+  );
+};
+
+export default SuspenseLoginPage;
