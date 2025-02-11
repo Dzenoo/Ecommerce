@@ -35,11 +35,11 @@ const Uploader = <T extends FieldValues>({
     maxSize: 5 * 1024 * 1024,
     accept: {
       'image/*': ['.png', '.jpg', '.jpeg'],
-      'application/pdf': ['.pdf'],
     },
   },
 }: UploaderProps<T>) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
 
   const {
     field: { onChange },
@@ -51,35 +51,38 @@ const Uploader = <T extends FieldValues>({
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: file.type.startsWith('image/')
-            ? URL.createObjectURL(file)
-            : undefined,
-        }),
-      );
-
       const updatedFiles = dropzoneOptions.multiple
-        ? [...files, ...newFiles].slice(0, dropzoneOptions.maxFiles)
-        : newFiles.slice(0, 1);
+        ? [...files, ...acceptedFiles].slice(
+            0,
+            dropzoneOptions.maxFiles || Infinity,
+          )
+        : acceptedFiles.slice(0, 1);
 
       setFiles(updatedFiles);
-      onChange(dropzoneOptions.multiple ? updatedFiles : updatedFiles[0]);
+      onChange(updatedFiles);
       onFilesChange?.(updatedFiles);
+
+      const imagePreviews = acceptedFiles
+        .filter((file) => file.type.startsWith('image/'))
+        .map((file) => URL.createObjectURL(file));
+      setPreviews((prev) =>
+        [...prev, ...imagePreviews].slice(0, dropzoneOptions.maxFiles),
+      );
     },
     [dropzoneOptions, files, onChange, onFilesChange],
   );
 
-  const { getInputProps, getRootProps, isDragActive } = useDropzone({
-    ...dropzoneOptions,
-    onDrop,
-  });
-
-  const removeFile = (fileToRemove: FileWithPreview) => {
+  const removeFile = (fileToRemove: File) => {
     const updatedFiles = files.filter((file) => file !== fileToRemove);
     setFiles(updatedFiles);
     onChange(dropzoneOptions.multiple ? updatedFiles : null);
     onFilesChange?.(updatedFiles);
+
+    const index = files.indexOf(fileToRemove);
+    if (index !== -1 && fileToRemove.type.startsWith('image/')) {
+      URL.revokeObjectURL(previews[index]);
+      setPreviews((prev) => prev.filter((_, i) => i !== index));
+    }
   };
 
   useEffect(() => {
@@ -88,6 +91,11 @@ const Uploader = <T extends FieldValues>({
         (file) => file.preview && URL.revokeObjectURL(file.preview),
       );
   }, []);
+
+  const { getInputProps, getRootProps, isDragActive } = useDropzone({
+    ...dropzoneOptions,
+    onDrop,
+  });
 
   return (
     <div className="w-full space-y-2">
@@ -130,9 +138,9 @@ const Uploader = <T extends FieldValues>({
               className="flex items-center justify-between rounded-md border border-gray-200 p-2"
             >
               <div className="flex items-center space-x-2">
-                {file.preview ? (
+                {file.type.startsWith('image/') ? (
                   <img
-                    src={file.preview}
+                    src={previews[index]}
                     alt={file.name}
                     className="h-10 w-10 rounded object-cover"
                   />

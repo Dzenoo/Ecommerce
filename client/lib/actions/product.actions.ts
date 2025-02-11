@@ -10,7 +10,9 @@ import {
 export const createProduct = async (
   data: FormData,
 ): Promise<ServerResponse> => {
-  return await postApiHandler('product/create', data);
+  return await postApiHandler('product/create', data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
 };
 
 export const updateProduct = async (

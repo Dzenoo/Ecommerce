@@ -29,11 +29,31 @@ import {
   FormMessage,
 } from '@/components/ui/form/form';
 import { Button } from '@/components/ui/buttons/button';
+import { useMutation } from '@tanstack/react-query';
+
+import { createProduct } from '@/lib/actions/product.actions';
 
 type ProductFormValues = z.infer<typeof CreateProductSchema>;
 
 const HandleProductForm: React.FC = () => {
   const { toast } = useToast();
+
+  const { mutateAsync: createProductMutation, status } = useMutation({
+    mutationFn: (data: FormData) => createProduct(data),
+    onSuccess: (response) => {
+      toast({
+        title: `Success ${response.statusCode} 🚀`,
+        description: response.message,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: (error as any)?.response?.data?.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(CreateProductSchema),
@@ -49,6 +69,7 @@ const HandleProductForm: React.FC = () => {
     },
   });
 
+  const isLoading = status === 'pending';
   const selectedCategoryId = form.watch('category');
 
   const selectedCategory = React.useMemo(
@@ -74,7 +95,7 @@ const HandleProductForm: React.FC = () => {
     form.setValue('category', category.id);
   };
 
-  const handleFormSubmit = (data: ProductFormValues) => {
+  const handleFormSubmit = async (data: ProductFormValues) => {
     const attributes = form.getValues('attributes') as Record<string, any>;
     let errors: string[] = [];
 
@@ -95,21 +116,22 @@ const HandleProductForm: React.FC = () => {
 
     const formData = new FormData();
 
-    const { images, ...rest } = data;
-    Object.entries(rest).forEach(([key, value]) => {
-      formData.append(
-        key,
-        typeof value === 'object' ? JSON.stringify(value) : String(value),
-      );
+    Object.entries(data).forEach(([key, value]) => {
+      if (key !== 'images') {
+        formData.append(
+          key,
+          typeof value === 'object' ? JSON.stringify(value) : String(value),
+        );
+      }
     });
 
-    if (images) {
-      images.forEach((file) => {
+    if (data.images && Array.isArray(data.images)) {
+      data.images.forEach((file) => {
         formData.append('images', file);
       });
     }
 
-    console.log([...formData.entries()]);
+    await createProductMutation(formData);
   };
 
   return (
@@ -260,7 +282,9 @@ const HandleProductForm: React.FC = () => {
           />
 
           <Button type="submit" disabled={!form.formState.isValid}>
-            {form.formState.isSubmitting ? 'Submitting...' : 'Save'}
+            {form.formState.isSubmitting && isLoading
+              ? 'Submitting...'
+              : 'Save'}
           </Button>
         </div>
       </form>
