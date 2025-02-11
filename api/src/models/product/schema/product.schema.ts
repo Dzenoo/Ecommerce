@@ -41,13 +41,13 @@ export class Product {
   averageRating?: number;
 
   @Prop({
-    type: String,
+    type: Number,
     required: true,
   })
-  category: string;
+  category: number;
 
   @Prop({
-    type: mongoose.Schema.Types.Mixed, // Stores dynamic attributes
+    type: mongoose.Schema.Types.Mixed,
     default: {},
   })
   attributes: Record<string, any>;
