@@ -1,5 +1,18 @@
 import { Category } from '@/types';
-import { getColorsLabelAndValue, getSizesLabelAndValue } from '@/lib/utils';
+import { COLORS, SIZES } from './shared.constant';
+
+const formattedColors = COLORS.map((color) => ({
+  label: color
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' '),
+  value: color,
+}));
+
+const formattedSizes = SIZES.map((size) => ({
+  label: size,
+  value: size.toLowerCase(),
+}));
 
 export const CATEGORY_LIST: Category[] = [
   {
@@ -19,7 +32,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: getSizesLabelAndValue(),
+            options: formattedSizes,
             description: 'Choose the appropriate size for the t-shirt.',
           },
           {
@@ -27,7 +40,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Color',
             type: 'multi',
             required: true,
-            options: getColorsLabelAndValue(),
+            options: formattedColors,
             placeholder: 'Select colors',
             description: 'Choose one or more colors for the t-shirt.',
           },
@@ -68,7 +81,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: getSizesLabelAndValue(),
+            options: formattedSizes,
             description: 'Choose the appropriate size for the hoodie.',
           },
           {
@@ -76,7 +89,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Color',
             type: 'multi',
             required: true,
-            options: getColorsLabelAndValue(),
+            options: formattedColors,
             description: 'Choose one or more colors for the hoodie.',
           },
           {
@@ -115,7 +128,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: getSizesLabelAndValue(),
+            options: formattedSizes,
             description: 'Choose the appropriate size for the jacket.',
           },
           {
@@ -123,7 +136,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Color',
             type: 'multi',
             required: true,
-            options: getColorsLabelAndValue(),
+            options: formattedColors,
             description: 'Choose one or more colors for the jacket.',
           },
           {
@@ -152,7 +165,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Size',
             type: 'multi',
             required: true,
-            options: getSizesLabelAndValue(),
+            options: formattedSizes,
             description: 'Choose the appropriate size for the tracksuit.',
           },
           {
@@ -160,7 +173,7 @@ export const CATEGORY_LIST: Category[] = [
             label: 'Color',
             type: 'multi',
             required: true,
-            options: getColorsLabelAndValue(),
+            options: formattedColors,
             description: 'Choose one or more colors for the tracksuit.',
           },
         ],

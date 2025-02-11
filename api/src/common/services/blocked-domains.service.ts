@@ -1,6 +1,6 @@
-import exactDomains from 'disposable-email-domains/index.json';
+import * as exactDomains from 'disposable-email-domains/index.json';
 
-import wildcardDomains from 'disposable-email-domains/wildcard.json';
+import * as wildcardDomains from 'disposable-email-domains/wildcard.json';
 
 import { Injectable } from '@nestjs/common';
 

@@ -148,8 +148,8 @@ const SignupForm: React.FC = () => {
             <Image
               src="/icons/google-icon-logo-transparent.png"
               alt="google-logo"
-              width={20}
-              height={20}
+              width={40}
+              height={40}
             />
             Sign up with Google
           </Button>
