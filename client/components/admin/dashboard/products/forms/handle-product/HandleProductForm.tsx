@@ -15,6 +15,7 @@ import { validateObject } from '@/validations/validate-object';
 import PickCategory from './PickCategory';
 import Description from './Description';
 import FormFieldRenderer from '../../../../../../helpers/FormFieldRenderer';
+import Uploader from '@/components/shared/Uploader';
 
 import { Separator } from '@/components/ui/layout/separator';
 import { Input } from '@/components/ui/form/input';
@@ -43,6 +44,7 @@ const HandleProductForm: React.FC = () => {
       discount: 0,
       category: 0,
       attributes: {},
+      images: [],
     },
   });
 
@@ -90,7 +92,23 @@ const HandleProductForm: React.FC = () => {
       return;
     }
 
-    console.log('Form submitted successfully with data:', data);
+    const formData = new FormData();
+
+    const { images, ...rest } = data;
+    Object.entries(rest).forEach(([key, value]) => {
+      formData.append(
+        key,
+        typeof value === 'object' ? JSON.stringify(value) : String(value),
+      );
+    });
+
+    if (images) {
+      images.forEach((file) => {
+        formData.append('images', file);
+      });
+    }
+
+    console.log([...formData.entries()]);
   };
 
   return (
@@ -222,7 +240,24 @@ const HandleProductForm: React.FC = () => {
           )}
         </div>
         <div>
-          <button type="submit">Submit</button>Images Upload
+          <FormField
+            control={form.control}
+            name="images"
+            render={({ fieldState }) => (
+              <FormItem>
+                <FormControl>
+                  <Uploader
+                    name="images"
+                    control={form.control}
+                    label="Product Images"
+                    dropzoneOptions={{ multiple: true }}
+                  />
+                </FormControl>
+                <FormMessage>{fieldState.error?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
+          <button type="submit">Submit</button>
         </div>
       </form>
     </Form>

@@ -43,6 +43,11 @@ export const CreateProductSchema = z
       .min(1, 'Category must be selected.'),
 
     attributes: z.record(z.any()).optional(),
+
+    images: z
+      .array(z.any())
+      .min(1, 'At least one image is required.')
+      .max(10, 'Cannot upload more than 10 images.'),
   })
   .superRefine((data, ctx) => {
     if (data.discount !== undefined && data.discount > data.price) {
