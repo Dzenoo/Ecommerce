@@ -18,6 +18,7 @@ import PickCategory from './PickCategory';
 import Description from './Description';
 import FormFieldRenderer from '../../../../../../helpers/FormFieldRenderer';
 import Uploader from '@/components/shared/Uploader';
+import Loader from '@/components/ui/info/loader';
 
 import { Separator } from '@/components/ui/layout/separator';
 import { Button } from '@/components/ui/buttons/button';
@@ -284,9 +285,11 @@ const HandleProductForm: React.FC = () => {
           />
 
           <Button type="submit" disabled={!form.formState.isValid}>
-            {form.formState.isSubmitting && isLoading
-              ? 'Submitting...'
-              : 'Save'}
+            {form.formState.isSubmitting && isLoading ? (
+              <Loader type="ScaleLoader" width={20} height={20} />
+            ) : (
+              'Save'
+            )}
           </Button>
         </div>
       </form>

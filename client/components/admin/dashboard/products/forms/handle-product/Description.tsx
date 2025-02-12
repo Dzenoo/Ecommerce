@@ -45,7 +45,6 @@ const Description: React.FC<DescriptionProps> = ({ form }) => {
           'flex h-52 w-full max-w-full rounded-lg border border-input bg-transparent px-3 py-4 text-sm overflow-auto shadow-sm transition-colors hover:border-gray-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring',
       },
     },
-    content: '<p>Type description here</p>',
     onUpdate: ({ editor }) => {
       form.setValue('description', editor.getHTML());
     },

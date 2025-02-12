@@ -34,7 +34,7 @@ const Uploader = <T extends FieldValues>({
     maxFiles: 5,
     maxSize: 5 * 1024 * 1024,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg'],
+      'image/*': ['.png', '.jpg', '.jpeg', '.webp'],
     },
   },
 }: UploaderProps<T>) => {
@@ -42,7 +42,7 @@ const Uploader = <T extends FieldValues>({
   const [previews, setPreviews] = useState<string[]>([]);
 
   const {
-    field: { onChange },
+    field: { onChange, value },
     fieldState: { error },
   } = useController({
     name,
@@ -84,6 +84,17 @@ const Uploader = <T extends FieldValues>({
       setPreviews((prev) => prev.filter((_, i) => i !== index));
     }
   };
+
+  const reset = () => {
+    setFiles([]);
+    setPreviews([]);
+  };
+
+  useEffect(() => {
+    if (!value || (Array.isArray(value) && value.length === 0)) {
+      reset();
+    }
+  }, [value]);
 
   useEffect(() => {
     return () =>
