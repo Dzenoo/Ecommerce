@@ -20,7 +20,7 @@ class RangeFilterDto {
 
   @IsOptional()
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   @Transform(({ value }) => Number(value))
   readonly max?: number;
 }
@@ -49,8 +49,9 @@ export class GetProductsDto {
   readonly sort?: string;
 
   @IsOptional()
-  @IsString()
-  readonly category?: string;
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  readonly category?: number;
 
   @IsOptional()
   @IsArray()

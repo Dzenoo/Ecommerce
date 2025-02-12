@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import { CreateProductDto, GetProductsDto, IProduct } from '@/types';
 
 import {
@@ -36,10 +38,11 @@ export const getAllProducts = async (
     totalProducts: number;
   }>
 > => {
-  return await getApiHandler(
-    `product/all?page=${query.page}&limit=${query.limit}&search=${query.search}&sort=${query.sort}&category=${query.category}&attributes=${query.attributes}&price[min]=${query.price?.min}&price[max]=${query.price?.max}`,
-    { withCredentials: false },
-  );
+  const queryString = qs.stringify(query, { skipNulls: true });
+
+  return await getApiHandler(`product/all?${queryString}`, {
+    withCredentials: false,
+  });
 };
 
 export const getOneProduct = async (

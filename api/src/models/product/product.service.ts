@@ -158,7 +158,7 @@ export class ProductService {
     }
 
     if (category) {
-      conditions.category = { $regex: `^${category}` }; // Match any category ID starting with the given category ID
+      conditions.category = category;
     }
 
     if (attributes && attributes.length > 0) {

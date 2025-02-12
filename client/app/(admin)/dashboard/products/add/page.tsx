@@ -1,6 +1,6 @@
 import AddProduct from '@/components/admin/dashboard/products/add/AddProduct';
 
-const AddProductPage = () => {
+const DashboardAddProductPage = () => {
   return (
     <div className="h-full">
       <AddProduct />
@@ -8,4 +8,4 @@ const AddProductPage = () => {
   );
 };
 
-export default AddProductPage;
+export default DashboardAddProductPage;

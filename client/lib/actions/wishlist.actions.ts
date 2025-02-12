@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import { GetWishlistDto, IWishlist } from '@/types/wishlist.types';
 
 import { getApiHandler, patchApiHandler, postApiHandler } from '../api';
@@ -26,7 +28,6 @@ export const getWishlist = async (
     totalProducts: number;
   }>
 > => {
-  return await getApiHandler(
-    `wishlist?page=${query.page}&limit=${query.limit}`,
-  );
+  const queryString = qs.stringify(query, { skipNulls: true });
+  return await getApiHandler(`wishlist?${queryString}`);
 };

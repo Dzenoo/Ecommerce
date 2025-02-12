@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import { CreateCouponDto, ICoupon } from '@/types';
 
 import { deleteApiHandler, getApiHandler, postApiHandler } from '../api';
@@ -28,7 +30,8 @@ export const getCoupons = async (query?: {
     coupons: ICoupon;
   }>
 > => {
-  return getApiHandler(`coupon/all?active=${query?.active}`);
+  const queryString = qs.stringify(query, { skipNulls: true });
+  return getApiHandler(`coupon/all?${queryString}`);
 };
 
 export const getCoupon = async (

@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import { CreateReviewDto, GetReviewsDto, IReview } from '@/types';
 
 import {
@@ -49,7 +51,6 @@ export const getReviews = async (
     };
   }>
 > => {
-  return await getApiHandler(
-    `review/all/${productId}?page=${query.page}&limit=${query.limit}`,
-  );
+  const queryString = qs.stringify(query, { skipNulls: true });
+  return await getApiHandler(`review/all/${productId}?${queryString}`);
 };

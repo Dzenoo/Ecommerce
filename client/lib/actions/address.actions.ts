@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import { CreateAddressDto, GetAddressesDto, IAddress } from '@/types';
 
 import {
@@ -34,7 +36,6 @@ export const getAddresses = async (
     totalAddresses: number;
   }>
 > => {
-  return await getApiHandler(
-    `address/all?page=${query.page}&limit=${query.limit}`,
-  );
+  const queryString = qs.stringify(query, { skipNulls: true });
+  return await getApiHandler(`address/all?${queryString}`);
 };

@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import { CreateOrderDto, GetOrdersDto, IOrder, UpdateOrderDto } from '@/types';
 
 import {
@@ -24,9 +26,8 @@ export const getOrdersByUser = async (
     orders: IOrder[];
   }>
 > => {
-  return await getApiHandler(
-    `order/user?page=${query.page}&limit=${query.limit}&sort=${query.sort}&status=${query.status}`,
-  );
+  const queryString = qs.stringify(query, { skipNulls: true });
+  return await getApiHandler(`order/user?${queryString}`);
 };
 
 export const cancelOrder = async (
@@ -47,9 +48,8 @@ export const getOrders = async (
     totalOrders: number;
   }>
 > => {
-  return await getApiHandler(
-    `order/all?page=${query.page}&limit=${query.limit}&sort=${query.sort}&status=${query.status}`,
-  );
+  const queryString = qs.stringify(query, { skipNulls: true });
+  return await getApiHandler(`order/all?${queryString}`);
 };
 
 export const getOrder = async (

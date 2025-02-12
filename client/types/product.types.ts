@@ -6,7 +6,7 @@ export type CreateProductDto = {
   description: string;
   stock?: number;
   discount?: number;
-  category: string;
+  category: number;
   images: string[];
   attributes: Record<string, any>;
 };
@@ -16,7 +16,7 @@ export type GetProductsDto = {
   limit?: number;
   search?: string;
   sort?: string;
-  category?: string;
+  category?: number;
   attributes?: string[];
   price?: { min: number; max: number };
 };
@@ -30,7 +30,7 @@ export interface IProduct {
   stock: number;
   discount: number;
   averageRating: number;
-  category: string;
+  category: number;
   attributes: Record<string, any>;
   reviews: IReview[] | [];
   createdAt: Date;
