@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 
 import { Category } from '@/types';
 import { CATEGORY_LIST } from '@/constants';
@@ -11,6 +12,7 @@ import { CreateProductSchema } from '@/lib/zod/product.zod';
 import { getCategoryById } from '@/lib/utils';
 import { useToast } from '@/hooks/core/use-toast';
 import { validateObject } from '@/validations/validate-object';
+import { createProduct } from '@/lib/actions/product.actions';
 
 import PickCategory from './PickCategory';
 import Description from './Description';
@@ -18,6 +20,7 @@ import FormFieldRenderer from '../../../../../../helpers/FormFieldRenderer';
 import Uploader from '@/components/shared/Uploader';
 
 import { Separator } from '@/components/ui/layout/separator';
+import { Button } from '@/components/ui/buttons/button';
 import { Input } from '@/components/ui/form/input';
 import {
   Form,
@@ -28,10 +31,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form/form';
-import { Button } from '@/components/ui/buttons/button';
-import { useMutation } from '@tanstack/react-query';
-
-import { createProduct } from '@/lib/actions/product.actions';
 
 type ProductFormValues = z.infer<typeof CreateProductSchema>;
 
@@ -276,6 +275,7 @@ const HandleProductForm: React.FC = () => {
                     control={form.control}
                     label="Product Images"
                     dropzoneOptions={{ multiple: true }}
+                    className="flex h-72 items-center justify-center"
                   />
                 </FormControl>
                 <FormMessage>{fieldState.error?.message}</FormMessage>
