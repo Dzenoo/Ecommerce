@@ -1,19 +1,23 @@
 'use client';
 
-import { use } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import {
   ProductQueryType,
   useProductQuery,
 } from '@/hooks/queries/useProduct.query';
-import { GetProductsDto } from '@/types';
 
 import DashboardProductsList from '@/components/admin/dashboard/products/DashboardProductsList';
 import PaginateList from '@/components/ui/pagination/paginate-list';
 import QueryParamController from '@/components/shared/QueryParamController';
+import SearchDashboardProducts from '@/components/admin/dashboard/products/filters/SearchDashboardProducts';
 
-const DashboardProductsPage = ({ searchParams }: { searchParams: any }) => {
-  const { page, limit, search, sort } = use<GetProductsDto>(searchParams);
+const DashboardProductsPage = () => {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
+  const limit = Number(searchParams.get('limit')) || 10;
+  const search = searchParams.get('search') || '';
+  const sort = searchParams.get('sort') || '';
 
   const { data, isLoading } = useProductQuery({
     type: ProductQueryType.GET_ALL,
@@ -32,7 +36,9 @@ const DashboardProductsPage = ({ searchParams }: { searchParams: any }) => {
   const totalProducts = productsData.totalProducts;
 
   return (
-    <section className="flex flex-col gap-10">
+    <section className="flex flex-col gap-5">
+      <SearchDashboardProducts />
+
       <DashboardProductsList productsData={productsData} />
 
       {totalProducts > 10 && (
