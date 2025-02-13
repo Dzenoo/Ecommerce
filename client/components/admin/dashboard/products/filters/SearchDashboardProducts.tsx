@@ -40,7 +40,7 @@ const SearchDashboardProducts: React.FC = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Options</SelectLabel>
+                  <SelectLabel>Products per page</SelectLabel>
                   <SelectItem value="10">10</SelectItem>
                   <SelectItem value="25">25</SelectItem>
                   <SelectItem value="50">50</SelectItem>
@@ -60,7 +60,7 @@ const SearchDashboardProducts: React.FC = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Options</SelectLabel>
+                  <SelectLabel>Sort products by</SelectLabel>
                   <SelectItem value="default">Default</SelectItem>
                   <SelectItem value="asc">Ascending</SelectItem>
                   <SelectItem value="desc">Descending</SelectItem>
