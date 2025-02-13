@@ -100,6 +100,7 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
           <TableRow className="whitespace-nowrap" key={product._id}>
             <TableCell>
               <Image
+                className="min-w-[50px]"
                 src={product.images[0]}
                 alt={product.name}
                 width={50}
