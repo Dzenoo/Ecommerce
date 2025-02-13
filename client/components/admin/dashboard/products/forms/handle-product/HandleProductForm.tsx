@@ -175,7 +175,7 @@ const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
       return await productMutation.mutateAsync({
         type: ProductMutationType.UPDATE,
         data: formData,
-        productId: '1',
+        productId: props.product._id,
       });
     }
 
