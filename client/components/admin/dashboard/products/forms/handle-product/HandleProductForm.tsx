@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { Category } from '@/types';
@@ -13,7 +12,11 @@ import { CreateProductSchema } from '@/lib/zod/product.zod';
 import { getCategoryById } from '@/lib/utils';
 import { useToast } from '@/hooks/core/use-toast';
 import { validateObject } from '@/validations/validate-object';
-import { createProduct } from '@/lib/actions/product.actions';
+import {
+  useProductMutation,
+  ProductMutationType,
+} from '@/hooks/mutations/useProduct.mutation';
+import { queryClient } from '@/context/react-query-client';
 
 import PickCategory from './PickCategory';
 import Description from './Description';
@@ -40,6 +43,30 @@ const HandleProductForm: React.FC = () => {
   const { toast } = useToast();
   const router = useRouter();
 
+  const productMutation = useProductMutation({
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+
+      form.reset();
+
+      toast({
+        title: `Success ${response.statusCode} 🚀`,
+        description: response.message,
+      });
+
+      setTimeout(() => {
+        router.push('/dashboard/products');
+      }, 1000);
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error?.response?.data?.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(CreateProductSchema),
     defaultValues: {
@@ -54,29 +81,7 @@ const HandleProductForm: React.FC = () => {
     },
   });
 
-  const { mutateAsync: createProductMutation, status } = useMutation({
-    mutationFn: (data: FormData) => createProduct(data),
-    onSuccess: (response) => {
-      form.reset();
-      toast({
-        title: `Success ${response.statusCode} 🚀`,
-        description: response.message,
-      });
-
-      setTimeout(() => {
-        router.push('/dashboard/products');
-      }, 1000);
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: (error as any)?.response?.data?.message,
-        variant: 'destructive',
-      });
-    },
-  });
-
-  const isLoading = status === 'pending';
+  const isLoading = productMutation.status === 'pending';
   const selectedCategoryId = form.watch('category');
 
   const selectedCategory = React.useMemo(
@@ -138,7 +143,10 @@ const HandleProductForm: React.FC = () => {
       });
     }
 
-    await createProductMutation(formData);
+    await productMutation.mutateAsync({
+      type: ProductMutationType.CREATE,
+      data: formData,
+    });
   };
 
   return (

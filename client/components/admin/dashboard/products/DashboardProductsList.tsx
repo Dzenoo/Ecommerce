@@ -9,6 +9,8 @@ import {
   ProductMutationType,
   useProductMutation,
 } from '@/hooks/mutations/useProduct.mutation';
+import { useToast } from '@/hooks/core/use-toast';
+
 import Loader from '@/components/ui/info/loader';
 
 import { Button } from '@/components/ui/buttons/button';
@@ -39,6 +41,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/layout/dialog';
+import { queryClient } from '@/context/react-query-client';
 
 type DashboardProductsListProps = {
   productsData: { products: IProduct[]; totalProducts: number };
@@ -48,8 +51,27 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
   productsData,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
 
-  const productMutation = useProductMutation();
+  const productMutation = useProductMutation({
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+
+      setIsDialogOpen(false);
+
+      toast({
+        title: `Success ${response.statusCode} 🚀`,
+        description: response.message,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error?.response?.data?.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
   return (
     <Table>
