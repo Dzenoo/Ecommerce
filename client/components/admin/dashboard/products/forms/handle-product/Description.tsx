@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Bold as BoldIcon,
   Italic as ItalicIcon,
@@ -32,8 +32,6 @@ type DescriptionProps = {
 };
 
 const Description: React.FC<DescriptionProps> = ({ form }) => {
-  const descriptionValue = form.watch('description');
-
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -55,8 +53,18 @@ const Description: React.FC<DescriptionProps> = ({ form }) => {
     onUpdate: ({ editor }) => {
       form.setValue('description', editor.getHTML());
     },
-    content: descriptionValue,
   });
+
+  const descriptionValue = form.watch('description');
+
+  useEffect(() => {
+    if (editor) {
+      const safeValue = descriptionValue || '';
+      if (safeValue !== editor.getHTML()) {
+        editor.commands.setContent(safeValue);
+      }
+    }
+  }, [descriptionValue, editor]);
 
   if (!editor) return null;
 
