@@ -4,7 +4,8 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'jobernify.s3.eu-north-1.amazonaws.com',
+        hostname:
+          'ecommerce-application-for-business.s3.eu-north-1.amazonaws.com',
         port: '',
         pathname: '/**',
       },

@@ -31,7 +31,7 @@ const DashboardProductsPage = ({ searchParams }: { searchParams: any }) => {
 
   return (
     <section>
-      <DashboardProductsList products={productsData.products} />
+      <DashboardProductsList productsData={productsData} />
     </section>
   );
 };
