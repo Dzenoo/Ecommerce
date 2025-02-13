@@ -10,6 +10,7 @@ import { GetProductsDto } from '@/types';
 
 import DashboardProductsList from '@/components/admin/dashboard/products/DashboardProductsList';
 import PaginateList from '@/components/ui/pagination/paginate-list';
+import QueryParamController from '@/components/shared/QueryParamController';
 
 const DashboardProductsPage = ({ searchParams }: { searchParams: any }) => {
   const { page, limit, search, sort } = use<GetProductsDto>(searchParams);
@@ -35,12 +36,16 @@ const DashboardProductsPage = ({ searchParams }: { searchParams: any }) => {
       <DashboardProductsList productsData={productsData} />
 
       {totalProducts > 10 && (
-        <PaginateList
-          onPageChange={(value) => console.log(value)}
-          totalItems={totalProducts}
-          itemsPerPage={10}
-          currentPage={1}
-        />
+        <QueryParamController<string> paramKey="page" defaultValue="1">
+          {({ value, onChange }) => (
+            <PaginateList
+              onPageChange={(value) => onChange(String(value))}
+              totalItems={totalProducts}
+              itemsPerPage={10}
+              currentPage={Number(value)}
+            />
+          )}
+        </QueryParamController>
       )}
     </section>
   );
