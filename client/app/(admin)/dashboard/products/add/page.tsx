@@ -2,9 +2,9 @@ import HandleProduct from '@/components/admin/dashboard/products/handle/HandlePr
 
 const DashboardAddProductPage = () => {
   return (
-    <div className="h-full">
+    <section className="h-full">
       <HandleProduct isEdit={false} />
-    </div>
+    </section>
   );
 };
 

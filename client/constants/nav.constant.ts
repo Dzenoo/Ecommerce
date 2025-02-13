@@ -90,7 +90,7 @@ export const AdminNavbarActions = [
         id: 5.2,
         icon: View,
         text: 'View Coupons',
-        href: '/dashboard/coupons/view',
+        href: '/dashboard/coupons/',
       },
     ],
   },

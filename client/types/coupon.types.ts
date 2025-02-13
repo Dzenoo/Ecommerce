@@ -2,7 +2,7 @@ export type CreateCouponDto = {
   code: string;
   discountType: 'percentage' | 'fixed';
   discountValue: number;
-  expirationDate: string;
+  expirationDate: Date;
   maxUsage?: number;
   active?: boolean;
   minPurchaseAmount?: number;

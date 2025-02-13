@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Delete, Edit, MoreHorizontal } from 'lucide-react';
 
-import { getCategoryById } from '@/lib/utils';
-import { IProduct } from '@/types';
+import { formatDate } from '@/lib/utils';
+import { ICoupon } from '@/types';
 import {
-  ProductMutationType,
-  useProductMutation,
-} from '@/hooks/mutations/useProduct.mutation';
-import { useToast } from '@/hooks/core/use-toast';
+  useCouponMutation,
+  CouponMutationType,
+} from '@/hooks/mutations/useCoupon.mutation';
+
 import { queryClient } from '@/context/react-query-client';
+import { useToast } from '@/hooks/core/use-toast';
 
 import Loader from '@/components/ui/info/loader';
 
@@ -43,19 +43,19 @@ import {
   DialogTitle,
 } from '@/components/ui/layout/dialog';
 
-type DashboardProductsListProps = {
-  productsData: { products: IProduct[]; totalProducts: number };
+type DashboardCouponsListProps = {
+  couponsData: { coupons: ICoupon[]; totalCoupons: number };
 };
 
-const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
-  productsData,
+const DashboardCouponsList: React.FC<DashboardCouponsListProps> = ({
+  couponsData,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const productMutation = useProductMutation({
+  const couponMutation = useCouponMutation({
     onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['coupons'] });
 
       setIsDialogOpen(false);
 
@@ -75,18 +75,19 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
 
   return (
     <Table>
-      <TableCaption>A list of your products</TableCaption>
+      <TableCaption>A list of your coupons</TableCaption>
       <TableHeader>
         <TableRow>
           {[
-            '',
             'Id',
-            'Name',
-            'Description',
-            'Category',
-            'Price',
-            'Discount',
-            'Stock',
+            'Code',
+            'Discount Type',
+            'Discount Value',
+            'Expiry Date',
+            'Max Usage',
+            'Usage Count',
+            'Active',
+            'Min Purchase Amount',
             'Actions',
           ].map((header) => (
             <TableHead className="whitespace-nowrap" key={header}>
@@ -96,24 +97,22 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {productsData.products.map((product) => (
-          <TableRow className="whitespace-nowrap" key={product._id}>
-            <TableCell>
-              <Image
-                className="min-w-[50px]"
-                src={product.images[0]}
-                alt={product.name}
-                width={50}
-                height={50}
-              />
-            </TableCell>
-            <TableCell>{product._id}</TableCell>
-            <TableCell>{product.name}</TableCell>
-            <TableCell className="truncate">{product.description}</TableCell>
-            <TableCell>{getCategoryById(product.category)?.name}</TableCell>
-            <TableCell>{product.price} DIN</TableCell>
-            <TableCell>{product.discount} %</TableCell>
-            <TableCell>{product.stock}</TableCell>
+        {couponsData.coupons.length === 0 && (
+          <TableRow>
+            <TableCell colSpan={10}>No coupons found</TableCell>
+          </TableRow>
+        )}
+        {couponsData.coupons.map((coupon) => (
+          <TableRow className="whitespace-nowrap" key={coupon._id}>
+            <TableCell>{coupon._id}</TableCell>
+            <TableCell>{coupon.code}</TableCell>
+            <TableCell>{coupon.discountType}</TableCell>
+            <TableCell>{coupon.discountValue}</TableCell>
+            <TableCell>{formatDate(coupon.expirationDate)}</TableCell>
+            <TableCell>{coupon.maxUsage}</TableCell>
+            <TableCell>{coupon.usageCount}</TableCell>
+            <TableCell>{coupon.active}</TableCell>
+            <TableCell>{coupon.minPurchaseAmount}</TableCell>
             <TableCell>
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
@@ -125,15 +124,15 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
                   <DropdownMenuGroup>
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <Link href={`/dashboard/products/${product._id}/edit`}>
+                    <Link href={`/dashboard/coupons/${coupon._id}/edit`}>
                       <DropdownMenuItem>
                         <Edit />
-                        Edit Product
+                        Edit Coupon
                       </DropdownMenuItem>
                     </Link>
                     <DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
                       <Delete />
-                      Delete Product
+                      Delete Coupon
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -141,25 +140,25 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Delete Product</DialogTitle>
+                    <DialogTitle>Delete Coupon</DialogTitle>
                     <DialogDescription>
                       This action cannot be undone. Are you sure you want to
-                      permanently delete this product from server?
+                      permanently delete this coupon?
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
                     <Button
                       type="submit"
                       variant="destructive"
-                      disabled={productMutation.status === 'pending'}
+                      disabled={couponMutation.status === 'pending'}
                       onClick={() =>
-                        productMutation.mutate({
-                          type: ProductMutationType.DELETE,
-                          productId: product._id,
+                        couponMutation.mutate({
+                          type: CouponMutationType.DELETE,
+                          couponId: coupon._id,
                         })
                       }
                     >
-                      {productMutation.status === 'pending' ? (
+                      {couponMutation.status === 'pending' ? (
                         <Loader type="ScaleLoader" height={20} />
                       ) : (
                         'Confirm'
@@ -174,9 +173,9 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={8}>Total</TableCell>
+          <TableCell colSpan={10}>Total</TableCell>
           <TableCell className="text-right">
-            {productsData.totalProducts}
+            {couponsData.totalCoupons}
           </TableCell>
         </TableRow>
       </TableFooter>
@@ -184,4 +183,4 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
   );
 };
 
-export default DashboardProductsList;
+export default DashboardCouponsList;
