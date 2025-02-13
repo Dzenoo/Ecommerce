@@ -94,11 +94,11 @@ export const AdminNavbarActions = [
       },
     ],
   },
-  {
-    id: 6,
-    icon: Settings,
-    text: 'Settings',
-    href: '/dashboard/settings',
-    subActions: [],
-  },
+  // {
+  //   id: 6,
+  //   icon: Settings,
+  //   text: 'Settings',
+  //   href: '/dashboard/settings',
+  //   subActions: [],
+  // },
 ];
