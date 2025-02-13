@@ -5,6 +5,11 @@ import { Delete, Edit, MoreHorizontal } from 'lucide-react';
 
 import { getCategoryById } from '@/lib/utils';
 import { IProduct } from '@/types';
+import {
+  ProductMutationType,
+  useProductMutation,
+} from '@/hooks/mutations/useProduct.mutation';
+import Loader from '@/components/ui/info/loader';
 
 import { Button } from '@/components/ui/buttons/button';
 import {
@@ -43,6 +48,8 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
   productsData,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const productMutation = useProductMutation();
 
   return (
     <Table>
@@ -121,9 +128,19 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
                     <Button
                       type="submit"
                       variant="destructive"
-                      onClick={() => console.log(product._id)}
+                      disabled={productMutation.status === 'pending'}
+                      onClick={() =>
+                        productMutation.mutate({
+                          type: ProductMutationType.DELETE,
+                          productId: product._id,
+                        })
+                      }
                     >
-                      Confirm
+                      {productMutation.status === 'pending' ? (
+                        <Loader type="ScaleLoader" height={20} />
+                      ) : (
+                        'Confirm'
+                      )}
                     </Button>
                   </DialogFooter>
                 </DialogContent>

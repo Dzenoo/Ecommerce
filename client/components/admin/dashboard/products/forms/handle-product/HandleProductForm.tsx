@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 import { Category } from '@/types';
 import { CATEGORY_LIST } from '@/constants';
@@ -37,6 +38,7 @@ type ProductFormValues = z.infer<typeof CreateProductSchema>;
 
 const HandleProductForm: React.FC = () => {
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(CreateProductSchema),
@@ -56,11 +58,14 @@ const HandleProductForm: React.FC = () => {
     mutationFn: (data: FormData) => createProduct(data),
     onSuccess: (response) => {
       form.reset();
-
       toast({
         title: `Success ${response.statusCode} 🚀`,
         description: response.message,
       });
+
+      setTimeout(() => {
+        router.push('/dashboard/products');
+      }, 1000);
     },
     onError: (error) => {
       toast({

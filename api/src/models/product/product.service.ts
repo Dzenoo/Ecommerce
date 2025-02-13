@@ -126,10 +126,10 @@ export class ProductService {
     await Promise.all([
       this.productModel.findByIdAndDelete(id),
       this.reviewService.findAndDeleteMany({ product: id }),
-      this.userService.findAndUpdateMany({
-        _id: { $in: userIds },
-        $pull: { reviews: { product: id } },
-      }),
+      this.userService.findAndUpdateMany(
+        { _id: { $in: userIds } },
+        { $pull: { reviews: { product: id } } },
+      ),
     ]);
 
     return {
