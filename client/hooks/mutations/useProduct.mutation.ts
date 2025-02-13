@@ -23,7 +23,7 @@ type ProductMutationPayload =
     }
   | {
       type: ProductMutationType.UPDATE;
-      data: Partial<CreateProductDto>;
+      data: FormData;
       productId: string;
     }
   | {

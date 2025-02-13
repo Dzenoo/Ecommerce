@@ -6,9 +6,12 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 
-import { Category } from '@/types';
+import { Category, IProduct } from '@/types';
 import { CATEGORY_LIST } from '@/constants';
-import { CreateProductSchema } from '@/lib/zod/product.zod';
+import {
+  CreateProductSchema,
+  UpdateProductSchema,
+} from '@/lib/zod/product.zod';
 import { getCategoryById } from '@/lib/utils';
 import { useToast } from '@/hooks/core/use-toast';
 import { validateObject } from '@/validations/validate-object';
@@ -37,11 +40,33 @@ import {
   FormMessage,
 } from '@/components/ui/form/form';
 
-type ProductFormValues = z.infer<typeof CreateProductSchema>;
+type HandleProductFormProps =
+  | {
+      isEdit?: true;
+      product: IProduct;
+    }
+  | { isEdit?: false; product: undefined };
 
-const HandleProductForm: React.FC = () => {
+const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
   const { toast } = useToast();
   const router = useRouter();
+
+  const schema = props.isEdit ? UpdateProductSchema : CreateProductSchema;
+  type ProductFormValues = z.infer<typeof schema>;
+
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: '',
+      price: 0,
+      description: '',
+      stock: 0,
+      discount: 0,
+      category: 0,
+      attributes: {},
+      images: [],
+    },
+  });
 
   const productMutation = useProductMutation({
     onSuccess: (response) => {
@@ -67,30 +92,33 @@ const HandleProductForm: React.FC = () => {
     },
   });
 
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(CreateProductSchema),
-    defaultValues: {
-      name: '',
-      price: 0,
-      description: '',
-      stock: 0,
-      discount: 0,
-      category: 0,
-      attributes: {},
-      images: [],
-    },
-  });
-
   const isLoading = productMutation.status === 'pending';
   const selectedCategoryId = form.watch('category');
 
   const selectedCategory = React.useMemo(
-    () => getCategoryById(selectedCategoryId, CATEGORY_LIST),
+    () => getCategoryById(selectedCategoryId as number, CATEGORY_LIST),
     [selectedCategoryId],
   );
 
   useEffect(() => {
-    if (selectedCategory) {
+    if (props.isEdit && props.product) {
+      const initialValues = {
+        ...props.product,
+        attributes: props.product.attributes || {},
+      };
+
+      form.reset(initialValues);
+
+      setTimeout(() => {
+        Object.entries(initialValues.attributes).forEach(([key, value]) => {
+          form.setValue(`attributes.${key}` as any, value);
+        });
+      }, 100);
+    }
+  }, [props.product, props.isEdit, form]);
+
+  useEffect(() => {
+    if (selectedCategory && !props.isEdit) {
       const initialAttributes = selectedCategory.fields?.reduce(
         (acc, field) => {
           acc[field.name] = field.defaultValue || '';
@@ -101,7 +129,7 @@ const HandleProductForm: React.FC = () => {
 
       form.setValue('attributes', initialAttributes || {});
     }
-  }, [selectedCategory, form]);
+  }, [selectedCategory, form, props.isEdit]);
 
   const handleCategorySelect = (category: Category) => {
     form.setValue('category', category.id);
@@ -143,7 +171,15 @@ const HandleProductForm: React.FC = () => {
       });
     }
 
-    await productMutation.mutateAsync({
+    if (props.isEdit) {
+      return await productMutation.mutateAsync({
+        type: ProductMutationType.UPDATE,
+        data: formData,
+        productId: '1',
+      });
+    }
+
+    return await productMutation.mutateAsync({
       type: ProductMutationType.CREATE,
       data: formData,
     });
@@ -249,7 +285,7 @@ const HandleProductForm: React.FC = () => {
                 <FormControl>
                   <PickCategory
                     categories={CATEGORY_LIST}
-                    selectedCategory={form.getValues('category')}
+                    selectedCategory={form.getValues('category') as number}
                     onSelect={handleCategorySelect}
                   />
                 </FormControl>
@@ -278,24 +314,26 @@ const HandleProductForm: React.FC = () => {
           )}
         </div>
         <div className="space-y-5">
-          <FormField
-            control={form.control}
-            name="images"
-            render={({ fieldState }) => (
-              <FormItem>
-                <FormControl>
-                  <Uploader
-                    name="images"
-                    control={form.control}
-                    label="Product Images"
-                    dropzoneOptions={{ multiple: true }}
-                    className="flex h-72 items-center justify-center"
-                  />
-                </FormControl>
-                <FormMessage>{fieldState.error?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
+          {!props.isEdit && (
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ fieldState }) => (
+                <FormItem>
+                  <FormControl>
+                    <Uploader
+                      name="images"
+                      control={form.control}
+                      label="Product Images"
+                      dropzoneOptions={{ multiple: true }}
+                      className="flex h-72 items-center justify-center"
+                    />
+                  </FormControl>
+                  <FormMessage>{fieldState.error?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+          )}
 
           <Button type="submit" disabled={!form.formState.isValid}>
             {form.formState.isSubmitting && isLoading ? (

@@ -124,7 +124,7 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
                   <DropdownMenuGroup>
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <Link href={`/dashboard/products/${product._id}/add`}>
+                    <Link href={`/dashboard/products/${product._id}/edit`}>
                       <DropdownMenuItem>
                         <Edit />
                         Edit Product

@@ -1,9 +1,9 @@
-import AddProduct from '@/components/admin/dashboard/products/add/AddProduct';
+import HandleProduct from '@/components/admin/dashboard/products/handle/HandleProduct';
 
 const DashboardAddProductPage = () => {
   return (
     <div className="h-full">
-      <AddProduct />
+      <HandleProduct isEdit={false} />
     </div>
   );
 };

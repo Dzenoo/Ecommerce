@@ -18,7 +18,7 @@ export const createProduct = async (
 };
 
 export const updateProduct = async (
-  data: Partial<CreateProductDto>,
+  data: FormData,
   productId: string,
 ): Promise<ServerResponse> => {
   return await patchApiHandler(`product/update/${productId}`, data);

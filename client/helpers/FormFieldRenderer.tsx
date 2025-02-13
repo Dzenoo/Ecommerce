@@ -34,16 +34,18 @@ const FormFieldRenderer = <T extends FieldValues>({
     control={control}
     name={name}
     defaultValue={fieldConfig.defaultValue as any}
-    render={({ field }) => (
-      <FormItem>
-        <FormLabel>{fieldConfig.label || fieldConfig.name}</FormLabel>
-        <FormControl>{renderComponent(fieldConfig, field)}</FormControl>
-        {fieldConfig.description && (
-          <FormDescription>{fieldConfig.description}</FormDescription>
-        )}
-        <FormMessage />
-      </FormItem>
-    )}
+    render={({ field }) => {
+      return (
+        <FormItem>
+          <FormLabel>{fieldConfig.label || fieldConfig.name}</FormLabel>
+          <FormControl>{renderComponent(fieldConfig, field)}</FormControl>
+          {fieldConfig.description && (
+            <FormDescription>{fieldConfig.description}</FormDescription>
+          )}
+          <FormMessage />
+        </FormItem>
+      );
+    }}
   />
 );
 
@@ -98,6 +100,7 @@ const renderComponent = (fieldConfig: CategoryField, field: any) => {
       return (
         <MultiSelect
           options={options}
+          defaultValue={field.value ?? []}
           onValueChange={field.onChange}
           placeholder={fieldConfig.placeholder}
           variant="inverted"

@@ -18,15 +18,22 @@ import Underline from '@tiptap/extension-underline';
 import BulletList from '@tiptap/extension-bullet-list';
 
 import { cn } from '@/lib/utils';
-import { CreateProductSchema } from '@/lib/zod/product.zod';
+import {
+  CreateProductSchema,
+  UpdateProductSchema,
+} from '@/lib/zod/product.zod';
 
 import { Button } from '@/components/ui/buttons/button';
 
 type DescriptionProps = {
-  form: UseFormReturn<z.infer<typeof CreateProductSchema>>;
+  form: UseFormReturn<
+    z.infer<typeof CreateProductSchema | typeof UpdateProductSchema>
+  >;
 };
 
 const Description: React.FC<DescriptionProps> = ({ form }) => {
+  const descriptionValue = form.watch('description');
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -48,7 +55,7 @@ const Description: React.FC<DescriptionProps> = ({ form }) => {
     onUpdate: ({ editor }) => {
       form.setValue('description', editor.getHTML());
     },
-    immediatelyRender: false,
+    content: descriptionValue,
   });
 
   if (!editor) return null;
