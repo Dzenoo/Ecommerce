@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useSearchParams } from 'next/navigation';
 
 import {
   useCouponQuery,
@@ -11,12 +10,9 @@ import {
 import DashboardCouponsList from '@/components/admin/dashboard/coupons/DashboardCouponsList';
 
 const DashboardCouponsPage = () => {
-  const searchParams = useSearchParams();
-  const active = Boolean(searchParams.get('active')) || true;
-
   const { data, isLoading } = useCouponQuery({
     type: CouponQueryType.GET_ALL,
-    query: { active },
+    query: {},
   });
 
   if (!data && !isLoading) {

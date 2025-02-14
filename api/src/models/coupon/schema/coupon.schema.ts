@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type CouponDocument = HydratedDocument<Coupon>;
@@ -27,14 +27,8 @@ export class Coupon {
   @Prop({ type: Number, default: 0 })
   usageCount: number;
 
-  @Prop({ type: Boolean, default: false })
-  active: boolean;
-
   @Prop({ type: Number, required: false, default: 0 })
   minPurchaseAmount: number;
-
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'User' })
-  userLimit: mongoose.Types.ObjectId[];
 }
 
 export const CouponSchema = SchemaFactory.createForClass(Coupon);

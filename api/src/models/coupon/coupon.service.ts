@@ -135,20 +135,12 @@ export class CouponService {
       throw new NotFoundException('Invalid coupon code');
     }
 
-    if (!coupon.active || new Date(coupon.expirationDate) < new Date()) {
+    if (new Date(coupon.expirationDate) < new Date()) {
       throw new NotAcceptableException('Coupon expired or inactive');
     }
 
     if (coupon.maxUsage && coupon.usageCount >= coupon.maxUsage) {
       throw new NotAcceptableException('Coupon usage limit reached');
-    }
-
-    if (
-      Array.isArray(coupon.userLimit) &&
-      coupon.userLimit.length > 0 &&
-      !coupon.userLimit.includes(new mongoose.Types.ObjectId(userId))
-    ) {
-      throw new NotAcceptableException('User has reached coupon limit');
     }
 
     return coupon;

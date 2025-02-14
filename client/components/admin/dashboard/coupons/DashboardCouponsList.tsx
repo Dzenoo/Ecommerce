@@ -86,7 +86,6 @@ const DashboardCouponsList: React.FC<DashboardCouponsListProps> = ({
             'Expiry Date',
             'Max Usage',
             'Usage Count',
-            'Active',
             'Min Purchase Amount',
             'Actions',
           ].map((header) => (
@@ -111,7 +110,6 @@ const DashboardCouponsList: React.FC<DashboardCouponsListProps> = ({
             <TableCell>{formatDate(coupon.expirationDate)}</TableCell>
             <TableCell>{coupon.maxUsage}</TableCell>
             <TableCell>{coupon.usageCount}</TableCell>
-            <TableCell>{coupon.active}</TableCell>
             <TableCell>{coupon.minPurchaseAmount}</TableCell>
             <TableCell>
               <DropdownMenu modal={false}>

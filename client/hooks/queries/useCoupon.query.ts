@@ -10,9 +10,7 @@ enum CouponQueryType {
 type CouponQueryPayload =
   | {
       type: CouponQueryType.GET_ALL;
-      query?: {
-        active?: boolean;
-      };
+      query?: {};
     }
   | {
       type: CouponQueryType.GET_ONE;
