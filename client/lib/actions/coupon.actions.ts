@@ -2,7 +2,12 @@ import qs from 'qs';
 
 import { CreateCouponDto, ICoupon } from '@/types';
 
-import { deleteApiHandler, getApiHandler, postApiHandler } from '../api';
+import {
+  deleteApiHandler,
+  getApiHandler,
+  patchApiHandler,
+  postApiHandler,
+} from '../api';
 
 export const createCoupon = async (
   data: CreateCouponDto,
@@ -14,7 +19,7 @@ export const updateCoupon = async (
   data: Partial<CreateCouponDto>,
   couponId: string,
 ): Promise<ServerResponse<{ coupon: ICoupon }>> => {
-  return await postApiHandler(`coupon/update/${couponId}`, data);
+  return await patchApiHandler(`coupon/update/${couponId}`, data);
 };
 
 export const deleteCoupon = async (
