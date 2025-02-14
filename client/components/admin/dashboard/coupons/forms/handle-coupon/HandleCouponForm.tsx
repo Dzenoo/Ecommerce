@@ -293,11 +293,11 @@ const HandleCouponForm: React.FC<HandleCouponFormProps> = (props) => {
           />
         </div>
         <div className="pt-5">
-          <Button type="submit">
+          <Button type="submit" disabled={!form.formState.isValid}>
             {form.formState.isSubmitting && isLoading ? (
               <Loader type="ScaleLoader" height={20} />
             ) : (
-              'Create'
+              'Save'
             )}
           </Button>
         </div>
