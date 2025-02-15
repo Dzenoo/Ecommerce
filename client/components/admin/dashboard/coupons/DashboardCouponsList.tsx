@@ -106,7 +106,10 @@ const DashboardCouponsList: React.FC<DashboardCouponsListProps> = ({
             <TableCell>{coupon._id}</TableCell>
             <TableCell>{coupon.code}</TableCell>
             <TableCell>{coupon.discountType}</TableCell>
-            <TableCell>{coupon.discountValue}</TableCell>
+            <TableCell>
+              {coupon.discountValue}
+              {coupon.discountType === 'fixed' ? 'DIN' : '%'}
+            </TableCell>
             <TableCell>{formatDate(coupon.expirationDate)}</TableCell>
             <TableCell>{coupon.maxUsage}</TableCell>
             <TableCell>{coupon.usageCount}</TableCell>
