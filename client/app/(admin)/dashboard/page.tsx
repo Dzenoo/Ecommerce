@@ -12,14 +12,20 @@ import SalesPerformance from '@/components/admin/dashboard/SalesPerformance';
 import OrdersByStatus from '@/components/admin/dashboard/OrdersByStatus';
 import TopSellingProducts from '@/components/admin/dashboard/TopSellingProducts';
 import CustomerGrowth from '@/components/admin/dashboard/CustomerGrowth';
+import LoadingDashboard from '@/components/shared/loading/LoadingDashboard';
+import NotFound from '@/components/shared/pages/NotFound';
 
 const DashboardPage = () => {
   const { data, isLoading } = useAnalyticsQuery({
     type: AnalyticsQueryType.GET_ANALYTICS,
   });
 
+  if (isLoading) {
+    return <LoadingDashboard />;
+  }
+
   if (!data && !isLoading) {
-    return 'No analytics found';
+    return <NotFound href="/dashboard" />;
   }
 
   const analyticsData = data?.data || {
