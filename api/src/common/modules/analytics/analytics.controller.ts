@@ -9,10 +9,10 @@ import { Roles } from '@/common/decorators/roles.decorator';
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
-  @Get('/overview')
+  @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async getOverview() {
-    return await this.analyticsService.getOverview();
+  async getAnalytics() {
+    return await this.analyticsService.getAnalytics();
   }
 }

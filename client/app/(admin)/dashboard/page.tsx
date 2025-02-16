@@ -1,4 +1,11 @@
+'use client';
+
 import React from 'react';
+
+import {
+  AnalyticsQueryType,
+  useAnalyticsQuery,
+} from '@/hooks/queries/useAnalytics.query';
 
 import Overview from '@/components/admin/dashboard/Overview';
 import SalesPerformance from '@/components/admin/dashboard/SalesPerformance';
@@ -7,25 +14,50 @@ import TopSellingProducts from '@/components/admin/dashboard/TopSellingProducts'
 import CustomerGrowth from '@/components/admin/dashboard/CustomerGrowth';
 
 const DashboardPage = () => {
+  const { data, isLoading } = useAnalyticsQuery({
+    type: AnalyticsQueryType.GET_ANALYTICS,
+  });
+
+  if (!data && !isLoading) {
+    return 'No analytics found';
+  }
+
+  const analyticsData = data?.data || {
+    overview: {
+      totalOrders: 0,
+      ordersThisMonth: 0,
+      totalProducts: 0,
+      productsThisMonth: 0,
+      totalUsers: 0,
+      usersThisMonth: 0,
+      totalRevenue: 0,
+      revenueThisMonth: 0,
+    },
+    salesPerformance: [],
+    ordersByStatus: [],
+    topSellingProducts: [],
+    customerGrowth: [],
+  };
+
   return (
     <section className="grid grid-cols-1 gap-5">
       <div>
         <Overview
-          totalOrders={0}
-          totalProducts={0}
-          totalRevenue={0}
-          totalUsers={0}
-          ordersThisMonth={0}
-          productsThisMonth={0}
-          revenueThisMonth={0}
-          usersThisMonth={0}
+          totalOrders={analyticsData.overview.totalOrders}
+          totalProducts={analyticsData.overview.totalProducts}
+          totalRevenue={analyticsData.overview.totalRevenue}
+          totalUsers={analyticsData.overview.totalUsers}
+          ordersThisMonth={analyticsData.overview.ordersThisMonth}
+          productsThisMonth={analyticsData.overview.productsThisMonth}
+          revenueThisMonth={analyticsData.overview.revenueThisMonth}
+          usersThisMonth={analyticsData.overview.usersThisMonth}
         />
       </div>
       <div className="grid grid-cols-2 gap-5 max-xl:grid-cols-1">
-        <SalesPerformance />
-        <OrdersByStatus />
-        <TopSellingProducts />
-        <CustomerGrowth />
+        <SalesPerformance data={analyticsData.salesPerformance} />
+        <OrdersByStatus data={analyticsData.ordersByStatus} />
+        <TopSellingProducts data={analyticsData.topSellingProducts} />
+        <CustomerGrowth data={analyticsData.customerGrowth} />
       </div>
     </section>
   );

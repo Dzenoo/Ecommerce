@@ -19,23 +19,9 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/utilities/chart';
 
-const orders = [
-  { id: 1, status: 'pending' },
-  { id: 2, status: 'completed' },
-  { id: 3, status: 'shipped' },
-  { id: 4, status: 'cancelled' },
-  { id: 5, status: 'completed' },
-];
-
-const groupedData = orders.reduce((acc: Record<string, number>, order) => {
-  acc[order.status] = (acc[order.status] || 0) + 1;
-  return acc;
-}, {});
-
-const pieChartData = Object.entries(groupedData).map(([status, count]) => ({
-  status,
-  count,
-}));
+type OrdersByStatusProps = {
+  data: { id: number; status: string }[];
+};
 
 const chartConfig = {
   pending: {
@@ -56,7 +42,21 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const OrdersByStatus: React.FC = () => {
+const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
+  const groupedData = data.reduce((acc: Record<string, number>, order) => {
+    acc[order.status] = (acc[order.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  let pieChartData = Object.entries(groupedData).map(([status, count]) => ({
+    status,
+    count,
+  }));
+
+  if (data.length === 0) {
+    pieChartData = [{ status: 'No Orders', count: 1 }];
+  }
+
   return (
     <Card className="shadow-none">
       <CardHeader>
@@ -81,7 +81,8 @@ const OrdersByStatus: React.FC = () => {
                 <Cell
                   key={`cell-${index}`}
                   fill={
-                    chartConfig[entry.status as keyof typeof chartConfig].color
+                    chartConfig[entry.status as keyof typeof chartConfig]
+                      ?.color || '#e5e7eb'
                   }
                 />
               ))}
@@ -93,10 +94,10 @@ const OrdersByStatus: React.FC = () => {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Profit up by 20% this month <TrendingUp className="h-4 w-4" />
+              Data is updated periodically
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2025
+              Last updated: Today
             </div>
           </div>
         </div>

@@ -13,7 +13,26 @@ export class AnalyticsService {
     private readonly orderService: OrderService,
   ) {}
 
-  async getOverview(): Promise<ResponseObject> {
+  async getAnalytics(): Promise<ResponseObject> {
+    const overview = await this.getOverview();
+    const salesPerformance = await this.getSalesPerformance();
+    const ordersByStatus = await this.getOrdersByStatus();
+    const topSellingProducts = await this.getTopSellingProducts();
+    const customerGrowth = await this.getCustomerGrowth();
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        overview: overview.data,
+        salesPerformance: salesPerformance.data,
+        ordersByStatus: ordersByStatus.data,
+        topSellingProducts: topSellingProducts.data,
+        customerGrowth: customerGrowth.data,
+      },
+    };
+  }
+
+  private async getOverview() {
     const startOfMonth = new Date();
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
@@ -48,7 +67,6 @@ export class AnalyticsService {
     );
 
     return {
-      statusCode: HttpStatus.OK,
       data: {
         totalOrders,
         ordersThisMonth,
@@ -62,15 +80,18 @@ export class AnalyticsService {
     };
   }
 
-  async getSalesPerformance(): Promise<ResponseObject> {
+  private async getSalesPerformance() {
     const allOrders = await this.orderService.find(
       {},
       'status createdAt totalPrice _id',
     );
 
-    const completedOrders = allOrders.filter(
-      (order) => order.status === 'completed',
-    );
+    const completedOrders = allOrders
+      .filter((order) => order.status === 'completed')
+      .map(({ _id, ...rest }: OrderDocument) => ({
+        id: _id,
+        ...rest,
+      }));
 
     return {
       statusCode: HttpStatus.OK,
@@ -78,23 +99,24 @@ export class AnalyticsService {
     };
   }
 
-  async getOrdersByStatus(): Promise<ResponseObject> {
+  private async getOrdersByStatus() {
     const allOrders = await this.orderService.find({}, 'status _id');
 
-    const transformedOrders = allOrders.map((order: OrderDocument) => {
-      return {
-        id: order._id,
-        status: order.status,
-      };
-    });
+    const transformedOrders = allOrders.map(
+      ({ _id, ...rest }: OrderDocument) => {
+        return {
+          id: _id,
+          ...rest,
+        };
+      },
+    );
 
     return {
-      statusCode: HttpStatus.OK,
       data: transformedOrders,
     };
   }
 
-  async getTopSellingProducts(): Promise<ResponseObject> {
+  private async getTopSellingProducts() {
     const allOrders = await this.orderService.find({}, 'items _id');
 
     const transformedOrders = allOrders.map((order: OrderDocument) => {
@@ -108,21 +130,19 @@ export class AnalyticsService {
     });
 
     return {
-      statusCode: HttpStatus.OK,
       data: transformedOrders,
     };
   }
 
-  async getCustomerGrowth(): Promise<ResponseObject> {
+  private async getCustomerGrowth() {
     const allUsers = await this.userService.find({}, 'createdAt _id');
 
-    const transformedUsers = allUsers.map((user: UserDocument) => ({
-      id: user._id,
-      ...user,
+    const transformedUsers = allUsers.map(({ _id, ...rest }: UserDocument) => ({
+      id: _id,
+      ...rest,
     }));
 
     return {
-      statusCode: HttpStatus.OK,
       data: transformedUsers,
     };
   }

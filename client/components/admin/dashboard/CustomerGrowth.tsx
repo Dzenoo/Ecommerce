@@ -18,14 +18,11 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/utilities/chart';
 
-const SampleCustomers = [
-  { id: 1, createdAt: '2025-01-01T09:00:00Z' },
-  { id: 2, createdAt: '2025-01-05T15:00:00Z' },
-  { id: 3, createdAt: '2025-02-01T08:30:00Z' },
-  { id: 4, createdAt: '2025-05-01T08:30:00Z' },
-];
+type CustomerGrowthProps = {
+  data: { id: string; createdAt: string }[];
+};
 
-const transformData = (customers: typeof SampleCustomers) => {
+const transformData = (customers: { id: string; createdAt: string }[]) => {
   const monthlyCounts: Record<string, number> = {};
 
   customers.forEach((customer) => {
@@ -58,8 +55,19 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const CustomerGrowth: React.FC = () => {
-  const data = transformData(SampleCustomers);
+const CustomerGrowth: React.FC<CustomerGrowthProps> = ({ data }) => {
+  let chartData = transformData(data);
+
+  if (chartData.length === 0) {
+    chartData = [
+      { month: 'Jan 2025', newCustomers: 0 },
+      { month: 'Feb 2025', newCustomers: 0 },
+      { month: 'Mar 2025', newCustomers: 0 },
+      { month: 'Apr 2025', newCustomers: 0 },
+      { month: 'May 2025', newCustomers: 0 },
+      { month: 'Jun 2025', newCustomers: 0 },
+    ];
+  }
 
   return (
     <Card className="shadow-none">
@@ -73,7 +81,7 @@ const CustomerGrowth: React.FC = () => {
       <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart
-            data={data}
+            data={chartData}
             margin={{
               left: -20,
               right: 12,
@@ -123,7 +131,7 @@ const CustomerGrowth: React.FC = () => {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Data is updated periodically
         </div>
         <div className="leading-none text-muted-foreground">
           Showing new customer acquisitions per month

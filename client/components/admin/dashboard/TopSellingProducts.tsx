@@ -19,42 +19,9 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/utilities/chart';
 
-const SampleProducts = [
-  {
-    id: 1,
-    items: [
-      { product: 'T-shirt', quantity: 2 },
-      { product: 'Jacket', quantity: 1 },
-      { product: 'ASDA', quantity: 5 },
-      { product: 'Aasd', quantity: 6 },
-      { product: 'Aasdsad', quantity: 9 },
-    ],
-  },
-  {
-    id: 2,
-    items: [
-      { product: 'Other', quantity: 3 },
-      { product: 'Other Example', quantity: 1 },
-    ],
-  },
-];
-
-const aggregatedSales = SampleProducts.reduce(
-  (acc, order) => {
-    order.items.forEach((item) => {
-      acc[item.product] = (acc[item.product] || 0) + item.quantity;
-    });
-    return acc;
-  },
-  {} as Record<string, number>,
-);
-
-const chartData = Object.entries(aggregatedSales).map(
-  ([product, quantity]) => ({
-    product,
-    quantity,
-  }),
-);
+type TopSellingProductsProps = {
+  data: { id: number; items: { product: string; quantity: number }[] }[];
+};
 
 const chartConfig = {
   quantity: {
@@ -63,7 +30,29 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const TopSellingProducts: React.FC = () => {
+const TopSellingProducts: React.FC<TopSellingProductsProps> = ({ data }) => {
+  const aggregatedSales = data.reduce(
+    (acc, order) => {
+      order.items.forEach((item) => {
+        acc[item.product] = (acc[item.product] || 0) + item.quantity;
+      });
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  let chartData = Object.entries(aggregatedSales).map(
+    ([product, quantity]) => ({
+      product,
+      quantity,
+    }),
+  );
+
+  // If no data exists, provide a dummy entry so the chart still renders
+  if (chartData.length === 0) {
+    chartData = [{ product: 'No Sales', quantity: 0 }];
+  }
+
   return (
     <Card className="shadow-none">
       <CardHeader>
@@ -108,7 +97,7 @@ const TopSellingProducts: React.FC = () => {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Data is updated periodically
         </div>
         <div className="leading-none text-muted-foreground">
           Aggregated sales from recent orders.

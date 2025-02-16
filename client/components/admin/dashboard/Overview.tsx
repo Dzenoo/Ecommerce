@@ -105,7 +105,7 @@ const Overview: React.FC<OverviewProps> = ({
                     >
                       <Icon className="size-5" />
                     </div>
-                    <p className="text-xl font-semibold">${value}</p>
+                    <p className="text-xl font-semibold">{value}</p>
                   </div>
                   <div>
                     <p
