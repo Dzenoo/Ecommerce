@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { FilterQuery, Model } from 'mongoose';
 
 import { Order } from './schema/order.schema';
 
@@ -17,6 +17,14 @@ export class OrderService {
     private readonly cartService: CartService,
     private readonly userService: UserService,
   ) {}
+
+  async find(query: FilterQuery<Order> = {}): Promise<Order[]> {
+    return await this.orderModel.find(query).lean().exec();
+  }
+
+  async countDocuments(query: FilterQuery<Order> = {}): Promise<number> {
+    return await this.orderModel.countDocuments(query).exec();
+  }
 
   async create(body: CreateOrderDto, userId: string): Promise<ResponseObject> {
     const cart = await this.cartService.findOne({

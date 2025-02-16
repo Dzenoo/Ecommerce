@@ -6,7 +6,7 @@ import {
   NotAcceptableException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateQuery } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 
 import { Product } from './schema/product.schema';
 
@@ -27,6 +27,10 @@ export class ProductService {
     @Inject(forwardRef(() => ReviewService))
     private readonly reviewService: ReviewService,
   ) {}
+
+  async countDocuments(query: FilterQuery<Product> = {}): Promise<number> {
+    return await this.productModel.countDocuments(query).exec();
+  }
 
   async findOneByIdAndUpdate(
     id: string,

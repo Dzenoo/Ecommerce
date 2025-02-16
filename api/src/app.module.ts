@@ -12,6 +12,7 @@ import { OrderModule } from '@/models/order/order.module';
 import { CouponModule } from '@/models/coupon/coupon.module';
 import { CartModule } from '@/models/cart/cart.module';
 import { AuthModule } from '@/authentication/auth.module';
+import { AnalyticsModule } from './common/modules/analytics/analytics.module';
 
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
@@ -44,6 +45,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     OrderModule,
     CouponModule,
     CartModule,
+    AnalyticsModule,
   ],
   providers: [
     {

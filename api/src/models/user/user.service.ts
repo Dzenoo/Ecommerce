@@ -12,6 +12,10 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
+  async countDocuments(query: FilterQuery<User> = {}): Promise<number> {
+    return await this.userModel.countDocuments(query).exec();
+  }
+
   async findAndUpdateMany(
     query: FilterQuery<User> = {},
     update: UpdateQuery<User> = {},
