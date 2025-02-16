@@ -8,6 +8,8 @@ import {
 } from '@/hooks/queries/useCoupon.query';
 
 import DashboardCouponsList from '@/components/admin/dashboard/coupons/DashboardCouponsList';
+import LoadingDashboardCoupons from '@/components/shared/loading/LoadingDashboardCoupons';
+import NotFound from '@/components/shared/pages/NotFound';
 
 const DashboardCouponsPage = () => {
   const { data, isLoading } = useCouponQuery({
@@ -15,8 +17,12 @@ const DashboardCouponsPage = () => {
     query: {},
   });
 
+  if (isLoading) {
+    return <LoadingDashboardCoupons />;
+  }
+
   if (!data && !isLoading) {
-    return 'No coupons found';
+    return <NotFound href="/dashboard" />;
   }
 
   const couponsData = data || {
