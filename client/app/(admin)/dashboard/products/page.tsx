@@ -11,6 +11,8 @@ import DashboardProductsList from '@/components/admin/dashboard/products/Dashboa
 import PaginateList from '@/components/ui/pagination/paginate-list';
 import QueryParamController from '@/components/shared/QueryParamController';
 import SearchDashboardProducts from '@/components/admin/dashboard/products/filters/SearchDashboardProducts';
+import LoadingDashboardProducts from '@/components/shared/loading/LoadingDashboardProducts';
+import NotFound from '@/components/shared/pages/NotFound';
 
 const DashboardProductsPage = () => {
   const searchParams = useSearchParams();
@@ -24,8 +26,12 @@ const DashboardProductsPage = () => {
     query: { page, limit, search, sort },
   });
 
+  if (isLoading) {
+    return <LoadingDashboardProducts />;
+  }
+
   if (!data && !isLoading) {
-    return 'No products found';
+    return <NotFound href="/dashboard" />;
   }
 
   const productsData = data || {
