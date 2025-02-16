@@ -1,7 +1,7 @@
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 import { Cart } from '@/models/cart/schema/cart.schema';
 import { Order } from '@/models/order/schema/order.schema';

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -27,6 +28,8 @@ import {
 
 const SignupForm: React.FC = () => {
   const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -42,6 +45,7 @@ const SignupForm: React.FC = () => {
     mutationFn: signup,
     onSuccess: () => {
       form.reset();
+      router.push('/login');
     },
     onError: (error: any) => {
       toast({

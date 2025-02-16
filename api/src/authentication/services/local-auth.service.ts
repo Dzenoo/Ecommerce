@@ -15,7 +15,7 @@ import { BlockedDomainsService } from '@/common/services/blocked-domains.service
 import { SignupDto } from '../dto/signup.dto';
 import { getRedirectUrl } from '@/common/utils';
 
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class LocalAuthService {
