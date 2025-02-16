@@ -2,6 +2,8 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '@/models/user/user.service';
 import { ProductService } from '@/models/product/product.service';
 import { OrderService } from '@/models/order/order.service';
+import { OrderDocument } from '@/models/order/schema/order.schema';
+import { UserDocument } from '@/models/user/schema/user.schema';
 
 @Injectable()
 export class AnalyticsService {
@@ -57,6 +59,71 @@ export class AnalyticsService {
         totalRevenue,
         revenueThisMonth,
       },
+    };
+  }
+
+  async getSalesPerformance(): Promise<ResponseObject> {
+    const allOrders = await this.orderService.find(
+      {},
+      'status createdAt totalPrice _id',
+    );
+
+    const completedOrders = allOrders.filter(
+      (order) => order.status === 'completed',
+    );
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: completedOrders,
+    };
+  }
+
+  async getOrdersByStatus(): Promise<ResponseObject> {
+    const allOrders = await this.orderService.find({}, 'status _id');
+
+    const transformedOrders = allOrders.map((order: OrderDocument) => {
+      return {
+        id: order._id,
+        status: order.status,
+      };
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: transformedOrders,
+    };
+  }
+
+  async getTopSellingProducts(): Promise<ResponseObject> {
+    const allOrders = await this.orderService.find({}, 'items _id');
+
+    const transformedOrders = allOrders.map((order: OrderDocument) => {
+      return {
+        id: order._id,
+        items: order.items.map((item) => ({
+          product: item.product.name,
+          quantity: item.quantity,
+        })),
+      };
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: transformedOrders,
+    };
+  }
+
+  async getCustomerGrowth(): Promise<ResponseObject> {
+    const allUsers = await this.userService.find({}, 'createdAt _id');
+
+    const transformedUsers = allUsers.map((user: UserDocument) => ({
+      id: user._id,
+      ...user,
+    }));
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: transformedUsers,
     };
   }
 }

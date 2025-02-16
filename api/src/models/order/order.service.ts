@@ -18,8 +18,11 @@ export class OrderService {
     private readonly userService: UserService,
   ) {}
 
-  async find(query: FilterQuery<Order> = {}): Promise<Order[]> {
-    return await this.orderModel.find(query).lean().exec();
+  async find(
+    query: FilterQuery<Order> = {},
+    select?: string,
+  ): Promise<Order[]> {
+    return await this.orderModel.find(query).select(select).lean().exec();
   }
 
   async countDocuments(query: FilterQuery<Order> = {}): Promise<number> {
