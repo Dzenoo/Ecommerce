@@ -1,5 +1,6 @@
-import { Skeleton } from '@/components/ui/utilities/skeleton';
 import React from 'react';
+
+import { Skeleton } from '@/components/ui/utilities/skeleton';
 
 const LoadingDashboardProducts: React.FC = () => {
   return (
