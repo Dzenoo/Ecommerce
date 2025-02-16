@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getCategoryById } from '@/lib/utils';
+import { getCategory } from '@/lib/utils';
 import { Category } from '@/types';
 
 import { Button } from '@/components/ui/buttons/button';
@@ -56,7 +56,7 @@ const PickCategory: React.FC<PickCategoryProps> = ({
           className="min-w-[150px] justify-start px-3 py-1 text-sm"
         >
           {selectedCategory
-            ? getCategoryById(selectedCategory)?.name
+            ? getCategory('id', selectedCategory)?.name
             : triggerLabel}
         </Button>
       </DropdownMenuTrigger>

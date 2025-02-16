@@ -28,7 +28,7 @@ export const DesktopSearch: React.FC<SearchState & SearchActions> = ({
       </PopoverTrigger>
       <PopoverContent
         onOpenAutoFocus={(e) => e.preventDefault()}
-        className="w-[var(--radix-popover-trigger-width)] max-w-none p-0"
+        className="w-[var(--radix-popover-trigger-width)] max-w-none p-0 shadow-none"
         side="bottom"
         align="start"
       >

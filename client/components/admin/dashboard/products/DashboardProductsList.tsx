@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Delete, Edit, MoreHorizontal } from 'lucide-react';
 
-import { getCategoryById } from '@/lib/utils';
+import { getCategory } from '@/lib/utils';
 import { IProduct } from '@/types';
 import {
   ProductMutationType,
@@ -110,7 +110,7 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
             <TableCell>{product._id}</TableCell>
             <TableCell>{product.name}</TableCell>
             <TableCell className="truncate">{product.description}</TableCell>
-            <TableCell>{getCategoryById(product.category)?.name}</TableCell>
+            <TableCell>{getCategory('id', product.category)?.name}</TableCell>
             <TableCell>{product.price} DIN</TableCell>
             <TableCell>{product.discount} %</TableCell>
             <TableCell>{product.stock}</TableCell>

@@ -40,7 +40,7 @@ const NavItem: React.FC<NavItemProps> = ({ category, depth = 0 }) => {
       {hasSubcategories && (
         <ul
           className={cn(
-            'absolute top-0 min-w-52 rounded-lg border bg-popover p-2 shadow-lg transition-opacity',
+            'absolute top-0 min-w-52 rounded-lg border bg-popover p-2 transition-opacity',
             depth === 0 ? 'left-full ml-1' : 'right-full -ml-1',
             isOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
           )}

@@ -12,7 +12,7 @@ import {
   CreateProductSchema,
   UpdateProductSchema,
 } from '@/lib/zod/product.zod';
-import { getCategoryById } from '@/lib/utils';
+import { getCategory } from '@/lib/utils';
 import { useToast } from '@/hooks/core/use-toast';
 import { validateObject } from '@/validations/validate-object';
 import {
@@ -96,7 +96,7 @@ const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
   const selectedCategoryId = form.watch('category');
 
   const selectedCategory = React.useMemo(
-    () => getCategoryById(selectedCategoryId as number, CATEGORY_LIST),
+    () => getCategory('id', selectedCategoryId as number, CATEGORY_LIST),
     [selectedCategoryId],
   );
 

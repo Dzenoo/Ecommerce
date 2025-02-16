@@ -13,7 +13,7 @@ import OrdersByStatus from '@/components/admin/dashboard/OrdersByStatus';
 import TopSellingProducts from '@/components/admin/dashboard/TopSellingProducts';
 import CustomerGrowth from '@/components/admin/dashboard/CustomerGrowth';
 import LoadingDashboard from '@/components/shared/loading/LoadingDashboard';
-import NotFound from '@/components/shared/pages/NotFound';
+import NotFound from '@/components/shared/NotFound';
 
 const DashboardPage = () => {
   const { data, isLoading } = useAnalyticsQuery({

@@ -12,7 +12,7 @@ import PaginateList from '@/components/ui/pagination/paginate-list';
 import QueryParamController from '@/components/shared/QueryParamController';
 import SearchDashboardProducts from '@/components/admin/dashboard/products/filters/SearchDashboardProducts';
 import LoadingDashboardProducts from '@/components/shared/loading/LoadingDashboardProducts';
-import NotFound from '@/components/shared/pages/NotFound';
+import NotFound from '@/components/shared/NotFound';
 
 const DashboardProductsPage = () => {
   const searchParams = useSearchParams();
