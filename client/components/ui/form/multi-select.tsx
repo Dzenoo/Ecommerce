@@ -125,6 +125,10 @@ export const MultiSelect = React.forwardRef<
       }
     };
 
+    React.useEffect(() => {
+      setSelectedValues(defaultValue);
+    }, [defaultValue]);
+
     return (
       <Popover
         open={isPopoverOpen}
@@ -140,6 +144,7 @@ export const MultiSelect = React.forwardRef<
               'flex h-auto min-h-10 w-full items-center justify-between rounded-lg border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto',
               className,
             )}
+            variant={'outline'}
           >
             {selectedValues.length > 0 ? (
               <div className="flex w-full items-center justify-between">

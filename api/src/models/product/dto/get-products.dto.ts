@@ -2,6 +2,7 @@ import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   IsString,
@@ -54,9 +55,18 @@ export class GetProductsDto {
   readonly category?: number;
 
   @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
-  readonly attributes?: string[];
+  @IsObject()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return {};
+      }
+    }
+    return value || {};
+  })
+  readonly attributes?: Record<string, string[]>;
 
   @IsOptional()
   @ValidateNested()

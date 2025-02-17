@@ -1,6 +1,6 @@
 import qs from 'qs';
 
-import { CreateProductDto, GetProductsDto, IProduct } from '@/types';
+import { GetProductsDto, IProduct } from '@/types';
 
 import {
   deleteApiHandler,
@@ -38,7 +38,11 @@ export const getAllProducts = async (
     totalProducts: number;
   }>
 > => {
-  const queryString = qs.stringify(query, { skipNulls: true });
+  const queryString = qs.stringify(query, {
+    skipNulls: true,
+    arrayFormat: 'brackets',
+    encode: false,
+  });
 
   return await getApiHandler(`product/all?${queryString}`, {
     withCredentials: false,

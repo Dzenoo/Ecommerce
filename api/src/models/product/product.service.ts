@@ -165,10 +165,11 @@ export class ProductService {
       conditions.category = category;
     }
 
-    if (attributes && attributes.length > 0) {
-      attributes.forEach((attr) => {
-        const [key, value] = attr.split(':');
-        conditions[`attributes.${key}`] = value;
+    if (attributes) {
+      Object.entries(attributes).forEach(([key, values]) => {
+        if (Array.isArray(values) && values.length > 0) {
+          conditions[`attributes.${key}`] = { $in: values };
+        }
       });
     }
 

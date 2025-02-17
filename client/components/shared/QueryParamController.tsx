@@ -32,8 +32,7 @@ const QueryParamController = <T,>({
 
   useEffect(() => {
     const paramValue = getQueryParamAll(paramKey);
-    const valueFromUrl =
-      paramValue.length > 1 ? paramValue : paramValue[0] || null;
+    const valueFromUrl = paramValue.length > 0 ? paramValue : null;
 
     if (valueFromUrl !== null) {
       const decoded = transform?.decode(valueFromUrl) ?? valueFromUrl;

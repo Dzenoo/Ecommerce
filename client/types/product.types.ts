@@ -17,7 +17,7 @@ export type GetProductsDto = {
   search?: string;
   sort?: string;
   category?: number;
-  attributes?: string[];
+  attributes?: Record<string, string[]>;
   price?: { min: number; max: number };
 };
 
