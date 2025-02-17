@@ -16,6 +16,7 @@ import ProductsList from '@/components/root/products/ProductsList';
 import QueryParamController from '@/components/shared/QueryParamController';
 import PaginateList from '@/components/ui/pagination/paginate-list';
 import FilterProducts from '@/components/root/products/filters/FilterProducts';
+import LoadingProducts from '@/components/shared/loading/LoadingProducts';
 
 import { Button } from '@/components/ui/buttons/button';
 
@@ -68,7 +69,7 @@ const ProductsPage = ({
     },
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingProducts />;
 
   if (!data) return <NotFound />;
 
