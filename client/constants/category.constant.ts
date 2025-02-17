@@ -18,14 +18,13 @@ export const CATEGORY_LIST: Category[] = [
   {
     id: 1,
     name: 'Clothing',
-    href: '/clothing',
     fields: [],
     subcategories: [
       {
         id: 11,
         parentId: 1,
         name: 'T-Shirts',
-        href: '/clothing/t-shirts',
+        href: '/products/t-shirts',
         fields: [
           {
             name: 'size',
@@ -74,7 +73,7 @@ export const CATEGORY_LIST: Category[] = [
         id: 12,
         parentId: 1,
         name: 'Hoodies',
-        href: '/clothing/hoodies',
+        href: '/products/hoodies',
         fields: [
           {
             name: 'size',
@@ -121,7 +120,7 @@ export const CATEGORY_LIST: Category[] = [
         id: 13,
         parentId: 1,
         name: 'Jackets',
-        href: '/clothing/jackets',
+        href: '/products/jackets',
         fields: [
           {
             name: 'size',
@@ -158,7 +157,7 @@ export const CATEGORY_LIST: Category[] = [
         id: 14,
         parentId: 1,
         name: 'Tracksuits',
-        href: '/clothing/tracksuits',
+        href: '/products/tracksuits',
         fields: [
           {
             name: 'size',

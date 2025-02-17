@@ -23,7 +23,7 @@ export type Category = {
   id: number;
   parentId?: number;
   name: string;
-  href: string;
+  href?: string;
   fields?: CategoryField[];
   subcategories?: Category[];
 };
