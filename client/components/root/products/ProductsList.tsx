@@ -28,7 +28,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
         </div>
       )}
       {products.length > 0 && (
-        <ul className="grid grid-cols-4 gap-5">
+        <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-4">
           {products.map((product) => (
             <ProductItem key={product._id} product={product} />
           ))}
