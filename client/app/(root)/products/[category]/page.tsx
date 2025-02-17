@@ -33,7 +33,7 @@ const ProductsPage = ({
   if (!data) return <NotFound />;
 
   return (
-    <section className="grid grid-cols-[1fr_3fr] gap-10">
+    <section className="grid grid-cols-[1fr_4fr] gap-10">
       <div></div>
 
       <div className="space-y-5">

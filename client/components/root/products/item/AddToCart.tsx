@@ -12,7 +12,7 @@ type AddToCartProps = React.HTMLAttributes<HTMLButtonElement> & {
 const AddToCart: React.FC<AddToCartProps> = ({ product, ...rest }) => {
   return (
     <Button type="button" variant="default" {...rest}>
-      <ShoppingBag /> Dodaj u korpu
+      <ShoppingBag />
     </Button>
   );
 };

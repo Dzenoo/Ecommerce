@@ -54,13 +54,11 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           </div>
         </CardContent>
         <Separator />
-        <CardFooter>
-          <div className="grid w-full grid-cols-2 gap-5">
-            <Button type="button" variant="outline">
-              {product.price} DIN
-            </Button>
-            <AddToCart product={product} />
-          </div>
+        <CardFooter className="flex items-center justify-between gap-2">
+          <Button type="button" variant="outline" className="flex-1">
+            {product.price} DIN
+          </Button>
+          <AddToCart product={product} />
         </CardFooter>
       </Card>
     </li>
