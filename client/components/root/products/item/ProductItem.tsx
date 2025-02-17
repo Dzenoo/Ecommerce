@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Star } from 'lucide-react';
 
 import { IProduct } from '@/types';
@@ -25,13 +26,15 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
     <li>
       <Card className="shadow-none">
         <CardHeader className="relative items-center">
-          <Image
-            className="transition-all hover:scale-110"
-            src={product.images[0]}
-            alt={product._id}
-            width={500}
-            height={500}
-          />
+          <Link href={`/products/product/${product._id}`}>
+            <Image
+              className="transition-all hover:scale-110"
+              src={product.images[0]}
+              alt={product._id}
+              width={500}
+              height={500}
+            />
+          </Link>
           <AddToFavorites
             className="absolute right-2 top-2"
             product={product}
@@ -41,7 +44,9 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         <CardContent>
           <div className="flex justify-between gap-5">
             <div>
-              <h2 className="text-lg font-medium">{product.name}</h2>
+              <Link href={`/products/product/${product._id}`}>
+                <h2 className="text-lg font-medium">{product.name}</h2>
+              </Link>
             </div>
             <div className="flex items-center gap-1">
               <span className="mt-0.5 font-bold">{product.averageRating}</span>{' '}

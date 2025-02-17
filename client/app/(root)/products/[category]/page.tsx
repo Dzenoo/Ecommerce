@@ -17,9 +17,10 @@ import QueryParamController from '@/components/shared/QueryParamController';
 import PaginateList from '@/components/ui/pagination/paginate-list';
 import FilterProducts from '@/components/root/products/filters/FilterProducts';
 import LoadingProducts from '@/components/shared/loading/LoadingProducts';
+import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
+import SortProducts from '@/components/root/products/filters/SortProducts';
 
 import { Button } from '@/components/ui/buttons/button';
-import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
 
 const ProductsPage = ({
   params,
@@ -82,14 +83,17 @@ const ProductsPage = ({
       </div>
 
       <div className="space-y-5">
-        <div className="flex items-center justify-between gap-5">
-          <div>
+        <div className="flex items-center justify-between gap-2">
+          <div className="basis-full">
             <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
           </div>
           <div>
             <Button variant="outline" onClick={clearAllQueryParams}>
               Clear All Filters
             </Button>
+          </div>
+          <div>
+            <SortProducts />
           </div>
         </div>
 
