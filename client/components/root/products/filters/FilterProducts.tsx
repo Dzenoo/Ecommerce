@@ -9,6 +9,7 @@ import { Category, CategoryField as CategoryFieldType } from '@/types';
 import QueryParamController from '@/components/shared/QueryParamController';
 
 import { Button } from '@/components/ui/buttons/button';
+import { Input } from '@/components/ui/form/input';
 import { Separator } from '@/components/ui/layout/separator';
 import { MultiSelect } from '@/components/ui/form/multi-select';
 import {
@@ -54,7 +55,8 @@ const FilterProducts: React.FC<FilterProductsProps> = ({
             </CardDescription>
           </CardHeader>
           <Separator />
-          <CardContent className="space-y-5">
+          <CardContent className="space-y-8">
+            <PriceFilter />
             {selectedCategory?.fields?.map((f, i) => (
               <CategoryField key={i} field={f} />
             ))}
@@ -80,6 +82,7 @@ const FilterProducts: React.FC<FilterProductsProps> = ({
                 </DrawerDescription>
               </DrawerHeader>
               <div className="hide-scrollbar mt-4 h-96 space-y-6 overflow-auto p-5">
+                <PriceFilter />
                 {selectedCategory?.fields?.map((f, i) => (
                   <CategoryField key={i} field={f} />
                 ))}
@@ -92,7 +95,9 @@ const FilterProducts: React.FC<FilterProductsProps> = ({
   );
 };
 
-const CategoryField = ({ field }: { field: CategoryFieldType }) => {
+const CategoryField: React.FC<{
+  field: CategoryFieldType;
+}> = ({ field }) => {
   switch (field.type) {
     case 'multi': {
       const options =
@@ -193,6 +198,63 @@ const CategoryField = ({ field }: { field: CategoryFieldType }) => {
       return null;
     }
   }
+};
+
+const PriceFilter: React.FC = () => {
+  return (
+    <div className="space-y-4">
+      <div>
+        <div>
+          <label className="text-sm font-medium">Price</label>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">
+            Filter products by their price.
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-5">
+        <QueryParamController<string>
+          paramKey="priceMin"
+          defaultValue=""
+          transform={{
+            decode: (value: string | string[]) =>
+              Array.isArray(value) ? value[0] || '' : value || '',
+            encode: (value) => value,
+          }}
+        >
+          {({ value, onChange }) => (
+            <Input
+              placeholder="Min Price"
+              onChange={(event) => onChange(event.target.value)}
+              value={value || 0}
+              min={0}
+              type="number"
+            />
+          )}
+        </QueryParamController>
+        <QueryParamController<string>
+          paramKey="priceMax"
+          defaultValue=""
+          transform={{
+            decode: (value: string | string[]) =>
+              Array.isArray(value) ? value[0] || '' : value || '',
+            encode: (value) => value,
+          }}
+        >
+          {({ value, onChange }) => (
+            <Input
+              placeholder="Max Price"
+              onChange={(event) => onChange(event.target.value)}
+              value={value || 0}
+              min={0}
+              type="number"
+            />
+          )}
+        </QueryParamController>
+      </div>
+    </div>
+  );
 };
 
 export default FilterProducts;
