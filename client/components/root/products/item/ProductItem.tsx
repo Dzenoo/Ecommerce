@@ -26,6 +26,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
       <Card className="shadow-none">
         <CardHeader className="relative items-center">
           <Image
+            className="transition-all hover:scale-110"
             src={product.images[0]}
             alt={product._id}
             width={500}
@@ -48,7 +49,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             </div>
           </div>
           <div className="mt-2">
-            <p className="truncate font-light text-muted-foreground">
+            <p className="truncate text-sm font-light text-muted-foreground">
               {product.description}
             </p>
           </div>

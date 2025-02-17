@@ -9,8 +9,15 @@ import { Category, CategoryField as CategoryFieldType } from '@/types';
 import QueryParamController from '@/components/shared/QueryParamController';
 
 import { Button } from '@/components/ui/buttons/button';
+import { Separator } from '@/components/ui/layout/separator';
 import { MultiSelect } from '@/components/ui/form/multi-select';
-import { Card, CardContent } from '@/components/ui/layout/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/layout/card';
 import {
   Drawer,
   DrawerContent,
@@ -21,7 +28,6 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -41,6 +47,13 @@ const FilterProducts: React.FC<FilterProductsProps> = ({
     <div>
       <div className="hidden xl:block">
         <Card className="shadow-none">
+          <CardHeader>
+            <CardTitle>Filters</CardTitle>
+            <CardDescription>
+              Filter products by their attributes.
+            </CardDescription>
+          </CardHeader>
+          <Separator />
           <CardContent className="space-y-5">
             {selectedCategory?.fields?.map((f, i) => (
               <CategoryField key={i} field={f} />
@@ -101,14 +114,26 @@ const CategoryField = ({ field }: { field: CategoryFieldType }) => {
         >
           {({ value, onChange }) => {
             return (
-              <MultiSelect
-                options={options}
-                defaultValue={value}
-                onValueChange={onChange}
-                placeholder={field.placeholder ?? 'Select options'}
-                variant="inverted"
-                maxCount={5}
-              />
+              <div className="space-y-4">
+                <div>
+                  <div>
+                    <label className="text-sm font-medium">{field.label}</label>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {field?.description ?? ''}
+                    </p>
+                  </div>
+                </div>
+                <MultiSelect
+                  options={options}
+                  defaultValue={value}
+                  onValueChange={onChange}
+                  placeholder={field.placeholder ?? 'Select options'}
+                  variant="inverted"
+                  maxCount={5}
+                />
+              </div>
             );
           }}
         </QueryParamController>
@@ -127,26 +152,38 @@ const CategoryField = ({ field }: { field: CategoryFieldType }) => {
           }}
         >
           {({ value, onChange }) => (
-            <Select value={value || undefined} onValueChange={onChange}>
-              <SelectTrigger>
-                <SelectValue
-                  placeholder={field.placeholder ?? 'Select Options'}
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {field.options?.map((option) =>
-                  typeof option === 'string' ? (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ) : (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ),
-                )}
-              </SelectContent>
-            </Select>
+            <div className="space-y-4">
+              <div>
+                <div>
+                  <label className="text-sm font-medium">{field.label}</label>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {field?.description ?? ''}
+                  </p>
+                </div>
+              </div>
+              <Select value={value || undefined} onValueChange={onChange}>
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={field.placeholder ?? 'Select Options'}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {field.options?.map((option) =>
+                    typeof option === 'string' ? (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ) : (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ),
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
           )}
         </QueryParamController>
       );

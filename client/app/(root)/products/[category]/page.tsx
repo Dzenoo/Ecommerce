@@ -19,6 +19,7 @@ import FilterProducts from '@/components/root/products/filters/FilterProducts';
 import LoadingProducts from '@/components/shared/loading/LoadingProducts';
 
 import { Button } from '@/components/ui/buttons/button';
+import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
 
 const ProductsPage = ({
   params,
@@ -74,8 +75,9 @@ const ProductsPage = ({
   if (!data) return <NotFound />;
 
   return (
-    <section className="grid grid-cols-[1fr_4fr] gap-10 pt-5">
-      <div>
+    <section className="grid grid-cols-[1fr_3fr] gap-10 pt-5">
+      <div className="space-y-5">
+        <BreadcrumbProducts page={selectedCategory.name} />
         <FilterProducts selectedCategory={selectedCategory} />
       </div>
 
