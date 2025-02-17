@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { GetProductsDto } from '@/types';
 import { getCategory } from '@/lib/utils';
@@ -27,8 +27,6 @@ const ProductsPage = ({
   const { clearAllQueryParams } = useQueryParams();
   const searchParams = useSearchParams();
   const { category } = use(params);
-
-  const pathname = usePathname();
 
   const selectedCategory = getCategory('name', category);
   if (!selectedCategory) return <NotFound />;
@@ -77,15 +75,19 @@ const ProductsPage = ({
   return (
     <section className="grid grid-cols-[1fr_4fr] gap-10 pt-5">
       <div>
-        <Button variant="outline" onClick={clearAllQueryParams}>
-          Clear All Filters
-        </Button>
         <FilterProducts selectedCategory={selectedCategory} />
       </div>
 
       <div className="space-y-5">
-        <div>
-          <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
+        <div className="flex items-center justify-between gap-5">
+          <div>
+            <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
+          </div>
+          <div>
+            <Button variant="outline" onClick={clearAllQueryParams}>
+              Clear All Filters
+            </Button>
+          </div>
         </div>
 
         <ProductsList products={data.products} />
