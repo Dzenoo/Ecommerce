@@ -57,12 +57,17 @@ const useQueryParams = () => {
     [updateQueryParams],
   );
 
+  const clearAllQueryParams = useCallback(() => {
+    window.history.replaceState(null, '', pathname);
+  }, [pathname]);
+
   return {
     params,
     updateQueryParams,
     getQueryParam,
     getQueryParamAll,
     deleteQueryParam,
+    clearAllQueryParams,
   };
 };
 

@@ -25,8 +25,12 @@ const QueryParamController = <T,>({
   debounce = 300,
   children,
 }: QueryParamControllerProps<T>) => {
-  const { getQueryParam, getQueryParamAll, updateQueryParams } =
-    useQueryParams();
+  const {
+    getQueryParam,
+    getQueryParamAll,
+    updateQueryParams,
+    deleteQueryParam,
+  } = useQueryParams();
   const [internalValue, setInternalValue] = useState<T>(defaultValue as T);
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -50,7 +54,15 @@ const QueryParamController = <T,>({
       const encodedValue =
         transform?.encode(internalValue) ??
         (internalValue as string | string[] | null);
-      updateQueryParams({ [paramKey]: encodedValue });
+      if (
+        encodedValue === undefined ||
+        encodedValue === null ||
+        encodedValue === ''
+      ) {
+        deleteQueryParam(paramKey);
+      } else {
+        updateQueryParams({ [paramKey]: encodedValue });
+      }
     }, debounce);
 
     return () => clearTimeout(handler);

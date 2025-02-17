@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import { GetProductsDto } from '@/types';
 import { getCategory } from '@/lib/utils';
@@ -9,6 +9,7 @@ import {
   ProductQueryType,
   useProductQuery,
 } from '@/hooks/queries/useProduct.query';
+import { useQueryParams } from '@/hooks/core/useQueryParams';
 
 import NotFound from '@/components/shared/NotFound';
 import ProductsList from '@/components/root/products/ProductsList';
@@ -16,13 +17,18 @@ import QueryParamController from '@/components/shared/QueryParamController';
 import PaginateList from '@/components/ui/pagination/paginate-list';
 import FilterProducts from '@/components/root/products/filters/FilterProducts';
 
+import { Button } from '@/components/ui/buttons/button';
+
 const ProductsPage = ({
   params,
 }: {
   params: Promise<{ category: string }>;
 }) => {
+  const { clearAllQueryParams } = useQueryParams();
   const searchParams = useSearchParams();
   const { category } = use(params);
+
+  const pathname = usePathname();
 
   const selectedCategory = getCategory('name', category);
   if (!selectedCategory) return <NotFound />;
@@ -69,12 +75,19 @@ const ProductsPage = ({
   if (!data) return <NotFound />;
 
   return (
-    <section className="grid grid-cols-[1fr_4fr] gap-10">
+    <section className="grid grid-cols-[1fr_4fr] gap-10 pt-5">
       <div>
+        <Button variant="outline" onClick={clearAllQueryParams}>
+          Clear All Filters
+        </Button>
         <FilterProducts selectedCategory={selectedCategory} />
       </div>
 
       <div className="space-y-5">
+        <div>
+          <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
+        </div>
+
         <ProductsList products={data.products} />
 
         {data.totalProducts > 10 && (

@@ -8,9 +8,7 @@ import { useMediaQuery } from '@/hooks/core/useMediaQuery.hook';
 import { Category, CategoryField as CategoryFieldType } from '@/types';
 import QueryParamController from '@/components/shared/QueryParamController';
 
-import { Input } from '@/components/ui/form/input';
 import { Button } from '@/components/ui/buttons/button';
-import { Checkbox } from '@/components/ui/buttons/checkbox';
 import { MultiSelect } from '@/components/ui/form/multi-select';
 import { Card, CardContent } from '@/components/ui/layout/card';
 import {
@@ -68,7 +66,11 @@ const FilterProducts: React.FC<FilterProductsProps> = ({
                   Filter seekers by skills to find the best candidates.
                 </DrawerDescription>
               </DrawerHeader>
-              <div className="hide-scrollbar mt-4 h-96 space-y-6 overflow-auto p-5"></div>
+              <div className="hide-scrollbar mt-4 h-96 space-y-6 overflow-auto p-5">
+                {selectedCategory?.fields?.map((f, i) => (
+                  <CategoryField key={i} field={f} />
+                ))}
+              </div>
             </DrawerContent>
           </Drawer>
         )}
@@ -115,16 +117,38 @@ const CategoryField = ({ field }: { field: CategoryFieldType }) => {
 
     case 'select': {
       return (
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Select Size"></SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="xs">XS</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <QueryParamController<string>
+          paramKey={field.name}
+          defaultValue=""
+          transform={{
+            decode: (value: string | string[]) =>
+              Array.isArray(value) ? value[0] || '' : value || '',
+            encode: (value) => value,
+          }}
+        >
+          {({ value, onChange }) => (
+            <Select value={value || undefined} onValueChange={onChange}>
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={field.placeholder ?? 'Select Options'}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {field.options?.map((option) =>
+                  typeof option === 'string' ? (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ) : (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ),
+                )}
+              </SelectContent>
+            </Select>
+          )}
+        </QueryParamController>
       );
     }
 
