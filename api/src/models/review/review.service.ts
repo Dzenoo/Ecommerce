@@ -57,12 +57,24 @@ export class ReviewService {
       user: userId,
     });
 
+    const allReviewsForProducts = await this.reviewModel
+      .find({ product: productId })
+      .lean()
+      .exec();
+
+    const totalRatings =
+      allReviewsForProducts.reduce((acc, review) => acc + review.rating, 0) +
+      body.rating;
+
+    const averageRating = totalRatings / (allReviewsForProducts.length + 1);
+
     await Promise.all([
       await this.userService.findOneByIdAndUpdate(userId, {
         $push: { reviews: review._id },
       }),
       await this.productService.findOneByIdAndUpdate(productId, {
         $push: { reviews: review._id },
+        averageRating: averageRating,
       }),
     ]);
 
