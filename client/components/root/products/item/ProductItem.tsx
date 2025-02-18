@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Star } from 'lucide-react';
 
 import { IProduct } from '@/types';
+import { renderRating } from '@/helpers/render-rating';
 
 import AddToCart from './AddToCart';
 import AddToFavorites from './AddToFavorites';
@@ -42,18 +42,17 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         </CardHeader>
         <Separator />
         <CardContent>
-          <div className="flex justify-between gap-5">
+          <div className="flex flex-wrap justify-between gap-2">
             <div>
               <Link href={`/products/product/${product._id}`}>
                 <h2 className="text-lg font-medium">{product.name}</h2>
               </Link>
             </div>
             <div className="flex items-center gap-1">
-              <span className="mt-0.5 font-bold">{product.averageRating}</span>{' '}
-              <Star color="#FFAE00" />
+              {renderRating(product.averageRating)}
             </div>
           </div>
-          <div className="mt-2">
+          <div className="mt-4">
             <p className="truncate text-sm font-light text-muted-foreground">
               {product.description}
             </p>

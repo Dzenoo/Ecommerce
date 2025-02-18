@@ -224,13 +224,16 @@ const PriceFilter: React.FC = () => {
           }}
         >
           {({ value, onChange }) => (
-            <Input
-              placeholder="Min Price"
-              onChange={(event) => onChange(event.target.value)}
-              value={value || 0}
-              min={0}
-              type="number"
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Min</label>
+              <Input
+                placeholder="Min Price"
+                onChange={(event) => onChange(event.target.value)}
+                value={value || 0}
+                min={0}
+                type="number"
+              />
+            </div>
           )}
         </QueryParamController>
         <QueryParamController<string>
@@ -243,13 +246,16 @@ const PriceFilter: React.FC = () => {
           }}
         >
           {({ value, onChange }) => (
-            <Input
-              placeholder="Max Price"
-              onChange={(event) => onChange(event.target.value)}
-              value={value || 0}
-              min={0}
-              type="number"
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Min</label>
+              <Input
+                placeholder="Max Price"
+                onChange={(event) => onChange(event.target.value)}
+                value={value || 0}
+                min={0}
+                type="number"
+              />
+            </div>
           )}
         </QueryParamController>
       </div>

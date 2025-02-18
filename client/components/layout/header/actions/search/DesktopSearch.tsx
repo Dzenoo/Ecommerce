@@ -4,7 +4,6 @@ import { useMounted } from '@/hooks/core/useMounted.hook';
 
 import { SearchInput } from './SearchInput';
 import { SearchResults } from './SearchResults';
-import { SearchActions, SearchState } from './SearchStateProvider';
 
 import {
   Popover,
@@ -12,10 +11,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/layout/popover';
 
-export const DesktopSearch: React.FC<SearchState & SearchActions> = ({
-  query,
-  setQuery,
-}) => {
+export const DesktopSearch: React.FC = ({}) => {
   const { isMounted } = useMounted();
   if (!isMounted) return null;
 
@@ -23,7 +19,7 @@ export const DesktopSearch: React.FC<SearchState & SearchActions> = ({
     <Popover>
       <PopoverTrigger asChild>
         <div className="w-full">
-          <SearchInput query={query} setQuery={setQuery} />
+          <SearchInput />
         </div>
       </PopoverTrigger>
       <PopoverContent
@@ -32,7 +28,7 @@ export const DesktopSearch: React.FC<SearchState & SearchActions> = ({
         side="bottom"
         align="start"
       >
-        <SearchResults query={query} />
+        <SearchResults />
       </PopoverContent>
     </Popover>
   );
