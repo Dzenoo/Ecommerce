@@ -32,7 +32,7 @@ export const SearchResults: React.FC = () => {
       </div>
     );
 
-  if (!data)
+  if (!data || data.products.length === 0)
     return (
       <div className={divClasses}>
         <p className="text-sm font-light text-muted-foreground">
