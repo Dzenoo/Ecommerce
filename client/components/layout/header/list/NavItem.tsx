@@ -24,7 +24,7 @@ const NavItem: React.FC<NavItemProps> = ({ category, depth = 0 }) => {
       onMouseLeave={() => setIsOpen(false)}
     >
       <Link
-        href={category.href}
+        href={category.href || '/'}
         className={cn(
           'flex w-full items-center justify-between rounded-lg py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
           depth > 0 ? 'pl-4 pr-2' : 'px-4',

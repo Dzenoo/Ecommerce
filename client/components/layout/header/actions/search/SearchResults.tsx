@@ -10,14 +10,15 @@ import {
 import { IProduct } from '@/types';
 import { renderRating } from '@/helpers/render-rating';
 import Loader from '@/components/ui/info/loader';
+import { getCategory } from '@/lib/utils';
 
-export const SearchResults: React.FC<{}> = ({}) => {
+export const SearchResults: React.FC = () => {
   const searchParams = useSearchParams();
 
   const { data, isLoading } = useProductQuery(
     {
       type: ProductQueryType.GET_ALL,
-      query: { search: searchParams.get('search') || undefined },
+      query: { search: searchParams.get('search') || undefined, limit: 5 },
     },
     { enabled: !!searchParams.get('search') },
   );
@@ -40,44 +41,47 @@ export const SearchResults: React.FC<{}> = ({}) => {
       </div>
     );
 
-  const productsData =
-    data.products.length > 5 ? data.products.slice(0, 5) : data.products;
+  const productsData = data.products.slice(0, 5);
 
   return (
     <div className="flex flex-col gap-5 p-5">
-      {productsData.map((product: IProduct) => (
-        <Link
-          key={product._id}
-          href={`/products/product/${product._id}`}
-          className="transition-all hover:bg-[#F5F5F5]"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div>
-                <Image
-                  src={product.images[0]}
-                  alt={product.name}
-                  width={50}
-                  height={50}
-                />
-              </div>
-              <div>
-                <h2 className="text-sm font-light">{product.name}</h2>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div>
-                <div className="flex items-center gap-1">
-                  {renderRating(product.averageRating)}
+      {productsData.map((product: IProduct) => {
+        const category = getCategory('id', product.category);
+
+        return (
+          <Link
+            key={product._id}
+            href={`/products/${category?.name.toLowerCase()}/${product._id}`}
+            className="transition-all hover:bg-[#F5F5F5]"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div>
+                  <Image
+                    src={product.images[0]}
+                    alt={product.name}
+                    width={50}
+                    height={50}
+                  />
+                </div>
+                <div>
+                  <h2 className="text-sm font-light">{product.name}</h2>
                 </div>
               </div>
-              <div>
-                <p className="text-sm font-medium">{product.price} DIN</p>
+              <div className="flex items-center gap-2">
+                <div>
+                  <div className="flex items-center gap-1">
+                    {renderRating(product.averageRating)}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">{product.price} DIN</p>
+                </div>
               </div>
             </div>
-          </div>
-        </Link>
-      ))}
+          </Link>
+        );
+      })}
     </div>
   );
 };

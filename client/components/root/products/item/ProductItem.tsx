@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { IProduct } from '@/types';
 import { renderRating } from '@/helpers/render-rating';
+import { getCategory } from '@/lib/utils';
 
 import AddToCart from './AddToCart';
 import AddToFavorites from './AddToFavorites';
@@ -22,11 +23,15 @@ type ProductItemProps = {
 };
 
 const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
+  const category = getCategory('id', product.category);
+
   return (
     <li>
       <Card className="shadow-none">
         <CardHeader className="relative items-center">
-          <Link href={`/products/product/${product._id}`}>
+          <Link
+            href={`/products/${category?.name.toLowerCase()}/${product._id}`}
+          >
             <Image
               className="transition-all hover:scale-110"
               src={product.images[0]}
@@ -44,7 +49,9 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         <CardContent>
           <div className="flex flex-wrap justify-between gap-2">
             <div>
-              <Link href={`/products/product/${product._id}`}>
+              <Link
+                href={`/products/${category?.name.toLowerCase()}/${product._id}`}
+              >
                 <h2 className="text-lg font-medium">{product.name}</h2>
               </Link>
             </div>
