@@ -1,5 +1,13 @@
+import { AttributesValidator } from '@/models/product/dto/create-product.dto';
 import { Transform } from 'class-transformer';
-import { IsMongoId, IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsPositive,
+  Validate,
+} from 'class-validator';
 
 export class AddItemDto {
   @IsMongoId()
@@ -11,4 +19,13 @@ export class AddItemDto {
   @IsPositive()
   @Transform(({ value }) => Number(value))
   quantity: number;
+
+  @IsObject()
+  @IsNotEmpty()
+  @Transform(({ value }) => JSON.parse(value))
+  @Validate(AttributesValidator, {
+    message:
+      'Attributes must be an object where each key has a string or an array of strings as its value.',
+  })
+  attributes: Record<string, any>;
 }

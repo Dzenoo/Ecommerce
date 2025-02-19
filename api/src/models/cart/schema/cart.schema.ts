@@ -19,11 +19,13 @@ export class Cart {
         required: true,
       },
       quantity: { type: Number, min: 1, required: true, default: 1 },
+      attributes: { type: mongoose.Schema.Types.Mixed, default: {} },
     },
   ])
   items: {
     product: Product | mongoose.Types.ObjectId;
     quantity: number;
+    attributes: Record<string, any>;
   }[];
 
   @Prop({ type: Number, default: 0 })

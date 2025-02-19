@@ -42,6 +42,7 @@ export class CartService {
     userId: string,
     productId: string,
     quantity: number,
+    attributes: Record<string, any>,
   ): Promise<ResponseObject> {
     const product = await this.productService.findById(productId);
     if (!product) {
@@ -57,7 +58,9 @@ export class CartService {
     }
 
     const existingProduct = cart.items.find(
-      (item) => item.product.toString() === productId,
+      (item) =>
+        item.product.toString() === productId &&
+        JSON.stringify(item.attributes) === JSON.stringify(attributes),
     );
 
     if (existingProduct) {
@@ -66,6 +69,7 @@ export class CartService {
       cart.items.push({
         product: new mongoose.Types.ObjectId(productId),
         quantity,
+        attributes,
       });
     }
 

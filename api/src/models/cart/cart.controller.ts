@@ -25,9 +25,9 @@ export class CartController {
   @UseGuards(JwtAuthGuard)
   async addItem(
     @User('userId') userId: string,
-    @Body() { productId, quantity }: AddItemDto,
+    @Body() { productId, quantity, attributes }: AddItemDto,
   ) {
-    return this.cartService.add(userId, productId, quantity);
+    return this.cartService.add(userId, productId, quantity, attributes);
   }
 
   @Delete('/remove/:productId')
