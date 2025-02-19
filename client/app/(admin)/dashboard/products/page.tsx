@@ -34,18 +34,13 @@ const DashboardProductsPage = () => {
     return <NotFound href="/dashboard" />;
   }
 
-  const productsData = data || {
-    products: [],
-    totalProducts: 0,
-  };
-
-  const totalProducts = productsData.totalProducts;
+  const totalProducts = data.totalProducts;
 
   return (
     <section className="flex flex-col gap-5">
       <SearchDashboardProducts />
 
-      <DashboardProductsList productsData={productsData} />
+      <DashboardProductsList productsData={data} />
 
       {totalProducts > 10 && (
         <QueryParamController<string> paramKey="page" defaultValue="1">

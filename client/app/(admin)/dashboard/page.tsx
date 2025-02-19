@@ -28,42 +28,25 @@ const DashboardPage = () => {
     return <NotFound href="/dashboard" />;
   }
 
-  const analyticsData = data?.data || {
-    overview: {
-      totalOrders: 0,
-      ordersThisMonth: 0,
-      totalProducts: 0,
-      productsThisMonth: 0,
-      totalUsers: 0,
-      usersThisMonth: 0,
-      totalRevenue: 0,
-      revenueThisMonth: 0,
-    },
-    salesPerformance: [],
-    ordersByStatus: [],
-    topSellingProducts: [],
-    customerGrowth: [],
-  };
-
   return (
     <section className="grid grid-cols-1 gap-5">
       <div>
         <Overview
-          totalOrders={analyticsData.overview.totalOrders}
-          totalProducts={analyticsData.overview.totalProducts}
-          totalRevenue={analyticsData.overview.totalRevenue}
-          totalUsers={analyticsData.overview.totalUsers}
-          ordersThisMonth={analyticsData.overview.ordersThisMonth}
-          productsThisMonth={analyticsData.overview.productsThisMonth}
-          revenueThisMonth={analyticsData.overview.revenueThisMonth}
-          usersThisMonth={analyticsData.overview.usersThisMonth}
+          totalOrders={data.overview.totalOrders}
+          totalProducts={data.overview.totalProducts}
+          totalRevenue={data.overview.totalRevenue}
+          totalUsers={data.overview.totalUsers}
+          ordersThisMonth={data.overview.ordersThisMonth}
+          productsThisMonth={data.overview.productsThisMonth}
+          revenueThisMonth={data.overview.revenueThisMonth}
+          usersThisMonth={data.overview.usersThisMonth}
         />
       </div>
       <div className="grid grid-cols-2 gap-5 max-xl:grid-cols-1">
-        <SalesPerformance data={analyticsData.salesPerformance} />
-        <OrdersByStatus data={analyticsData.ordersByStatus} />
-        <TopSellingProducts data={analyticsData.topSellingProducts} />
-        <CustomerGrowth data={analyticsData.customerGrowth} />
+        <SalesPerformance data={data.salesPerformance} />
+        <OrdersByStatus data={data.ordersByStatus} />
+        <TopSellingProducts data={data.topSellingProducts} />
+        <CustomerGrowth data={data.customerGrowth} />
       </div>
     </section>
   );

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { IProduct } from '@/types';
 import { renderRating } from '@/helpers/render-rating';
 import { getCategory } from '@/lib/utils';
+import MarkdownRenderer from '@/helpers/MarkdownRenderer';
 
 import AddToCart from './AddToCart';
 import AddToFavorites from './AddToFavorites';
@@ -28,16 +29,15 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   return (
     <li>
       <Card className="shadow-none">
-        <CardHeader className="relative items-center">
+        <CardHeader className="relative max-h-52 min-h-52 items-center overflow-hidden">
           <Link
             href={`/products/${category?.name.toLowerCase()}/${product._id}`}
           >
             <Image
-              className="transition-all hover:scale-110"
+              className="object-contain transition-all hover:scale-110"
               src={product.images[0]}
               alt={product._id}
-              width={500}
-              height={500}
+              fill
             />
           </Link>
           <AddToFavorites
@@ -59,10 +59,11 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               {renderRating(product.averageRating)}
             </div>
           </div>
-          <div className="mt-4">
-            <p className="truncate text-sm font-light text-muted-foreground">
-              {product.description}
-            </p>
+          <div className="mt-4 max-h-5 overflow-hidden">
+            <MarkdownRenderer
+              className="product-item-description-markdown"
+              content={product.description}
+            />
           </div>
         </CardContent>
         <Separator />

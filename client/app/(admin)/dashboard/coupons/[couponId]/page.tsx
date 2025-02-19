@@ -25,13 +25,9 @@ const DashboardEditCouponPage = ({
     return 'No coupon found';
   }
 
-  const couponData = data || {
-    coupon: {},
-  };
-
   return (
     <section className="h-full">
-      <HandleCoupon isEdit={true} coupon={couponData.coupon} />
+      <HandleCoupon isEdit={true} coupon={data.coupon} />
     </section>
   );
 };

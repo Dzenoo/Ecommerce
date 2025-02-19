@@ -25,13 +25,9 @@ const DashboardEditProductPage = ({
     return 'No product found';
   }
 
-  const productData = data || {
-    product: {},
-  };
-
   return (
     <section className="h-full">
-      <HandleProduct isEdit={true} product={productData.product} />
+      <HandleProduct isEdit={true} product={data.product} />
     </section>
   );
 };

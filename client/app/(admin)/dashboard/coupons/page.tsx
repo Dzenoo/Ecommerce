@@ -25,14 +25,9 @@ const DashboardCouponsPage = () => {
     return <NotFound href="/dashboard" />;
   }
 
-  const couponsData = data || {
-    coupons: [],
-    totalCoupons: 0,
-  };
-
   return (
     <section className="flex flex-col gap-5">
-      <DashboardCouponsList couponsData={couponsData} />
+      <DashboardCouponsList couponsData={data} />
     </section>
   );
 };

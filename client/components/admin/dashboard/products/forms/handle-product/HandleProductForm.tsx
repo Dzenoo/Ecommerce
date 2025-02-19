@@ -337,7 +337,7 @@ const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
 
           <Button type="submit" disabled={!form.formState.isValid}>
             {form.formState.isSubmitting && isLoading ? (
-              <Loader type="ScaleLoader" height={20} />
+              <Loader type="ScaleLoader" height={20} color="#ffffff" />
             ) : (
               'Save'
             )}
