@@ -31,8 +31,8 @@ export class Product {
   @Prop({ required: true, type: [String] })
   images: string[];
 
-  @Prop({ type: Number, default: 0 })
-  stock?: number;
+  @Prop({ type: Number, required: true, min: 0, max: 1000 })
+  stock: number;
 
   @Prop({ type: Number, default: 0 })
   discount?: number;

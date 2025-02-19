@@ -86,9 +86,11 @@ export class CreateProductDto {
   description: string;
 
   @IsNumber()
-  @IsOptional()
+  @IsNotEmpty()
+  @Min(0)
+  @Max(1000)
   @Transform(({ value }) => Number(value))
-  stock?: number;
+  stock: number;
 
   @IsNumber()
   @IsOptional()

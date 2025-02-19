@@ -22,8 +22,7 @@ const BaseProductSchema = z.object({
   stock: z.coerce
     .number({ invalid_type_error: 'Stock must be a number.' })
     .min(0, 'Stock cannot be negative.')
-    .max(100)
-    .optional(),
+    .max(1000),
 
   discount: z.coerce
     .number({ invalid_type_error: 'Discount must be a number.' })
