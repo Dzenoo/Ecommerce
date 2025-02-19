@@ -112,7 +112,7 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
             <TableCell className="truncate">{product.description}</TableCell>
             <TableCell>{getCategory('id', product.category)?.name}</TableCell>
             <TableCell>{product.price} DIN</TableCell>
-            <TableCell>{product.discount} %</TableCell>
+            <TableCell>{product.discount}%</TableCell>
             <TableCell>{product.stock}</TableCell>
             <TableCell>
               <DropdownMenu modal={false}>

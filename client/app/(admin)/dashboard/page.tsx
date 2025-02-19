@@ -32,21 +32,21 @@ const DashboardPage = () => {
     <section className="grid grid-cols-1 gap-5">
       <div>
         <Overview
-          totalOrders={data.overview.totalOrders}
-          totalProducts={data.overview.totalProducts}
-          totalRevenue={data.overview.totalRevenue}
-          totalUsers={data.overview.totalUsers}
-          ordersThisMonth={data.overview.ordersThisMonth}
-          productsThisMonth={data.overview.productsThisMonth}
-          revenueThisMonth={data.overview.revenueThisMonth}
-          usersThisMonth={data.overview.usersThisMonth}
+          totalOrders={data.data.overview.totalOrders}
+          totalProducts={data.data.overview.totalProducts}
+          totalRevenue={data.data.overview.totalRevenue}
+          totalUsers={data.data.overview.totalUsers}
+          ordersThisMonth={data.data.overview.ordersThisMonth}
+          productsThisMonth={data.data.overview.productsThisMonth}
+          revenueThisMonth={data.data.overview.revenueThisMonth}
+          usersThisMonth={data.data.overview.usersThisMonth}
         />
       </div>
       <div className="grid grid-cols-2 gap-5 max-xl:grid-cols-1">
-        <SalesPerformance data={data.salesPerformance} />
-        <OrdersByStatus data={data.ordersByStatus} />
-        <TopSellingProducts data={data.topSellingProducts} />
-        <CustomerGrowth data={data.customerGrowth} />
+        <SalesPerformance data={data.data.salesPerformance} />
+        <OrdersByStatus data={data.data.ordersByStatus} />
+        <TopSellingProducts data={data.data.topSellingProducts} />
+        <CustomerGrowth data={data.data.customerGrowth} />
       </div>
     </section>
   );

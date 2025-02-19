@@ -46,8 +46,8 @@ const AddToCart: React.FC<AddToCartProps> = ({
 
   const handleAddToCart = () => {
     if (
-      Object.keys(attributes).includes('size') &&
-      Object.keys(attributes).includes('color') &&
+      !Object.keys(attributes).includes('size') &&
+      !Object.keys(attributes).includes('color') &&
       Object.values(attributes).length === 0
     )
       return toast({

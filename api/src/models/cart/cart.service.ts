@@ -70,19 +70,17 @@ export class CartService {
 
     if (quantity > product.stock) {
       throw new BadRequestException('Not enough stock.');
+    } else if (quantity <= 0) {
+      throw new BadRequestException('Quantity must be greater than 0.');
     }
 
     if (existingProduct) {
       existingProduct.quantity += quantity;
     } else {
-      await this.cartModel.findByIdAndUpdate(cart._id, {
-        $push: {
-          items: {
-            product: new mongoose.Types.ObjectId(productId),
-            quantity,
-            attributes,
-          },
-        },
+      cart.items.push({
+        product: new mongoose.Types.ObjectId(productId),
+        quantity,
+        attributes,
       });
     }
 

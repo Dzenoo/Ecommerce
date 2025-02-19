@@ -27,7 +27,7 @@ const DashboardEditProductPage = ({
 
   return (
     <section className="h-full">
-      <HandleProduct isEdit={true} product={data.product} />
+      <HandleProduct isEdit={true} product={data?.product} />
     </section>
   );
 };

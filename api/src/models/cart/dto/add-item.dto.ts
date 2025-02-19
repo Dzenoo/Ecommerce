@@ -26,7 +26,9 @@ export class AddItemDto {
 
   @IsObject()
   @IsNotEmpty()
-  @Transform(({ value }) => JSON.parse(value))
+  @Transform(({ value }) =>
+    typeof value === 'string' ? JSON.parse(value) : value,
+  )
   @Validate(AttributesValidator, {
     message:
       'Attributes must be an object where each key has a string or an array of strings as its value.',
