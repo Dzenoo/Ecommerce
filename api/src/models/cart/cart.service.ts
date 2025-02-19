@@ -75,10 +75,14 @@ export class CartService {
     if (existingProduct) {
       existingProduct.quantity += quantity;
     } else {
-      cart.items.push({
-        product: new mongoose.Types.ObjectId(productId),
-        quantity,
-        attributes,
+      await this.cartModel.findByIdAndUpdate(cart._id, {
+        $push: {
+          items: {
+            product: new mongoose.Types.ObjectId(productId),
+            quantity,
+            attributes,
+          },
+        },
       });
     }
 
