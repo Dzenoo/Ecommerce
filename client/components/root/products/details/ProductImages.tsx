@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface ProductImagesProps {
+type ProductImagesProps = {
   images: string[];
-}
+};
 
 const ProductImages: React.FC<ProductImagesProps> = ({ images }) => {
   const [currentImage, setCurrentImage] = useState<number>(0);

@@ -10,6 +10,7 @@ import {
 import ProductImages from '@/components/root/products/details/ProductImages';
 import ProductInformation from '@/components/root/products/details/ProductInformation';
 import NotFound from '@/components/shared/NotFound';
+import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
 
 const ProductDetailsPage = ({
   params,
@@ -33,11 +34,12 @@ const ProductDetailsPage = ({
 
   return (
     <section className="grid grid-cols-[1fr_2fr] gap-10 pt-5">
-      <div>
+      <div className="space-y-5">
+        <BreadcrumbProducts page={data.product.name} />
         <ProductImages images={data.product.images} />
       </div>
       <div>
-        <ProductInformation />
+        <ProductInformation product={data.product} />
       </div>
     </section>
   );

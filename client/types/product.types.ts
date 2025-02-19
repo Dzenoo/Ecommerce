@@ -31,7 +31,7 @@ export interface IProduct {
   discount: number;
   averageRating: number;
   category: number;
-  attributes: Record<string, any>;
+  attributes: Record<string, string | string[] | number | number[]>;
   reviews: IReview[] | [];
   createdAt: Date;
   updatedAt: Date;
