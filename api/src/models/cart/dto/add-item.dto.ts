@@ -6,6 +6,8 @@ import {
   IsNumber,
   IsObject,
   IsPositive,
+  Max,
+  Min,
   Validate,
 } from 'class-validator';
 
@@ -18,6 +20,8 @@ export class AddItemDto {
   @IsNotEmpty()
   @IsPositive()
   @Transform(({ value }) => Number(value))
+  @Max(100)
+  @Min(1)
   quantity: number;
 
   @IsObject()

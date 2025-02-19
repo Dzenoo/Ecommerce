@@ -1,4 +1,9 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, {
   FilterQuery,
@@ -62,6 +67,10 @@ export class CartService {
         item.product.toString() === productId &&
         JSON.stringify(item.attributes) === JSON.stringify(attributes),
     );
+
+    if (quantity > product.stock) {
+      throw new BadRequestException('Not enough stock.');
+    }
 
     if (existingProduct) {
       existingProduct.quantity += quantity;

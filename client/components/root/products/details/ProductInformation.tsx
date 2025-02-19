@@ -1,20 +1,37 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { Truck } from 'lucide-react';
 
 import { IProduct } from '@/types';
 import { renderRating } from '@/helpers/render-rating';
+import { cn } from '@/lib/utils';
+
 import AddToFavorites from '../item/AddToFavorites';
 import AddToCart from '../item/AddToCart';
 import MarkdownRenderer from '@/helpers/MarkdownRenderer';
+import PickQuantity from './PickQuantity';
 
 import { Button } from '@/components/ui/buttons/button';
 import { Separator } from '@/components/ui/layout/separator';
-import { Truck } from 'lucide-react';
 
 type ProductInformationProps = {
   product: IProduct;
 };
 
 const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
+  const [attributes, setAttributes] = useState<Record<string, any>>({});
+  const isOutOfStock = product.stock === 0;
+
+  const handlePick = ({ key, value }: { key: string; value: any }) => {
+    setAttributes((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
   return (
     <div className="grid grid-cols-2 gap-10">
       <div className="space-y-5">
@@ -24,12 +41,15 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
               {product.name}
             </h1>
           </div>
-          {product.stock > 0 && (
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-4 rounded-full bg-green-500" />
-              <p className="text-sm">On stock</p>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                'h-4 w-4 rounded-full bg-green-500',
+                isOutOfStock && 'bg-red-500',
+              )}
+            />
+            <p className="text-sm">{isOutOfStock ? 'Out of' : 'On'} stock</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -59,9 +79,14 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
                     <div className="flex items-center gap-2">
                       {value.map((v, i) => (
                         <Button
-                          className="capitalize"
-                          variant="outline"
                           key={i}
+                          className={cn(
+                            'capitalize',
+                            Object.values(attributes).includes(v) &&
+                              'border-blue-500',
+                          )}
+                          variant="outline"
+                          onClick={() => handlePick({ key, value: v })}
                         >
                           {v}
                         </Button>
@@ -79,7 +104,21 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         <Separator />
 
         <div className="flex flex-col gap-2">
-          <AddToCart variant="default" showText product={product} />
+          {!isOutOfStock && (
+            <PickQuantity product={product}>
+              {(quantity) => (
+                <AddToCart
+                  className="w-full"
+                  variant="default"
+                  showText
+                  product={product}
+                  attributes={attributes}
+                  quantity={quantity}
+                  disabled={isOutOfStock}
+                />
+              )}
+            </PickQuantity>
+          )}
           <AddToFavorites variant="outline" showText product={product} />
         </div>
       </div>

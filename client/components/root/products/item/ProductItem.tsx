@@ -41,8 +41,9 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             />
           </Link>
           <AddToFavorites
-            className="absolute right-2 top-2"
+            className="absolute right-1 top-1"
             product={product}
+            variant="ghost"
           />
         </CardHeader>
         <Separator />
@@ -71,7 +72,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           <Button type="button" variant="outline" className="flex-1">
             {product.price} DIN
           </Button>
-          <AddToCart product={product} />
+          <AddToCart product={product} attributes={{}} />
         </CardFooter>
       </Card>
     </li>

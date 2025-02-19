@@ -4,6 +4,7 @@ import { IUser } from './user.types';
 export type AddItemToCartDto = {
   productId: string;
   quantity: number;
+  attributes: Record<string, any>;
 };
 
 export interface ICart {
