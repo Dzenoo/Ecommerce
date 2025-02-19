@@ -47,7 +47,7 @@ export class CartService {
     userId: string,
     productId: string,
     quantity: number,
-    attributes: Record<string, any>,
+    attributes: Record<string, any> = {},
   ): Promise<ResponseObject> {
     const product = await this.productService.findById(productId);
     if (!product) {
