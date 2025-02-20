@@ -44,6 +44,6 @@ export class AttributesValidator implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments): string {
-    return `${args.property} must be an object that includes non-empty "size" and "color" properties, and any other attributes must not be empty.`;
+    return 'Attributes must be an object that includes "size" and "color" properties, and any other attributes must not be empty.';
   }
 }
