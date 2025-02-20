@@ -10,24 +10,36 @@ import { Input } from '@/components/ui/form/input';
 
 type PickQuantityProps = {
   product: IProduct;
-  children: (quantity: number) => React.ReactNode;
+  defaultQuantity?: number;
+  onQuantityChange?: (
+    quantity: number,
+    action: 'increment' | 'decrement',
+  ) => void;
+  children?: (quantity: number) => React.ReactNode;
 };
 
-const PickQuantity: React.FC<PickQuantityProps> = ({ product, children }) => {
+const PickQuantity: React.FC<PickQuantityProps> = ({
+  product,
+  defaultQuantity,
+  onQuantityChange,
+  children,
+}) => {
   const [quantity, setQuantity] = useState<number>(1);
   const isOutOfStock = product.stock === 0;
 
   const handleDecrease = () => {
     if (isOutOfStock) return;
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      setQuantity((prev) => prev - 1);
+      onQuantityChange?.(quantity, 'decrement');
     }
   };
 
   const handleIncrease = () => {
     if (isOutOfStock) return;
     if (quantity < product.stock) {
-      setQuantity(quantity + 1);
+      setQuantity((prev) => prev + 1);
+      onQuantityChange?.(quantity, 'increment');
     }
   };
 
@@ -42,13 +54,11 @@ const PickQuantity: React.FC<PickQuantityProps> = ({ product, children }) => {
           <Minus />
         </Button>
         <Input
+          readOnly
           type="number"
           className="h-[37px] rounded-none text-center"
-          max={!isOutOfStock ? product.stock : 0}
-          min={1}
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          disabled={isOutOfStock}
+          value={defaultQuantity || quantity}
+          disabled={true}
           placeholder="Quantity"
         />
         <Button
@@ -59,7 +69,7 @@ const PickQuantity: React.FC<PickQuantityProps> = ({ product, children }) => {
           <Plus />
         </Button>
       </div>
-      <div>{children(quantity)}</div>
+      {children && <div>{children(quantity)}</div>}
     </div>
   );
 };

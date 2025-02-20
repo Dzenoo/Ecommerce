@@ -133,7 +133,7 @@ export class CartService {
     }
 
     const item = cart.items.find(
-      (item) => item.product.toString() === productId,
+      (item: any) => item._id.toString() === productId,
     );
     if (!item) {
       throw new NotFoundException('Product not found in cart');
@@ -163,7 +163,10 @@ export class CartService {
   }
 
   async get(userId: string): Promise<ResponseObject> {
-    const cart = await this.cartModel.findOne({ user: userId });
+    const cart = await this.cartModel.findOne({ user: userId }).populate({
+      path: 'items.product',
+      model: 'Product',
+    });
     if (!cart) {
       throw new NotFoundException('Cart not found');
     }

@@ -7,13 +7,17 @@ export type AddItemToCartDto = {
   attributes: Record<string, any>;
 };
 
+export interface ICartItem {
+  _id: string;
+  product: IProduct & string;
+  quantity: number;
+  attributes: Record<string, any>;
+}
+
 export interface ICart {
   _id: string;
   user: IUser;
-  items: {
-    product: IProduct | string;
-    quantity: number;
-  }[];
+  items: ICartItem[];
   totalPrice: number;
   isActive: boolean;
   couponApplied: string;
