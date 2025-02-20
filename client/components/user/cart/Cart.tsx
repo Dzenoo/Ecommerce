@@ -27,7 +27,7 @@ const Cart: React.FC<CartProps> = ({ cart }) => {
         </CardDescription>
       </CardHeader>
       <Separator />
-      <CardContent className="space-y-4">
+      <CardContent className="hide-scrollbar max-h-screen space-y-4 overflow-y-auto">
         {cart.items.length === 0 && (
           <Empty
             icon={<ShoppingBag size={50} className="mb-4" />}
