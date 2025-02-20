@@ -11,6 +11,7 @@ import ProductImages from '@/components/root/products/details/ProductImages';
 import ProductInformation from '@/components/root/products/details/ProductInformation';
 import NotFound from '@/components/shared/NotFound';
 import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
+import LoadingProductDetails from '@/components/shared/loading/LoadingProductDetails';
 
 const ProductDetailsPage = ({
   params,
@@ -25,7 +26,7 @@ const ProductDetailsPage = ({
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingProductDetails />;
   }
 
   if (!data) {
