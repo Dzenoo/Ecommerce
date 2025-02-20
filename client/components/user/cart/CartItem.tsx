@@ -38,14 +38,11 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     },
   });
 
-  const handleQuantityChange = (
-    quantity: number,
-    action: 'increment' | 'decrement',
-  ) => {
+  const handleQuantityChange = (action: 'increment' | 'decrement') => {
     return mutation.mutateAsync({
       type: CartMutationType.UPDATE,
-      data: { quantity, action },
-      productId: item._id,
+      data: { action },
+      itemId: item._id,
     });
   };
 

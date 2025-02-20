@@ -26,10 +26,9 @@ type CartMutationPayload =
   | {
       type: CartMutationType.UPDATE;
       data: {
-        quantity: number;
         action: 'increment' | 'decrement';
       };
-      productId: string;
+      itemId: string;
     }
   | {
       type: CartMutationType.REMOVE;
@@ -52,7 +51,7 @@ const useCartMutation = (
       case CartMutationType.ADD:
         return addItem(payload.data);
       case CartMutationType.UPDATE:
-        return updateItem(payload.data, payload.productId);
+        return updateItem(payload.data, payload.itemId);
       case CartMutationType.REMOVE:
         return removeItem(payload.productId);
       case CartMutationType.CLEAR:

@@ -123,8 +123,7 @@ export class CartService {
 
   async update(
     userId: string,
-    productId: string,
-    quantity: number,
+    itemId: string,
     action: 'increment' | 'decrement',
   ): Promise<ResponseObject> {
     const cart = await this.cartModel.findOne({ user: userId });
@@ -132,23 +131,18 @@ export class CartService {
       throw new NotFoundException('Cart not found');
     }
 
-    const item = cart.items.find(
-      (item: any) => item._id.toString() === productId,
-    );
+    const item = cart.items.find((item: any) => item._id.toString() === itemId);
     if (!item) {
       throw new NotFoundException('Product not found in cart');
     }
 
     if (action === 'increment') {
-      item.quantity += quantity;
+      item.quantity += 1;
     } else if (action === 'decrement') {
-      item.quantity -= quantity;
-
-      if (item.quantity <= 0) {
-        cart.items = cart.items.filter(
-          (item: any) => item.product._id.toString() !== productId,
-        );
+      if (item.quantity <= 1) {
+        throw new BadRequestException('Quantity must be greater than 0.');
       }
+      item.quantity -= 1;
     }
 
     cart.totalPrice = await this.calculateTotalPrice(cart);

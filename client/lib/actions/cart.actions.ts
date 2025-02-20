@@ -25,16 +25,15 @@ export const removeItem = async (
 
 export const updateItem = async (
   data: {
-    quantity: number;
     action: 'increment' | 'decrement';
   },
-  productId: string,
+  itemId: string,
 ): Promise<
   ServerResponse<{
     cart: ICart;
   }>
 > => {
-  return await patchApiHandler(`cart/update/${productId}`, data);
+  return await patchApiHandler(`cart/update/${itemId}`, data);
 };
 
 export const getCart = async (): Promise<

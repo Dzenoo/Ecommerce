@@ -39,14 +39,14 @@ export class CartController {
     return this.cartService.remove(userId, productId);
   }
 
-  @Patch('/update/:productId')
+  @Patch('/update/:itemId')
   @UseGuards(JwtAuthGuard)
   async updateItem(
     @User('userId') userId: string,
-    @Param('productId') productId: string,
-    @Body() { quantity, action }: UpdateItemDto,
+    @Param('itemId') itemId: string,
+    @Body() { action }: UpdateItemDto,
   ) {
-    return this.cartService.update(userId, productId, quantity, action);
+    return this.cartService.update(userId, itemId, action);
   }
 
   @Get('/get')

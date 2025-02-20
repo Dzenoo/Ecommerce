@@ -12,10 +12,7 @@ import { cn } from '@/lib/utils';
 type PickQuantityProps = {
   product: IProduct;
   defaultQuantity?: number;
-  onQuantityChange?: (
-    quantity: number,
-    action: 'increment' | 'decrement',
-  ) => void;
+  onQuantityChange?: (action: 'increment' | 'decrement') => void;
   children?: (quantity: number) => React.ReactNode;
   className?: string;
 };
@@ -27,22 +24,22 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
   children,
   className,
 }) => {
-  const [quantity, setQuantity] = useState<number>(1);
+  const [quantity, setQuantity] = useState<number>(defaultQuantity ?? 1);
   const isOutOfStock = product.stock === 0;
 
   const handleDecrease = () => {
     if (isOutOfStock) return;
     if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-      onQuantityChange?.(quantity, 'decrement');
+      setQuantity(quantity - 1);
+      onQuantityChange?.('decrement');
     }
   };
 
   const handleIncrease = () => {
     if (isOutOfStock) return;
     if (quantity < product.stock) {
-      setQuantity((prev) => prev + 1);
-      onQuantityChange?.(quantity, 'increment');
+      setQuantity(quantity + 1);
+      onQuantityChange?.('increment');
     }
   };
 
@@ -63,7 +60,7 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
             className,
           )}
         >
-          {defaultQuantity || quantity}
+          {quantity}
         </div>
         <Button
           size="sm"
