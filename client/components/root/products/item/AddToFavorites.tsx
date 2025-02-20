@@ -6,6 +6,11 @@ import {
   useWishlistMutation,
   WishlistMutationType,
 } from '@/hooks/mutations/useWishlist.mutation';
+import {
+  useWishlistQuery,
+  WishlistQueryType,
+} from '@/hooks/queries/useWishlist.query';
+import { queryClient } from '@/context/react-query-client';
 import { IProduct } from '@/types';
 import Loader from '@/components/ui/info/loader';
 
@@ -24,8 +29,14 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
 }) => {
   const { toast } = useToast();
 
+  const { data } = useWishlistQuery({
+    type: WishlistQueryType.GET_WISHLIST,
+    query: {},
+  });
+
   const mutation = useWishlistMutation({
     onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
       toast({
         title: 'Success',
         description:
@@ -40,9 +51,15 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
     },
   });
 
+  const isAlreadyInWishlist = data?.wishlist?.products?.some(
+    (item: IProduct) => item._id === product._id,
+  );
+
   const handleAddToWishlist = () => {
     mutation.mutateAsync({
-      type: WishlistMutationType.ADD,
+      type: isAlreadyInWishlist
+        ? WishlistMutationType.REMOVE
+        : WishlistMutationType.ADD,
       productId: product._id,
     });
   };
@@ -53,8 +70,12 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
         <Loader type="ScaleLoader" color="#ffffff" height={10} />
       ) : (
         <>
-          <Heart />
-          {showText && <span className="ml-2">Add to favorites</span>}
+          <Heart fill={isAlreadyInWishlist ? 'black' : 'none'} />
+          {showText && (
+            <span className="ml-2">
+              {isAlreadyInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+            </span>
+          )}
         </>
       )}
     </Button>

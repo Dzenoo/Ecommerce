@@ -15,20 +15,21 @@ type PickQuantityProps = {
 
 const PickQuantity: React.FC<PickQuantityProps> = ({ product, children }) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const isOutOfStock = product.stock === 0;
 
   const handleDecrease = () => {
+    if (isOutOfStock) return;
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };
 
   const handleIncrease = () => {
+    if (isOutOfStock) return;
     if (quantity < product.stock) {
       setQuantity(quantity + 1);
     }
   };
-
-  const isOutOfStock = product.stock === 0;
 
   return (
     <div className="flex flex-col gap-2">

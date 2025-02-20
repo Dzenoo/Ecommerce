@@ -47,12 +47,16 @@ const ProductImages: React.FC<ProductImagesProps> = ({ images }) => {
     return <div>No images available</div>;
   }
 
+  const isMultipleImages = images.length > 1;
+
   return (
     <div className="flex flex-col gap-5">
       <div className="image-container relative">
-        <button onClick={prev} className="left-2">
-          <ArrowLeft size={20} />
-        </button>
+        {isMultipleImages && (
+          <button onClick={prev} className="left-2">
+            <ArrowLeft size={20} />
+          </button>
+        )}
         <div className="relative h-full max-h-[500px] min-h-[500px] w-full shadow-md">
           <Image
             src={images[currentImage]}
@@ -61,14 +65,16 @@ const ProductImages: React.FC<ProductImagesProps> = ({ images }) => {
             fill
           />
         </div>
-        <button onClick={next} className="right-2">
-          <ArrowRight size={20} />
-        </button>
+        {isMultipleImages && (
+          <button onClick={next} className="right-2">
+            <ArrowRight size={20} />
+          </button>
+        )}
       </div>
       <div
         ref={thumbnailContainerRef}
         onMouseDown={handleMouseDown}
-        className="hide-scrollbar flex cursor-grab touch-pan-x gap-5 overflow-x-scroll"
+        className={`hide-scrollbar flex touch-pan-x gap-5 overflow-x-scroll ${isMultipleImages && 'cursor-grabbing'}`}
       >
         {images.map((image, index) => (
           <Image

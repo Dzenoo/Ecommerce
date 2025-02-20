@@ -34,7 +34,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
 
   return (
     <div className="grid grid-cols-2 gap-10">
-      <div className="space-y-5">
+      <div className="hide-scrollbar space-y-5 overflow-auto">
         <div className="flex items-center justify-between gap-5">
           <div>
             <h1 className="text-4xl font-semibold capitalize">
@@ -48,7 +48,10 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
                 isOutOfStock && 'bg-red-500',
               )}
             />
-            <p className="text-sm">{isOutOfStock ? 'Out of' : 'On'} stock</p>
+            <p className="text-sm">
+              {isOutOfStock ? 'Out of' : 'On'} stock{' '}
+              <span className="font-medium">({product.stock})</span>
+            </p>
           </div>
         </div>
 

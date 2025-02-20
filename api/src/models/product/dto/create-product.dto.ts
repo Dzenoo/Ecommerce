@@ -25,6 +25,14 @@ export class AttributesValidator implements ValidatorConstraintInterface {
       return false;
     }
 
+    if (
+      !Object.keys(attributes).includes('size') &&
+      !Object.keys(attributes).includes('color') &&
+      Object.values(attributes).length === 0
+    ) {
+      return false;
+    }
+
     for (const key in attributes) {
       if (!Object.prototype.hasOwnProperty.call(attributes, key)) {
         continue;
