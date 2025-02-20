@@ -108,7 +108,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
 
         <div className="flex flex-col gap-2">
           {!isOutOfStock && (
-            <PickQuantity product={product}>
+            <PickQuantity product={product} className="w-full">
               {(quantity) => (
                 <AddToCart
                   className="w-full"

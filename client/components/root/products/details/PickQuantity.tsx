@@ -7,6 +7,7 @@ import { IProduct } from '@/types';
 
 import { Button } from '@/components/ui/buttons/button';
 import { Input } from '@/components/ui/form/input';
+import { cn } from '@/lib/utils';
 
 type PickQuantityProps = {
   product: IProduct;
@@ -16,6 +17,7 @@ type PickQuantityProps = {
     action: 'increment' | 'decrement',
   ) => void;
   children?: (quantity: number) => React.ReactNode;
+  className?: string;
 };
 
 const PickQuantity: React.FC<PickQuantityProps> = ({
@@ -23,6 +25,7 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
   defaultQuantity,
   onQuantityChange,
   children,
+  className,
 }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const isOutOfStock = product.stock === 0;
@@ -47,23 +50,25 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
     <div className="flex flex-col gap-2">
       <div className="flex items-stretch">
         <Button
+          size="sm"
           onClick={handleDecrease}
-          className="rounded-none"
+          className="rounded-none rounded-l-md"
           disabled={isOutOfStock}
         >
           <Minus />
         </Button>
-        <Input
-          readOnly
-          type="number"
-          className="h-[37px] rounded-none text-center"
-          value={defaultQuantity || quantity}
-          disabled={true}
-          placeholder="Quantity"
-        />
+        <div
+          className={cn(
+            'flex w-10 items-center justify-center border text-sm',
+            className,
+          )}
+        >
+          {defaultQuantity || quantity}
+        </div>
         <Button
+          size="sm"
           onClick={handleIncrease}
-          className="rounded-none"
+          className="rounded-none rounded-r-md"
           disabled={isOutOfStock}
         >
           <Plus />

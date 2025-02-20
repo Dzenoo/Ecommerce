@@ -1,4 +1,4 @@
-import { AttributesValidator } from '@/models/product/dto/create-product.dto';
+import { AttributesValidator } from '@/common/validators/attributes.validator';
 import { Transform } from 'class-transformer';
 import {
   IsMongoId,
@@ -29,9 +29,6 @@ export class AddItemDto {
   @Transform(({ value }) =>
     typeof value === 'string' ? JSON.parse(value) : value,
   )
-  @Validate(AttributesValidator, {
-    message:
-      'Attributes must be an object where each key has a string or an array of strings as its value.',
-  })
+  @Validate(AttributesValidator)
   attributes: Record<string, any>;
 }

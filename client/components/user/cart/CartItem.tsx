@@ -76,14 +76,14 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         </div>
       </div>
       <div>
-        <p className="text-sm">{item.product.price} DIN</p>
-      </div>
-      <div>
         <PickQuantity
           product={item.product}
           defaultQuantity={item.quantity}
           onQuantityChange={handleQuantityChange}
         />
+      </div>
+      <div className="col-span-1">
+        <p className="text-sm">{item.product.price} DIN</p>
       </div>
       <div>
         <p className="text-sm font-bold">{total} DIN</p>

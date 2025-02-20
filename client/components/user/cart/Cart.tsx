@@ -27,7 +27,7 @@ const Cart: React.FC<CartProps> = ({ cart }) => {
       <Separator />
       <CardContent className="space-y-4">
         <div className="grid grid-cols-4 gap-5">
-          {['Product', 'Price', 'Quantity', 'Total'].map((item, index) => (
+          {['Product', 'Quantity', 'Price', 'Total'].map((item, index) => (
             <div key={index} className="flex items-center justify-between">
               <h2 className="text-base font-medium">{item}</h2>
             </div>
