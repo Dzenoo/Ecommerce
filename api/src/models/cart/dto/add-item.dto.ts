@@ -29,6 +29,8 @@ export class AddItemDto {
   @Transform(({ value }) =>
     typeof value === 'string' ? JSON.parse(value) : value,
   )
-  @Validate(AttributesValidator)
+  @Validate(AttributesValidator, {
+    message: 'Please select color and size at least for the product',
+  })
   attributes: Record<string, any>;
 }
