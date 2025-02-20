@@ -2,6 +2,7 @@ import React from 'react';
 import { Search } from 'lucide-react';
 
 import { IProduct } from '@/types';
+import Empty from '@/helpers/Empty';
 
 import ProductItem from './item/ProductItem';
 
@@ -13,19 +14,11 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
   return (
     <div>
       {products.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-2 py-6">
-          <div>
-            <Search size={50} className="mb-4" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">No Products Found</h2>
-          </div>
-          <div>
-            <p className="text-center text-muted-foreground dark:text-muted-foreground">
-              Oops! It seems like there are no products found.
-            </p>
-          </div>
-        </div>
+        <Empty
+          icon={<Search size={50} className="mb-4" />}
+          title="No Products Found"
+          description="Oops! It seems like there are no products found."
+        />
       )}
       {products.length > 0 && (
         <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-4">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShoppingBag } from 'lucide-react';
 
 import {
   Card,
@@ -10,6 +11,7 @@ import {
 import { Separator } from '@/components/ui/layout/separator';
 import { ICart } from '@/types';
 import CartItem from './CartItem';
+import Empty from '@/helpers/Empty';
 
 type CartProps = {
   cart: ICart;
@@ -26,19 +28,32 @@ const Cart: React.FC<CartProps> = ({ cart }) => {
       </CardHeader>
       <Separator />
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-4 gap-5">
-          {['Product', 'Quantity', 'Price', 'Total'].map((item, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <h2 className="text-base font-medium">{item}</h2>
+        {cart.items.length === 0 && (
+          <Empty
+            icon={<ShoppingBag size={50} className="mb-4" />}
+            title="No Products In Cart"
+            description="Your cart is empty. Add products to your cart to see them here."
+          />
+        )}
+        {cart.items.length > 0 && (
+          <>
+            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] gap-5">
+              {['Product', 'Quantity', 'Price', 'Total', 'Remove'].map(
+                (item, index) => (
+                  <h2 key={index} className="text-base font-medium">
+                    {item}
+                  </h2>
+                ),
+              )}
             </div>
-          ))}
-        </div>
-        <Separator />
-        <div className="flex flex-col gap-5">
-          {cart.items.map((item, i) => (
-            <CartItem key={i} item={item} />
-          ))}
-        </div>
+            <Separator />
+            <div className="flex flex-col gap-5">
+              {cart.items.map((item, i) => (
+                <CartItem key={i} item={item} />
+              ))}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

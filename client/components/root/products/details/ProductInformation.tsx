@@ -79,7 +79,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
                 </label>
                 <div className="text-sm capitalize">
                   {value instanceof Array ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {value.map((v, i) => (
                         <Button
                           key={i}

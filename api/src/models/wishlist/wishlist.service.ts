@@ -95,7 +95,15 @@ export class WishlistService {
       })
       .exec();
 
-    if (!wishlist) throw new NotFoundException('Wishlist not found');
+    if (!wishlist) {
+      return {
+        statusCode: HttpStatus.OK,
+        wishlist: {
+          products: [],
+        },
+        totalProducts: 0,
+      };
+    }
 
     return {
       statusCode: HttpStatus.OK,

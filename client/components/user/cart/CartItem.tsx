@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Trash } from 'lucide-react';
 
 import { ICartItem } from '@/types';
 import { getCategory } from '@/lib/utils';
@@ -11,6 +12,7 @@ import {
 } from '@/hooks/mutations/useCart.mutation';
 import { useToast } from '@/hooks/core/use-toast';
 import { queryClient } from '@/context/react-query-client';
+import { Button } from '@/components/ui/buttons/button';
 
 type CartItemProps = {
   item: ICartItem;
@@ -27,7 +29,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
       toast({
         title: 'Success',
-        description: response.message || 'Quantity Updated',
+        description: response.message,
       });
     },
     onError: (error) => {
@@ -46,8 +48,15 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     });
   };
 
+  const handleRemoveItem = () => {
+    return mutation.mutateAsync({
+      type: CartMutationType.REMOVE,
+      productId: item.product._id,
+    });
+  };
+
   return (
-    <div className="grid grid-cols-4 items-center gap-5">
+    <div className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] items-center gap-5">
       <div className="flex items-center gap-4">
         <div>
           <Link
@@ -84,6 +93,11 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       </div>
       <div>
         <p className="text-sm font-bold">{total} DIN</p>
+      </div>
+      <div>
+        <Button onClick={handleRemoveItem} variant="outline">
+          <Trash color="#FF0000" />
+        </Button>
       </div>
     </div>
   );

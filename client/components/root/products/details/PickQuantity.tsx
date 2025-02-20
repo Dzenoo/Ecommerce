@@ -24,7 +24,7 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
   children,
   className,
 }) => {
-  const [quantity, setQuantity] = useState<number>(defaultQuantity ?? 1);
+  const [quantity, setQuantity] = useState<number>(1);
   const isOutOfStock = product.stock === 0;
 
   const handleDecrease = () => {
@@ -60,7 +60,7 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
             className,
           )}
         >
-          {quantity}
+          {defaultQuantity ? defaultQuantity : quantity}
         </div>
         <Button
           size="sm"
