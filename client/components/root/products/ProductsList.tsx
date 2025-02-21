@@ -15,7 +15,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
     <div>
       {products.length === 0 && (
         <Empty
-          icon={<Search size={50} className="mb-4" />}
+          icon={<Search size={25} className="mb-4" />}
           title="No Products Found"
           description="Oops! It seems like there are no products found."
         />

@@ -1,6 +1,11 @@
 import React from 'react';
-import { ShoppingBag } from 'lucide-react';
 
+import { ICart } from '@/types';
+
+import ClearCart from './ClearCart';
+import CartList from './CartList';
+
+import { Separator } from '@/components/ui/layout/separator';
 import {
   Card,
   CardContent,
@@ -8,10 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/layout/card';
-import { Separator } from '@/components/ui/layout/separator';
-import { ICart } from '@/types';
-import CartItem from './CartItem';
-import Empty from '@/helpers/Empty';
 
 type CartProps = {
   cart: ICart;
@@ -20,40 +21,18 @@ type CartProps = {
 const Cart: React.FC<CartProps> = ({ cart }) => {
   return (
     <Card className="shadow-none">
-      <CardHeader>
-        <CardTitle>Your Cart ({cart.items.length})</CardTitle>
-        <CardDescription>
-          Add items to your cart, and they will appear here.
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div className="space-y-1.5">
+          <CardTitle>Your Cart ({cart.items.length})</CardTitle>
+          <CardDescription>
+            Add items to your cart, and they will appear here.
+          </CardDescription>
+        </div>
+        {cart.items.length > 0 && <ClearCart />}
       </CardHeader>
       <Separator />
-      <CardContent className="hide-scrollbar max-h-screen space-y-4 overflow-y-auto">
-        {cart.items.length === 0 && (
-          <Empty
-            icon={<ShoppingBag size={50} className="mb-4" />}
-            title="No Products In Cart"
-            description="Your cart is empty. Add products to your cart to see them here."
-          />
-        )}
-        {cart.items.length > 0 && (
-          <>
-            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] gap-5">
-              {['Product', 'Quantity', 'Price', 'Total', 'Remove'].map(
-                (item, index) => (
-                  <h2 key={index} className="text-base font-medium">
-                    {item}
-                  </h2>
-                ),
-              )}
-            </div>
-            <Separator />
-            <div className="flex flex-col gap-5">
-              {cart.items.map((item, i) => (
-                <CartItem key={i} item={item} />
-              ))}
-            </div>
-          </>
-        )}
+      <CardContent>
+        <CartList cart={cart} />
       </CardContent>
     </Card>
   );

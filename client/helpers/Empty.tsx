@@ -23,20 +23,20 @@ const Empty: React.FC<EmptyProps> = ({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-2 py-6',
+        'flex flex-col items-center justify-center space-y-1',
         customStyles?.container,
       )}
     >
       <div className={cn('', customStyles?.icon)}>{icon}</div>
       <div>
-        <h2 className={cn('text-lg font-semibold', customStyles?.title)}>
+        <h2 className={cn('text-base font-semibold', customStyles?.title)}>
           {title}
         </h2>
       </div>
       <div>
         <p
           className={cn(
-            'text-center text-muted-foreground',
+            'text-center text-sm text-muted-foreground',
             customStyles?.description,
           )}
         >

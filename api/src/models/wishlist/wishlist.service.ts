@@ -97,7 +97,7 @@ export class WishlistService {
 
     if (!wishlist) {
       return {
-        statusCode: HttpStatus.OK,
+        statusCode: HttpStatus.NOT_FOUND,
         wishlist: {
           products: [],
         },

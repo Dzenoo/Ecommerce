@@ -161,8 +161,14 @@ export class CartService {
       path: 'items.product',
       model: 'Product',
     });
+
     if (!cart) {
-      throw new NotFoundException('Cart not found');
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        cart: {
+          items: [],
+        },
+      };
     }
 
     return {

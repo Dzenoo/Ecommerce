@@ -17,7 +17,7 @@ const WishList: React.FC<WishListProps> = ({ products }) => {
       </div>
       {products.length === 0 && (
         <Empty
-          icon={<Search size={50} className="mb-4" />}
+          icon={<Search size={25} className="mb-4" />}
           title="No Products In Wishlist"
           description="Your wishlist is empty. Add items to your wishlist to save them
               for later"
