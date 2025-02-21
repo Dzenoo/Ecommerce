@@ -22,7 +22,7 @@ const ProductDetailsPage = ({
 
   const { data, isLoading } = useProductQuery({
     type: ProductQueryType.GET_ONE,
-    productId,
+    params: { productId: productId },
   });
 
   if (isLoading) {

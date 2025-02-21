@@ -23,14 +23,14 @@ const DashboardProductsPage = () => {
 
   const { data, isLoading } = useProductQuery({
     type: ProductQueryType.GET_ALL,
-    query: { page, limit, search, sort },
+    params: { page, limit, search, sort },
   });
 
   if (isLoading) {
     return <LoadingDashboardProducts />;
   }
 
-  if (!data && !isLoading) {
+  if (!data) {
     return <NotFound href="/dashboard" />;
   }
 

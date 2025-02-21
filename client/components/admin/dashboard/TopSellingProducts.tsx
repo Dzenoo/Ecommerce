@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import {
@@ -20,7 +19,7 @@ import {
 } from '@/components/ui/utilities/chart';
 
 type TopSellingProductsProps = {
-  data: { id: number; items: { product: string; quantity: number }[] }[];
+  data: { id: string; items: { product: string; quantity: number }[] }[];
 };
 
 const chartConfig = {

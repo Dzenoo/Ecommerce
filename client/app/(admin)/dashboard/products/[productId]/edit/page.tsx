@@ -18,10 +18,14 @@ const DashboardEditProductPage = ({
 
   const { data, isLoading } = useProductQuery({
     type: ProductQueryType.GET_ONE,
-    productId: productId,
+    params: { productId: productId },
   });
 
-  if (!data && !isLoading) {
+  if (isLoading) {
+    return 'Loading...';
+  }
+
+  if (!data) {
     return 'No product found';
   }
 

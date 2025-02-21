@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
 import { Pie, PieChart, Cell } from 'recharts';
 
 import {
@@ -20,7 +19,7 @@ import {
 } from '@/components/ui/utilities/chart';
 
 type OrdersByStatusProps = {
-  data: { id: number; status: string }[];
+  data: { id: string; status: string }[];
 };
 
 const chartConfig = {

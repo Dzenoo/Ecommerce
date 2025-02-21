@@ -18,7 +18,7 @@ export const SearchResults: React.FC = () => {
   const { data, isLoading } = useProductQuery(
     {
       type: ProductQueryType.GET_ALL,
-      query: { search: searchParams.get('search') || undefined, limit: 5 },
+      params: { search: searchParams.get('search') || undefined, limit: 5 },
     },
     { enabled: !!searchParams.get('search') },
   );
