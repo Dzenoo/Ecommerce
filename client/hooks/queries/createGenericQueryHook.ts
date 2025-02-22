@@ -1,16 +1,16 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
-type QueryFunctionMap = Record<string, (params: any) => Promise<any>>;
+type QueryFunctionMap = Record<string, (...args: any[]) => Promise<any>>;
 
-function createGenericQueryHook<TQueryFunctions extends QueryFunctionMap>(
-  domain: string,
-  queryFunctions: TQueryFunctions,
-) {
-  type QueryKeys = keyof TQueryFunctions;
-  type QueryPayload = {
-    type: QueryKeys;
-    params: Parameters<TQueryFunctions[QueryKeys]>[0];
+export function createGenericQueryHook<
+  TQueryFunctions extends QueryFunctionMap,
+>(domain: string, queryFunctions: TQueryFunctions) {
+  type QueryPayloadMap = {
+    [K in keyof TQueryFunctions]: Parameters<TQueryFunctions[K]> extends []
+      ? { type: K }
+      : { type: K; params: Parameters<TQueryFunctions[K]>[0] };
   };
+  type QueryPayload = QueryPayloadMap[keyof TQueryFunctions];
 
   type InferReturnType<T extends QueryPayload> = T extends { type: infer K }
     ? K extends keyof TQueryFunctions
@@ -30,7 +30,11 @@ function createGenericQueryHook<TQueryFunctions extends QueryFunctionMap>(
       queryFn: async ({ queryKey }): Promise<InferReturnType<T>> => {
         const [, payload] = queryKey as [string, T];
         const queryFn = queryFunctions[payload.type];
-        return queryFn(payload.params) as Promise<InferReturnType<T>>;
+        if ('params' in payload) {
+          return queryFn(payload.params) as Promise<InferReturnType<T>>;
+        } else {
+          return queryFn() as Promise<InferReturnType<T>>;
+        }
       },
       ...options,
     });
@@ -38,5 +42,3 @@ function createGenericQueryHook<TQueryFunctions extends QueryFunctionMap>(
 
   return useDomainQuery;
 }
-
-export { createGenericQueryHook };

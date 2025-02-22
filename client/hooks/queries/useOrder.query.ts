@@ -1,12 +1,17 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-
+import { createGenericQueryHook } from './createGenericQueryHook';
+import { GetOrdersDto } from '@/types';
 import {
+  getOrdersByUser,
   getOrders,
   getOrder,
-  getOrdersByUser,
 } from '@/lib/actions/order.actions';
 
-import { GetOrdersDto } from '@/types';
+const OrderQueryFunctions = {
+  GET_BY_USER: (params: { query: GetOrdersDto }) =>
+    getOrdersByUser(params.query),
+  GET_ALL: (params: { query: GetOrdersDto }) => getOrders(params.query),
+  GET_ONE: (params: { orderId: string }) => getOrder(params.orderId),
+} as const;
 
 enum OrderQueryType {
   GET_BY_USER = 'GET_BY_USER',
@@ -14,42 +19,6 @@ enum OrderQueryType {
   GET_ONE = 'GET_ONE',
 }
 
-type OrderQueryPayload =
-  | {
-      type: OrderQueryType.GET_BY_USER;
-      query: GetOrdersDto;
-    }
-  | {
-      type: OrderQueryType.GET_ALL;
-      query: GetOrdersDto;
-    }
-  | {
-      type: OrderQueryType.GET_ONE;
-      orderId: string;
-    };
-
-const useOrderQuery = (
-  payload: OrderQueryPayload,
-  options?: Omit<UseQueryOptions<any, any, any>, 'queryKey' | 'queryFn'>,
-) => {
-  return useQuery({
-    queryKey: ['orders', payload] as const,
-    queryFn: async ({ queryKey }) => {
-      const [, payload] = queryKey as [string, OrderQueryPayload];
-
-      switch (payload.type) {
-        case OrderQueryType.GET_BY_USER:
-          return getOrdersByUser(payload.query);
-        case OrderQueryType.GET_ALL:
-          return getOrders(payload.query);
-        case OrderQueryType.GET_ONE:
-          return getOrder(payload.orderId);
-        default:
-          throw new Error('Invalid query type');
-      }
-    },
-    ...options,
-  });
-};
+const useOrderQuery = createGenericQueryHook('orders', OrderQueryFunctions);
 
 export { useOrderQuery, OrderQueryType };

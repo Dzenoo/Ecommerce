@@ -23,7 +23,7 @@ const WishlistPage = () => {
 
   const { data, isLoading } = useWishlistQuery({
     type: WishlistQueryType.GET_WISHLIST,
-    query,
+    params: { query },
   });
 
   if (isLoading) {

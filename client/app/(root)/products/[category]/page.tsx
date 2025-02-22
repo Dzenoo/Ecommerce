@@ -64,7 +64,7 @@ const ProductsPage = ({
   const { data, isLoading } = useProductQuery(
     {
       type: ProductQueryType.GET_ALL,
-      params: query,
+      params: { query },
     },
     {
       refetchOnWindowFocus: true,

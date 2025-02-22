@@ -18,10 +18,14 @@ const DashboardEditCouponPage = ({
 
   const { data, isLoading } = useCouponQuery({
     type: CouponQueryType.GET_ONE,
-    couponId: couponId,
+    params: { couponId: couponId },
   });
 
-  if (!data && !isLoading) {
+  if (isLoading) {
+    return 'Loading...';
+  }
+
+  if (!data) {
     return 'No coupon found';
   }
 

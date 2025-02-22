@@ -3,7 +3,7 @@ import { GetProductsDto } from '@/types';
 import { getAllProducts, getOneProduct } from '@/lib/actions/product.actions';
 
 const ProductQueryFunctions = {
-  GET_ALL: (params: GetProductsDto) => getAllProducts(params),
+  GET_ALL: (params: { query: GetProductsDto }) => getAllProducts(params.query),
   GET_ONE: (params: { productId: string }) => getOneProduct(params.productId),
 } as const;
 

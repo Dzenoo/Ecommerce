@@ -30,7 +30,8 @@ export const deleteCoupon = async (
 
 export const getCoupons = async (query?: {}): Promise<
   ServerResponse<{
-    coupons: ICoupon;
+    coupons: ICoupon[];
+    totalCoupons: number;
   }>
 > => {
   const queryString = qs.stringify(query, { skipNulls: true });

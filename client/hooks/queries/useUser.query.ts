@@ -1,33 +1,14 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-
+import { createGenericQueryHook } from './createGenericQueryHook';
 import { getProfile } from '@/lib/actions/user.actions';
+
+const UserQueryFunctions = {
+  GET_PROFILE: () => getProfile(),
+} as const;
 
 enum UserQueryType {
   GET_PROFILE = 'GET_PROFILE',
 }
 
-type UserQueryPayload = {
-  type: UserQueryType.GET_PROFILE;
-};
-
-const useUserQuery = (
-  payload: UserQueryPayload,
-  options?: Omit<UseQueryOptions<any, any, any>, 'queryKey' | 'queryFn'>,
-) => {
-  return useQuery({
-    queryKey: ['user', payload] as const,
-    queryFn: async ({ queryKey }) => {
-      const [, payload] = queryKey as [string, UserQueryPayload];
-
-      switch (payload.type) {
-        case UserQueryType.GET_PROFILE:
-          return getProfile();
-        default:
-          throw new Error('Invalid query type');
-      }
-    },
-    ...options,
-  });
-};
+const useUserQuery = createGenericQueryHook('user', UserQueryFunctions);
 
 export { useUserQuery, UserQueryType };

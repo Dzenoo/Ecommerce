@@ -9,7 +9,7 @@ export type GetWishlistDto = {
 export interface IWishlist {
   _id: string;
   user: IUser | string;
-  products: IProduct[] | string[];
+  products: IProduct[] & string[];
   createdAt: Date;
   updatedAt: Date;
 }

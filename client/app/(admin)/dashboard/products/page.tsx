@@ -23,7 +23,7 @@ const DashboardProductsPage = () => {
 
   const { data, isLoading } = useProductQuery({
     type: ProductQueryType.GET_ALL,
-    params: { page, limit, search, sort },
+    params: { query: { page, limit, search, sort } },
   });
 
   if (isLoading) {

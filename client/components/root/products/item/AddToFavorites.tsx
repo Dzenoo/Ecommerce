@@ -31,7 +31,7 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
 
   const { data } = useWishlistQuery({
     type: WishlistQueryType.GET_WISHLIST,
-    query: {},
+    params: { query: {} },
   });
 
   const mutation = useWishlistMutation({

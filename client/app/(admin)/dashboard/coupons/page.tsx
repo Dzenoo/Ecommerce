@@ -14,20 +14,22 @@ import NotFound from '@/components/shared/NotFound';
 const DashboardCouponsPage = () => {
   const { data, isLoading } = useCouponQuery({
     type: CouponQueryType.GET_ALL,
-    query: {},
+    params: { query: {} },
   });
 
   if (isLoading) {
     return <LoadingDashboardCoupons />;
   }
 
-  if (!data && !isLoading) {
+  if (!data) {
     return <NotFound href="/dashboard" />;
   }
 
   return (
     <section className="flex flex-col gap-5">
-      <DashboardCouponsList couponsData={data} />
+      <DashboardCouponsList
+        couponsData={{ coupons: data.coupons, totalCoupons: data.totalCoupons }}
+      />
     </section>
   );
 };
