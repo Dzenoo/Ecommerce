@@ -17,9 +17,11 @@ import {
 } from '@/components/ui/layout/card';
 import FieldGroup from '@/helpers/FieldGroup';
 
-type CheckoutProps = {};
+type CheckoutProps = {
+  cart: ICart;
+};
 
-const Checkout: React.FC<CheckoutProps> = ({}) => {
+const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
   return (
     <Card className="h-fit shadow-none">
       <CardHeader className="flex flex-row items-center justify-between gap-5">
@@ -46,7 +48,7 @@ const Checkout: React.FC<CheckoutProps> = ({}) => {
                   value="Enter your shipping address and payment details"
                   customStyles={{ h1: 'text-xl font-medium', p: 'text-sm' }}
                 />
-                <CheckoutForm />
+                <CheckoutForm cartId={cart._id} />
               </div>
             ) : null
           }

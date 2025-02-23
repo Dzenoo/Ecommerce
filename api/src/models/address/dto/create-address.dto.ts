@@ -14,7 +14,6 @@ export class CreateAddressDto {
 
   @IsString()
   @IsOptional()
-  @Length(5, 100)
   addressLine2?: string;
 
   @IsString()

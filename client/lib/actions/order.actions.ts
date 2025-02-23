@@ -16,7 +16,15 @@ export const createOrder = async (
     order: IOrder;
   }>
 > => {
-  return await postApiHandler('order/create', data);
+  let requestData;
+
+  if (data.addressId) {
+    requestData = { cartId: data.cartId, addressId: data.addressId };
+  } else if (data.address) {
+    requestData = { cartId: data.cartId, address: data.address };
+  }
+
+  return await postApiHandler('order/create', requestData);
 };
 
 export const getOrdersByUser = async (

@@ -1,4 +1,4 @@
-import { IAddress } from './address.types';
+import { CreateAddressDto, IAddress } from './address.types';
 import { IProduct } from './product.types';
 import { IUser } from './user.types';
 
@@ -11,8 +11,8 @@ export type GetOrdersDto = {
 
 export type CreateOrderDto = {
   cartId: string;
-  shippingAddress: string;
-  manualShippingAddress?: any;
+  addressId?: string;
+  address?: Omit<CreateAddressDto, 'isDefault'>;
 };
 
 export type UpdateOrderDto = {

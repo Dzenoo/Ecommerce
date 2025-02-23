@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { FilterQuery, Model } from 'mongoose';
+import mongoose, { FilterQuery, Model, mongo } from 'mongoose';
 
 import { Order } from './schema/order.schema';
 
@@ -36,12 +36,23 @@ export class OrderService {
     });
     if (!cart) throw new NotAcceptableException('Cart not found');
 
+    let orderAddress;
+    if (body.addressId) {
+      orderAddress = body.addressId;
+    } else if (body.address) {
+      orderAddress = body.address;
+    } else {
+      throw new NotAcceptableException(
+        'Either addressId or address details must be provided',
+      );
+    }
+    console.log(body);
+
     const order = await this.orderModel.create({
       user: new mongoose.Types.ObjectId(userId),
       items: cart.items,
       totalPrice: cart.totalPrice,
-      shippingAddress: body.shippingAddress,
-      manualShippingAddress: body.manualShippingAddress,
+      address: orderAddress,
     });
     if (!order) throw new NotAcceptableException('Order could not be created');
 

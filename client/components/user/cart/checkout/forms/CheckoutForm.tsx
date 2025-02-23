@@ -2,8 +2,17 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 
 import { CreateOrderSchema } from '@/lib/zod/order.zod';
+import { COUNTRIES } from '@/constants';
+import {
+  OrderMutationType,
+  useOrderMutation,
+} from '@/hooks/mutations/useOrder.mutation';
+import Loader from '@/components/ui/info/loader';
+import { useToast } from '@/hooks/core/use-toast';
+import { queryClient } from '@/context/react-query-client';
 
 import { Input } from '@/components/ui/form/input';
 import {
@@ -22,19 +31,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/form/select';
-import { COUNTRIES } from '@/constants';
 import { Button } from '@/components/ui/buttons/button';
 
-type CheckoutFormValues = z.infer<typeof CreateOrderSchema>;
+export type CheckoutFormValues = z.infer<typeof CreateOrderSchema>;
 
-type CheckoutFormProps = {};
+type CheckoutFormProps = {
+  cartId: string;
+};
 
-const CheckoutForm: React.FC<CheckoutFormProps> = () => {
+const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId }) => {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(CreateOrderSchema),
     defaultValues: {
-      first_name: '',
-      last_name: '',
       addressLine1: '',
       addressLine2: '',
       city: '',
@@ -44,44 +55,39 @@ const CheckoutForm: React.FC<CheckoutFormProps> = () => {
     },
   });
 
-  const handleSubmit = async (values: CheckoutFormValues) => {};
+  const mutation = useOrderMutation({
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      form.reset();
+      toast({
+        title: 'Success',
+        description: response.message,
+      });
+
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    },
+  });
+
+  const handleCreateOrder = (values: CheckoutFormValues) => {
+    return mutation.mutateAsync({
+      type: OrderMutationType.CREATE,
+      data: {
+        cartId,
+        address: values,
+      },
+    });
+  };
+
+  const isLoading = mutation.status === 'pending';
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={form.handleSubmit(handleCreateOrder)}
         className="w-full space-y-5"
       >
-        <div className="grid grid-cols-2 items-center gap-5">
-          <FormField
-            name="first_name"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First Name *</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormDescription>Enter your first name</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="last_name"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last Name *</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormDescription>Enter your last name</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
         <div className="grid grid-cols-2 items-center gap-5">
           <FormField
             name="addressLine1"
@@ -189,7 +195,19 @@ const CheckoutForm: React.FC<CheckoutFormProps> = () => {
             )}
           />
         </div>
-        <Button>Submit</Button>
+        <div className="pt-5">
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={!form.formState.isValid}
+          >
+            {isLoading ? (
+              <Loader type="ScaleLoader" height={10} />
+            ) : (
+              'Create Order'
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

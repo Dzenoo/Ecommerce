@@ -1,15 +1,25 @@
-import { IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
-import { Address } from '@/models/address/schema/address.schema';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateAddressDto } from '@/models/address/dto/create-address.dto';
 
 export class CreateOrderDto {
   @IsMongoId()
   @IsNotEmpty()
   cartId: string;
 
+  @IsOptional()
   @IsMongoId()
-  @IsNotEmpty()
-  shippingAddress: string;
+  addressId?: string;
 
   @IsOptional()
-  manualShippingAddress?: Address;
+  @IsObject()
+  @ValidateNested()
+  @Type(() => CreateAddressDto)
+  address?: CreateAddressDto;
 }

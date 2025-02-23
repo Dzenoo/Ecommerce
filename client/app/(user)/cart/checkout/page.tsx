@@ -41,7 +41,7 @@ const CheckoutPage = () => {
 
   return (
     <section className="grid grid-cols-[2.5fr,1fr] gap-5 pt-5">
-      <Checkout />
+      <Checkout cart={data.cart} />
       <CartOrderDetails
         showSummary
         showApplyCoupon
