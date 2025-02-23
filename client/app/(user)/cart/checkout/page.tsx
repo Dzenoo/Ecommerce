@@ -30,7 +30,7 @@ const CheckoutPage = () => {
 
   if (isEmpty)
     return (
-      <div className="pt-5">
+      <div className="flex h-screen items-center justify-center">
         <Empty
           title="No Products In Cart"
           description="Your cart is empty. Add products to your cart to see them here."
