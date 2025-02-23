@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 
 import { IProduct } from '@/types';
 
 import { Button } from '@/components/ui/buttons/button';
-import { Input } from '@/components/ui/form/input';
 import { cn } from '@/lib/utils';
 
 type PickQuantityProps = {
@@ -19,28 +18,32 @@ type PickQuantityProps = {
 
 const PickQuantity: React.FC<PickQuantityProps> = ({
   product,
-  defaultQuantity,
+  defaultQuantity = 1,
   onQuantityChange,
   children,
   className,
 }) => {
-  const [quantity, setQuantity] = useState<number>(1);
+  const [quantity, setQuantity] = useState(defaultQuantity);
   const isOutOfStock = product.stock === 0;
+  const isDecreaseEnabled = isOutOfStock || quantity <= 1;
+  const isIncreaseEnabled = isOutOfStock || quantity >= product.stock;
+
+  useEffect(() => {
+    setQuantity(defaultQuantity);
+  }, [defaultQuantity]);
 
   const handleDecrease = () => {
-    if (isOutOfStock) return;
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-      onQuantityChange?.('decrement');
-    }
+    if (isDecreaseEnabled) return;
+    const newQuantity = quantity - 1;
+    setQuantity(newQuantity);
+    onQuantityChange?.('decrement');
   };
 
   const handleIncrease = () => {
-    if (isOutOfStock) return;
-    if (quantity < product.stock) {
-      setQuantity(quantity + 1);
-      onQuantityChange?.('increment');
-    }
+    if (isIncreaseEnabled) return;
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    onQuantityChange?.('increment');
   };
 
   return (
@@ -50,7 +53,7 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
           size="sm"
           onClick={handleDecrease}
           className="rounded-none rounded-l-md"
-          disabled={isOutOfStock}
+          disabled={isDecreaseEnabled}
         >
           <Minus />
         </Button>
@@ -60,13 +63,13 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
             className,
           )}
         >
-          {defaultQuantity ? defaultQuantity : quantity}
+          {quantity}
         </div>
         <Button
           size="sm"
           onClick={handleIncrease}
           className="rounded-none rounded-r-md"
-          disabled={isOutOfStock}
+          disabled={isIncreaseEnabled}
         >
           <Plus />
         </Button>

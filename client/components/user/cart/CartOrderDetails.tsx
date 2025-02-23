@@ -18,13 +18,15 @@ import { Separator } from '@/components/ui/layout/separator';
 import { Button } from '@/components/ui/buttons/button';
 
 type CartOrderDetailsProps = {
-  cart: ICart;
+  showFooter?: boolean;
   showApplyCoupon?: boolean;
+  cart: ICart;
 };
 
 const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
+  showFooter = true,
+  showApplyCoupon = false,
   cart,
-  showApplyCoupon = true,
 }) => {
   const cartItems = cart.items.map((item) => item.product);
   const productsUrl =
@@ -60,16 +62,18 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
           }}
         />
       </CardContent>
-      <CardFooter className="flex flex-col space-y-2 pt-0">
-        <Link href="/cart/checkout" className="w-full">
-          <Button className="w-full">Proceed to checkout</Button>
-        </Link>
-        <Link href={productsUrl} className="w-full">
-          <Button variant="outline" className="w-full">
-            Continue Shopping
-          </Button>
-        </Link>
-      </CardFooter>
+      {showFooter && (
+        <CardFooter className="flex flex-col space-y-2 pt-0">
+          <Link href="/cart/checkout" className="w-full">
+            <Button className="w-full">Proceed to checkout</Button>
+          </Link>
+          <Link href={productsUrl} className="w-full">
+            <Button variant="outline" className="w-full">
+              Continue Shopping
+            </Button>
+          </Link>
+        </CardFooter>
+      )}
     </Card>
   );
 };

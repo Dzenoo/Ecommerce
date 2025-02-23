@@ -61,7 +61,7 @@ const ProductImages: React.FC<ProductImagesProps> = ({ images }) => {
           <Image
             src={images[currentImage]}
             alt={`Product image ${currentImage + 1}`}
-            className="h-full w-full select-none object-contain"
+            className="h-full w-full select-none object-cover"
             fill
           />
         </div>

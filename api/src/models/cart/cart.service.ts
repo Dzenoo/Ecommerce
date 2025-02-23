@@ -103,9 +103,15 @@ export class CartService {
       throw new NotFoundException('Cart not found');
     }
 
-    const updatedCart = await this.cartModel.findByIdAndUpdate(cart._id, {
-      $pull: { items: { _id: itemId } },
-    });
+    const updatedCart = await this.cartModel.findByIdAndUpdate(
+      cart._id,
+      { $pull: { items: { _id: itemId } } },
+      { new: true },
+    );
+
+    if (!updatedCart) {
+      throw new NotFoundException('Cart not found after update');
+    }
 
     cart.totalPrice = await this.calculateTotalPrice(updatedCart.items);
     cart.isActive = cart.items.length > 0;
