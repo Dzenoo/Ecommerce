@@ -18,9 +18,9 @@ export const addItem = async (
 };
 
 export const removeItem = async (
-  productId: string,
+  itemId: string,
 ): Promise<ServerResponse<{ cart: ICart }>> => {
-  return deleteApiHandler(`cart/remove/${productId}`);
+  return deleteApiHandler(`cart/remove/${itemId}`);
 };
 
 export const updateItem = async (

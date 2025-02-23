@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, {
   FilterQuery,
   Model,
+  ObjectId,
   UpdateQuery,
   UpdateWriteOpResult,
 } from 'mongoose';
@@ -16,6 +17,7 @@ import { Cart } from './schema/cart.schema';
 
 import { ProductService } from '../product/product.service';
 import { UserService } from '../user/user.service';
+import { Product } from '../product/schema/product.schema';
 
 @Injectable()
 export class CartService {
@@ -84,7 +86,7 @@ export class CartService {
       });
     }
 
-    cart.totalPrice = await this.calculateTotalPrice(cart);
+    cart.totalPrice = await this.calculateTotalPrice(cart.items);
     cart.isActive = cart.items.length > 0;
 
     await cart.save();
@@ -95,22 +97,17 @@ export class CartService {
     };
   }
 
-  async remove(userId: string, productId: string): Promise<ResponseObject> {
+  async remove(userId: string, itemId: string): Promise<ResponseObject> {
     const cart = await this.cartModel.findOne({ user: userId });
     if (!cart) {
       throw new NotFoundException('Cart not found');
     }
 
-    const itemIndex = cart.items.findIndex(
-      (item) => item.product.toString() === productId,
-    );
-    if (itemIndex === -1) {
-      throw new NotFoundException('Product not found in cart');
-    }
+    const updatedCart = await this.cartModel.findByIdAndUpdate(cart._id, {
+      $pull: { items: { _id: itemId } },
+    });
 
-    cart.items.splice(itemIndex, 1);
-
-    cart.totalPrice = await this.calculateTotalPrice(cart);
+    cart.totalPrice = await this.calculateTotalPrice(updatedCart.items);
     cart.isActive = cart.items.length > 0;
 
     await cart.save();
@@ -145,7 +142,7 @@ export class CartService {
       item.quantity -= 1;
     }
 
-    cart.totalPrice = await this.calculateTotalPrice(cart);
+    cart.totalPrice = await this.calculateTotalPrice(cart.items);
     cart.isActive = cart.items.length > 0;
 
     await cart.save();
@@ -194,9 +191,15 @@ export class CartService {
     };
   }
 
-  private async calculateTotalPrice(cart: Cart): Promise<number> {
+  private async calculateTotalPrice(
+    items: {
+      product: any;
+      quantity: number;
+      attributes: Record<string, any>;
+    }[],
+  ): Promise<number> {
     let totalPrice = 0;
-    for (const item of cart.items) {
+    for (const item of items) {
       const product = await this.productService.findById(
         item.product.toString(),
       );

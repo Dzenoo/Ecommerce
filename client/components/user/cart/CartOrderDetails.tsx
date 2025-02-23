@@ -3,6 +3,8 @@ import Link from 'next/link';
 
 import { ICart } from '@/types';
 import { getCategory } from '@/lib/utils';
+import FieldGroup from '@/helpers/FieldGroup';
+import ApplyCoupon from './ApplyCoupon';
 
 import {
   Card,
@@ -14,17 +16,21 @@ import {
 } from '@/components/ui/layout/card';
 import { Separator } from '@/components/ui/layout/separator';
 import { Button } from '@/components/ui/buttons/button';
-import FieldGroup from '@/helpers/FieldGroup';
 
 type CartOrderDetailsProps = {
   cart: ICart;
+  showApplyCoupon?: boolean;
 };
 
-const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({ cart }) => {
+const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
+  cart,
+  showApplyCoupon = true,
+}) => {
   const cartItems = cart.items.map((item) => item.product);
-  const productsUrl = cartItems.map(
-    (i) => `/products/${getCategory('id', i.category)?.name.toLowerCase()}`,
-  )[0];
+  const productsUrl =
+    cartItems.map(
+      (i) => `/products/${getCategory('id', i.category)?.name.toLowerCase()}`,
+    )[0] || '/';
 
   return (
     <Card className="h-fit shadow-none">
@@ -35,12 +41,13 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({ cart }) => {
         </CardDescription>
       </CardHeader>
       <Separator />
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-5">
+        {showApplyCoupon && <ApplyCoupon cartId={cart._id} />}
         <FieldGroup
-          title="Subtotal"
+          title="Total Price"
           value={`${cart.totalPrice} DIN`}
           customStyles={{
-            div: 'flex flex-row justify-between',
+            div: 'flex flex-row justify-between items-center',
             p: 'font-bold text-black text-sm',
           }}
         />
@@ -48,13 +55,13 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({ cart }) => {
           title="Delivery"
           value={'Shipping costs are calculated during checkout.'}
           customStyles={{
-            div: 'flex flex-row justify-between',
+            div: 'flex flex-row justify-between items-center',
             p: ' text-sm',
           }}
         />
       </CardContent>
       <CardFooter className="flex flex-col space-y-2 pt-0">
-        <Link href="/checkout" className="w-full">
+        <Link href="/cart/checkout" className="w-full">
           <Button className="w-full">Proceed to checkout</Button>
         </Link>
         <Link href={productsUrl} className="w-full">

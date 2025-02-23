@@ -24,10 +24,14 @@ const CartPage = () => {
     );
   }
 
+  const isEmpty = data.cart.items.length === 0;
+
   return (
-    <section className="grid grid-cols-[2.5fr,1fr] gap-5 pt-5">
+    <section
+      className={`grid gap-5 pt-5 ${isEmpty ? 'grid-cols-1' : 'grid-cols-[2.5fr,1fr]'}`}
+    >
       <Cart cart={data.cart} />
-      <CartOrderDetails cart={data.cart} />
+      {!isEmpty && <CartOrderDetails cart={data.cart} />}
     </section>
   );
 };

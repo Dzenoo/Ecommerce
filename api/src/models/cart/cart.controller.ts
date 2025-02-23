@@ -30,13 +30,13 @@ export class CartController {
     return this.cartService.add(userId, productId, quantity, attributes);
   }
 
-  @Delete('/remove/:productId')
+  @Delete('/remove/:itemId')
   @UseGuards(JwtAuthGuard)
   async removeItem(
     @User('userId') userId: string,
-    @Param('productId') productId: string,
+    @Param('itemId') itemId: string,
   ) {
-    return this.cartService.remove(userId, productId);
+    return this.cartService.remove(userId, itemId);
   }
 
   @Patch('/update/:itemId')

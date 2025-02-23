@@ -20,7 +20,7 @@ type CartProps = {
 
 const Cart: React.FC<CartProps> = ({ cart }) => {
   return (
-    <Card className="shadow-none">
+    <Card className="h-fit shadow-none">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="space-y-1.5">
           <CardTitle>Your Cart ({cart.items.length})</CardTitle>

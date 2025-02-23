@@ -52,7 +52,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const handleRemoveItem = () => {
     return mutation.mutateAsync({
       type: CartMutationType.REMOVE,
-      productId: item.product._id,
+      itemId: item._id,
     });
   };
 

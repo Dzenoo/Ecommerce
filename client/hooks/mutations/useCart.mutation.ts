@@ -32,7 +32,7 @@ type CartMutationPayload =
     }
   | {
       type: CartMutationType.REMOVE;
-      productId: string;
+      itemId: string;
     }
   | {
       type: CartMutationType.CLEAR;
@@ -53,7 +53,7 @@ const useCartMutation = (
       case CartMutationType.UPDATE:
         return updateItem(payload.data, payload.itemId);
       case CartMutationType.REMOVE:
-        return removeItem(payload.productId);
+        return removeItem(payload.itemId);
       case CartMutationType.CLEAR:
         return clearCart();
       default:
