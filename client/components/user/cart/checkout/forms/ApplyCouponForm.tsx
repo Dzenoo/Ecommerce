@@ -9,6 +9,7 @@ import {
 } from '@/hooks/mutations/useCoupon.mutation';
 import { ApplyCouponSchema } from '@/lib/zod/coupon.zod';
 import { queryClient } from '@/context/react-query-client';
+import Loader from '@/components/ui/info/loader';
 
 import { Button } from '@/components/ui/buttons/button';
 import { Input } from '@/components/ui/form/input';
@@ -26,7 +27,7 @@ type ApplyCouponProps = {
 
 type ApplyCouponFormValues = z.infer<typeof ApplyCouponSchema>;
 
-const ApplyCoupon: React.FC<ApplyCouponProps> = ({ cartId }) => {
+const ApplyCouponForm: React.FC<ApplyCouponProps> = ({ cartId }) => {
   const form = useForm<ApplyCouponFormValues>({
     resolver: zodResolver(ApplyCouponSchema),
     defaultValues: {
@@ -66,12 +67,20 @@ const ApplyCoupon: React.FC<ApplyCouponProps> = ({ cartId }) => {
             </FormItem>
           )}
         />
-        <Button type="submit" variant="outline">
-          Apply
+        <Button
+          type="submit"
+          variant="outline"
+          disabled={mutation.status === 'pending'}
+        >
+          {mutation.status === 'pending' ? (
+            <Loader type="ScaleLoader" height={15} />
+          ) : (
+            'Apply'
+          )}
         </Button>
       </form>
     </Form>
   );
 };
 
-export default ApplyCoupon;
+export default ApplyCouponForm;

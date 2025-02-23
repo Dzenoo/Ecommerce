@@ -24,3 +24,5 @@ export interface ICart {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type CartDisplayMode = 'full' | 'summary';

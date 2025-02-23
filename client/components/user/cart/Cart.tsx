@@ -32,7 +32,7 @@ const Cart: React.FC<CartProps> = ({ cart }) => {
       </CardHeader>
       <Separator />
       <CardContent>
-        <CartList cart={cart} />
+        <CartList cart={cart} mode="full" />
       </CardContent>
     </Card>
   );

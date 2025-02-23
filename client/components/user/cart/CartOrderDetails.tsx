@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { ICart } from '@/types';
 import { getCategory } from '@/lib/utils';
 import FieldGroup from '@/helpers/FieldGroup';
-import ApplyCoupon from './ApplyCoupon';
+import ApplyCouponForm from './checkout/forms/ApplyCouponForm';
+import CartList from './CartList';
 
 import {
   Card,
@@ -18,12 +19,14 @@ import { Separator } from '@/components/ui/layout/separator';
 import { Button } from '@/components/ui/buttons/button';
 
 type CartOrderDetailsProps = {
+  showSummary?: boolean;
   showFooter?: boolean;
   showApplyCoupon?: boolean;
   cart: ICart;
 };
 
 const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
+  showSummary = false,
   showFooter = true,
   showApplyCoupon = false,
   cart,
@@ -44,7 +47,8 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
       </CardHeader>
       <Separator />
       <CardContent className="space-y-5">
-        {showApplyCoupon && <ApplyCoupon cartId={cart._id} />}
+        {showSummary && <CartList cart={cart} mode="summary" />}
+        {showApplyCoupon && <ApplyCouponForm cartId={cart._id} />}
         <FieldGroup
           title="Total Price"
           value={`${cart.totalPrice} DIN`}
