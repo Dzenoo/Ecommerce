@@ -7,11 +7,7 @@ export const CreateAddressSchema = z.object({
     .min(5, 'Minimum 5 characters')
     .max(100, 'Maximum 100 characters'),
 
-  addressLine2: z
-    .string()
-    .min(5, 'Minimum 5 characters')
-    .max(100, 'Maximum 100 characters')
-    .optional(),
+  addressLine2: z.string().optional(),
 
   city: z
     .string()

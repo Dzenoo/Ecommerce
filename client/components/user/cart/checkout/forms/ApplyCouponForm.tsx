@@ -37,6 +37,7 @@ const ApplyCouponForm: React.FC<ApplyCouponProps> = ({ cartId }) => {
 
   const mutation = useCouponMutation({
     onSuccess: () => {
+      form.reset();
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
   });
