@@ -30,11 +30,13 @@ const CheckoutPage = () => {
 
   if (isEmpty)
     return (
-      <Empty
-        title="No Products In Cart"
-        description="Your cart is empty. Add products to your cart to see them here."
-        icon={<ShoppingBag size={25} className="mb-4" />}
-      />
+      <div className="pt-5">
+        <Empty
+          title="No Products In Cart"
+          description="Your cart is empty. Add products to your cart to see them here."
+          icon={<ShoppingBag size={25} className="mb-4" />}
+        />
+      </div>
     );
 
   return (
