@@ -45,7 +45,8 @@ const CheckoutPage = () => {
       <CartOrderDetails
         showSummary
         showApplyCoupon
-        showFooter={false}
+        showFooter
+        type="checkout"
         cart={data.cart}
       />
     </section>

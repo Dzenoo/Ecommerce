@@ -15,7 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/layout/card';
-import FieldGroup from '@/helpers/FieldGroup';
 
 type CheckoutProps = {
   cart: ICart;
@@ -38,20 +37,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
       <Separator />
       <CardContent>
         <SelectAddress>
-          {(type) =>
-            type === 'auto' ? (
-              <div className="pt-10">Auto</div>
-            ) : type === 'manual' ? (
-              <div className="flex flex-col gap-10 pt-10">
-                <FieldGroup
-                  title="Shipping Address and Payment"
-                  value="Enter your shipping address and payment details"
-                  customStyles={{ h1: 'text-xl font-medium', p: 'text-sm' }}
-                />
-                <CheckoutForm cartId={cart._id} />
-              </div>
-            ) : null
-          }
+          {(type) => <CheckoutForm cartId={cart._id} type={type} />}
         </SelectAddress>
       </CardContent>
     </Card>

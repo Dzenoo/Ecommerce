@@ -31,7 +31,7 @@ const CartPage = () => {
       className={`grid gap-5 pt-5 ${isEmpty ? 'grid-cols-1' : 'grid-cols-[2.5fr,1fr]'}`}
     >
       <Cart cart={data.cart} />
-      {!isEmpty && <CartOrderDetails showFooter cart={data.cart} />}
+      {!isEmpty && <CartOrderDetails type="cart" showFooter cart={data.cart} />}
     </section>
   );
 };

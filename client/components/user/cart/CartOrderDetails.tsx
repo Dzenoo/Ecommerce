@@ -6,6 +6,7 @@ import { getCategory } from '@/lib/utils';
 import FieldGroup from '@/helpers/FieldGroup';
 import ApplyCouponForm from './checkout/forms/ApplyCouponForm';
 import CartList from './CartList';
+import CreateOrder from './checkout/CreateOrder';
 
 import {
   Card,
@@ -18,10 +19,13 @@ import {
 import { Separator } from '@/components/ui/layout/separator';
 import { Button } from '@/components/ui/buttons/button';
 
+type Type = 'cart' | 'checkout';
+
 type CartOrderDetailsProps = {
   showSummary?: boolean;
   showFooter?: boolean;
   showApplyCoupon?: boolean;
+  type: Type;
   cart: ICart;
 };
 
@@ -29,14 +33,9 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
   showSummary = false,
   showFooter = true,
   showApplyCoupon = false,
+  type,
   cart,
 }) => {
-  const cartItems = cart.items.map((item) => item.product);
-  const productsUrl =
-    cartItems.map(
-      (i) => `/products/${getCategory('id', i.category)?.name.toLowerCase()}`,
-    )[0] || '/';
-
   return (
     <Card className="h-fit shadow-none">
       <CardHeader>
@@ -68,18 +67,39 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
       </CardContent>
       {showFooter && (
         <CardFooter className="flex flex-col space-y-2 pt-0">
-          <Link href="/cart/checkout" className="w-full">
-            <Button className="w-full">Proceed to checkout</Button>
-          </Link>
-          <Link href={productsUrl} className="w-full">
-            <Button variant="outline" className="w-full">
-              Continue Shopping
-            </Button>
-          </Link>
+          <CartOrderDetailsActions type={type} cart={cart} />
         </CardFooter>
       )}
     </Card>
   );
+};
+
+const CartOrderDetailsActions: React.FC<{
+  type: Type;
+  cart: ICart;
+}> = ({ type, cart }) => {
+  if (type === 'cart') {
+    const cartItems = cart.items.map((item) => item.product);
+    const productsUrl =
+      cartItems.map(
+        (i) => `/products/${getCategory('id', i.category)?.name.toLowerCase()}`,
+      )[0] || '/';
+
+    return (
+      <>
+        <Link href="/cart/checkout" className="w-full">
+          <Button className="w-full">Proceed to checkout</Button>
+        </Link>
+        <Link href={productsUrl} className="w-full">
+          <Button variant="outline" className="w-full">
+            Continue Shopping
+          </Button>
+        </Link>
+      </>
+    );
+  } else {
+    return <CreateOrder />;
+  }
 };
 
 export default CartOrderDetails;

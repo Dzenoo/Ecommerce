@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 import { Button } from '@/components/ui/buttons/button';
 
-type AddressType = 'auto' | 'manual' | '';
+export type AddressType = 'auto' | 'manual' | '';
 
 type SelectAddressProps = {
   children: (addressType: AddressType) => React.ReactNode;
