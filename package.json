@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:api": "yarn --cwd api start:dev",
-    "start:client": "yarn --cwd client dev"
+    "start:api": "pnpm --filter api start:dev",
+    "start:client": "pnpm --filter client dev"
   }
 }
