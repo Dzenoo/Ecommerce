@@ -141,7 +141,9 @@ export class ReviewService {
     query: GetReviewsDto,
     productId: string,
   ): Promise<ResponseObject> {
-    const { skip = 0, limit = 10 } = query;
+    const { skip = 0, limit = 10, sort = 'desc' } = query;
+
+    const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
 
     const reviews = await this.reviewModel
       .find({
@@ -149,7 +151,7 @@ export class ReviewService {
       })
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort(sortOptions);
 
     const totalReviews = await this.reviewModel.countDocuments();
 

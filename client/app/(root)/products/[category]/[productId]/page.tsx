@@ -12,6 +12,7 @@ import ProductInformation from '@/components/root/products/details/ProductInform
 import NotFound from '@/components/shared/NotFound';
 import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
 import LoadingProductDetails from '@/components/shared/loading/LoadingProductDetails';
+import Reviews from '@/components/root/products/details/reviews/Reviews';
 
 const ProductDetailsPage = ({
   params,
@@ -35,9 +36,10 @@ const ProductDetailsPage = ({
 
   return (
     <section className="grid grid-cols-[1fr_2fr] gap-10 pt-5">
-      <div className="space-y-5">
+      <div className="space-y-10">
         <BreadcrumbProducts page={data.product.name} />
         <ProductImages images={data.product.images} />
+        <Reviews productId={productId} />
       </div>
       <div>
         <ProductInformation product={data.product} />

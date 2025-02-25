@@ -1,9 +1,9 @@
 import { createGenericQueryHook } from './createGenericQueryHook';
-import { GetProductsDto } from '@/types';
+import { GetReviewsDto } from '@/types';
 import { getReviews } from '@/lib/actions/review.actions';
 
 const ReviewQueryFunctions = {
-  GET_ALL: (params: { query: GetProductsDto; productId: string }) =>
+  GET_ALL: (params: { query: GetReviewsDto; productId: string }) =>
     getReviews(params.query, params.productId),
 } as const;
 

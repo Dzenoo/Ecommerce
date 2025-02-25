@@ -11,23 +11,22 @@ type ProductsListProps = {
 };
 
 const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
+  if (products.length === 0) {
+    return (
+      <Empty
+        icon={<Search size={25} className="mb-4" />}
+        title="No Products Found"
+        description="Oops! It seems like there are no products found."
+      />
+    );
+  }
+
   return (
-    <div>
-      {products.length === 0 && (
-        <Empty
-          icon={<Search size={25} className="mb-4" />}
-          title="No Products Found"
-          description="Oops! It seems like there are no products found."
-        />
-      )}
-      {products.length > 0 && (
-        <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-4">
-          {products.map((product) => (
-            <ProductItem key={product._id} product={product} />
-          ))}
-        </ul>
-      )}
-    </div>
+    <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-4">
+      {products.map((product) => (
+        <ProductItem key={product._id} product={product} />
+      ))}
+    </ul>
   );
 };
 

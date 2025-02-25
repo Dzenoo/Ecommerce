@@ -14,6 +14,7 @@ import PickQuantity from './PickQuantity';
 
 import { Button } from '@/components/ui/buttons/button';
 import { Separator } from '@/components/ui/layout/separator';
+import Link from 'next/link';
 
 type ProductInformationProps = {
   product: IProduct;
@@ -30,6 +31,11 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         [key]: value,
       };
     });
+  };
+
+  const scrollToReviews = () => {
+    const element = document.getElementById('reviews') as HTMLElement;
+    element?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -55,14 +61,16 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            {renderRating(product.averageRating)}
+        <button onClick={scrollToReviews} className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              {renderRating(product.averageRating)}
+            </div>
+            <div className="mt-0.5">
+              <p className="text-sm font-medium">{product.reviews.length}</p>
+            </div>
           </div>
-          <div className="mt-0.5">
-            <p className="text-sm font-medium">{product.reviews.length}</p>
-          </div>
-        </div>
+        </button>
 
         <div>
           <p className="text-xl font-semibold">{product.price} DIN</p>

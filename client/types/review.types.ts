@@ -9,11 +9,12 @@ export type CreateReviewDto = {
 export type GetReviewsDto = {
   page?: number;
   limit?: number;
+  sort?: string;
 };
 
 export interface IReview {
   _id: string;
-  user: IUser | string;
+  user: IUser & string;
   product: IProduct | string;
   rating: number;
   comment?: string;
