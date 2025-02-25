@@ -6,6 +6,7 @@ import { Order } from './schema/order.schema';
 
 import { CartService } from '../cart/cart.service';
 import { UserService } from '../user/user.service';
+import { ProductService } from '../product/product.service';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
@@ -16,6 +17,7 @@ export class OrderService {
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
     private readonly cartService: CartService,
     private readonly userService: UserService,
+    private readonly productService: ProductService,
   ) {}
 
   async find(
@@ -46,7 +48,6 @@ export class OrderService {
         'Either addressId or address details must be provided',
       );
     }
-    console.log(body);
 
     const order = await this.orderModel.create({
       user: new mongoose.Types.ObjectId(userId),
@@ -60,6 +61,27 @@ export class OrderService {
     await this.userService.findOneByIdAndUpdate(userId, {
       $push: { orders: order._id },
     });
+
+    for (const item of cart.items) {
+      const product = await this.productService.findById(String(item.product));
+
+      if (!product || product.stock < item.quantity) {
+        throw new NotAcceptableException(
+          `Not enough stock for ${product?.name}`,
+        );
+      }
+
+      await this.productService.findAndUpdateMany(
+        {
+          _id: item.product,
+        },
+        {
+          $inc: {
+            stock: -item.quantity,
+          },
+        },
+      );
+    }
 
     return {
       statusCode: HttpStatus.CREATED,
