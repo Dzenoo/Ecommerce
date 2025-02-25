@@ -149,6 +149,7 @@ export class ReviewService {
       .find({
         product: productId,
       })
+      .populate('user', 'first_name last_name _id')
       .skip(skip)
       .limit(limit)
       .sort(sortOptions);

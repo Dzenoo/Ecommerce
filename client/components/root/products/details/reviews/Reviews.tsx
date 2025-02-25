@@ -83,7 +83,7 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
         <ReviewList reviews={data.data.reviews} />
       </div>
       <div className="sticky bottom-0">
-        <ReviewForm />
+        <ReviewForm productId={productId} />
       </div>
     </div>
   );

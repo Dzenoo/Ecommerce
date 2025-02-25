@@ -3,7 +3,7 @@ import { IUser } from './user.types';
 
 export type CreateReviewDto = {
   rating: number;
-  comment: string;
+  comment?: string;
 };
 
 export type GetReviewsDto = {

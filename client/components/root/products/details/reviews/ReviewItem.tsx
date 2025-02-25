@@ -22,8 +22,8 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
             height={50}
           />
         </div>
-        <div className="space-y-1">
-          <div className="flex items-center gap-4">
+        <div>
+          <div className="flex gap-2">
             <div className="pt-1">
               <h1 className="font-medium">
                 {review.user.first_name} {review.user.last_name}
@@ -41,7 +41,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
         </div>
       </div>
       <div>
-        <span className="whitespace-nowrap text-base text-muted-foreground">
+        <span className="whitespace-nowrap text-sm text-muted-foreground">
           {formatDate(review.createdAt)}
         </span>
       </div>
