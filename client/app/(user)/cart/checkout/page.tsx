@@ -8,6 +8,7 @@ import NotFound from '@/components/shared/NotFound';
 import CartOrderDetails from '@/components/user/cart/CartOrderDetails';
 import Checkout from '@/components/user/cart/checkout/Checkout';
 import Empty from '@/helpers/Empty';
+import LoadingCheckout from '@/components/shared/loading/LoadingCheckout';
 
 const CheckoutPage = () => {
   const { data, isLoading } = useCartQuery({
@@ -15,7 +16,11 @@ const CheckoutPage = () => {
   });
 
   if (isLoading) {
-    return <div className="pt-5">Loading...</div>;
+    return (
+      <div className="pt-5">
+        <LoadingCheckout />
+      </div>
+    );
   }
 
   if (!data) {
@@ -30,7 +35,7 @@ const CheckoutPage = () => {
 
   if (isEmpty)
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="pt-52">
         <Empty
           title="No Products In Cart"
           description="Your cart is empty. Add products to your cart to see them here."

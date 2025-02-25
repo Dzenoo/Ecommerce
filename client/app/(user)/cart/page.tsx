@@ -6,6 +6,7 @@ import { CartQueryType, useCartQuery } from '@/hooks/queries/useCart.query';
 import Cart from '@/components/user/cart/Cart';
 import NotFound from '@/components/shared/NotFound';
 import CartOrderDetails from '@/components/user/cart/CartOrderDetails';
+import LoadingCart from '@/components/shared/loading/LoadingCart';
 
 const CartPage = () => {
   const { data, isLoading } = useCartQuery({
@@ -13,7 +14,7 @@ const CartPage = () => {
   });
 
   if (isLoading) {
-    return <div className="pt-5">Loading...</div>;
+    return <LoadingCart />;
   }
 
   if (!data) {
