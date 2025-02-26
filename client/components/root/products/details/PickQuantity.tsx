@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 
 import { IProduct } from '@/types';
+import { useAuthStore } from '@/store/auth.store';
 
 import { Button } from '@/components/ui/buttons/button';
 import { cn } from '@/lib/utils';
@@ -23,6 +24,12 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
   children,
   className,
 }) => {
+  const { user, isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated || user?.role === 'admin') {
+    return null;
+  }
+
   const [quantity, setQuantity] = useState(defaultQuantity);
   const isOutOfStock = product.stock === 0;
   const isDecreaseEnabled = isOutOfStock || quantity <= 1;

@@ -3,7 +3,7 @@
 import React from 'react';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 
-import { useAuth } from '@/hooks/core/useAuth.hook';
+import { useAuthStore } from '@/store/auth.store';
 
 import {
   SidebarMenu,
@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/info/avatar';
 
 const UserInfo: React.FC = () => {
-  const { logout } = useAuth();
+  const { logout } = useAuthStore();
 
   return (
     <SidebarMenu>

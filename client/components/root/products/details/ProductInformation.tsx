@@ -14,7 +14,6 @@ import PickQuantity from './PickQuantity';
 
 import { Button } from '@/components/ui/buttons/button';
 import { Separator } from '@/components/ui/layout/separator';
-import Link from 'next/link';
 
 type ProductInformationProps = {
   product: IProduct;

@@ -2,6 +2,7 @@ import React from 'react';
 import { ShoppingBag } from 'lucide-react';
 
 import { useToast } from '@/hooks/core/use-toast';
+import { useAuthStore } from '@/store/auth.store';
 import {
   useCartMutation,
   CartMutationType,
@@ -27,6 +28,11 @@ const AddToCart: React.FC<AddToCartProps> = ({
   ...rest
 }) => {
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated || user?.role === 'admin') {
+    return null;
+  }
 
   const mutation = useCartMutation({
     onSuccess: (response) => {

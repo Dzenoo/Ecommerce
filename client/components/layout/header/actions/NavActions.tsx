@@ -4,9 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { LogOut, User } from 'lucide-react';
 
-import { useCurrentUser } from '@/hooks/queries/useCurrentUser.query';
-import { useAuth } from '@/hooks/core/useAuth.hook';
 import { getRoleSpecificData } from '@/lib/utils';
+import { useAuthStore } from '@/store/auth.store';
 
 import Logo from '../Logo';
 import { NavSearch } from './search/NavSearch';
@@ -17,11 +16,9 @@ import { TooltipWrapper } from '@/components/ui/info/tooltip-wrapper';
 const NavActions: React.FC<{
   showSearch?: boolean;
 }> = ({ showSearch = true }) => {
-  const { data: currentUser } = useCurrentUser();
-  const { logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuthStore();
 
-  const isAuthenticated = currentUser !== null;
-  const isAdmin = currentUser?.user.role === 'admin';
+  const isAdmin = (user && user.role === 'admin') || false;
   const roleData = getRoleSpecificData(isAdmin);
 
   return (

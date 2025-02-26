@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 
 import { useToast } from '@/hooks/core/use-toast';
+import { useAuthStore } from '@/store/auth.store';
 import {
   useWishlistMutation,
   WishlistMutationType,
@@ -28,6 +29,11 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
   ...rest
 }) => {
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated || user?.role === 'admin') {
+    return null;
+  }
 
   const { data } = useWishlistQuery({
     type: WishlistQueryType.GET_WISHLIST,

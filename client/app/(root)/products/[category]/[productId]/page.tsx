@@ -6,6 +6,7 @@ import {
   ProductQueryType,
   useProductQuery,
 } from '@/hooks/queries/useProduct.query';
+import { useAuthStore } from '@/store/auth.store';
 
 import ProductImages from '@/components/root/products/details/ProductImages';
 import ProductInformation from '@/components/root/products/details/ProductInformation';
@@ -20,6 +21,8 @@ const ProductDetailsPage = ({
   params: Promise<{ productId: string }>;
 }) => {
   const { productId } = use(params);
+
+  const { isAuthenticated } = useAuthStore();
 
   const { data, isLoading } = useProductQuery({
     type: ProductQueryType.GET_ONE,
@@ -39,7 +42,7 @@ const ProductDetailsPage = ({
       <div className="space-y-10">
         <BreadcrumbProducts page={data.product.name} />
         <ProductImages images={data.product.images} />
-        <Reviews productId={productId} />
+        {isAuthenticated && <Reviews productId={productId} />}
       </div>
       <div>
         <ProductInformation product={data.product} />
