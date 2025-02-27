@@ -23,7 +23,11 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
   return (
     <ul className="flex flex-col gap-5">
       {reviews.map((review) => (
-        <ReviewItem key={review._id} review={review} />
+        <ReviewItem
+          key={review._id}
+          productId={review.product}
+          review={review}
+        />
       ))}
     </ul>
   );

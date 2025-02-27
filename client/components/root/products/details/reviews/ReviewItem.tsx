@@ -1,15 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { Delete, Edit } from 'lucide-react';
 
 import { IReview } from '@/types';
 import { renderRating } from '@/helpers/render-rating';
 import { formatDate } from '@/lib/utils';
+import { useAuthStore } from '@/store/auth.store';
+import {
+  ReviewMutationType,
+  useReviewMutation,
+} from '@/hooks/mutations/useReview.mutation';
+import { useToast } from '@/hooks/core/use-toast';
+import { queryClient } from '@/context/react-query-client';
+import { ProductQueryType } from '@/hooks/queries/useProduct.query';
+import { ReviewQueryType } from '@/hooks/queries/useReview.query';
+import ReviewForm from './forms/ReviewForm';
+
+import { Button } from '@/components/ui/buttons/button';
 
 type ReviewItemProps = {
   review: IReview;
+  productId: string;
 };
 
-const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
+const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const { user } = useAuthStore();
+  const { toast } = useToast();
+
+  const mutation = useReviewMutation({
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          'products',
+          {
+            type: ProductQueryType.GET_ONE,
+            params: { productId },
+          },
+        ],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [
+          'reviews',
+          {
+            type: ReviewQueryType.GET_ALL,
+            params: { productId },
+          },
+        ],
+      });
+
+      toast({
+        title: 'Success',
+        description: response.message,
+      });
+    },
+  });
+
+  const handleDelete = () => {
+    mutation.mutateAsync({
+      type: ReviewMutationType.DELETE,
+      productId,
+      reviewId: review._id,
+    });
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  const isOwner = user?.userId === review.user._id;
+
+  if (isEditing) {
+    return (
+      <li className="rounded-lg border p-5">
+        <ReviewForm
+          productId={productId}
+          reviewToEdit={review}
+          onCancel={handleCancelEdit}
+        />
+      </li>
+    );
+  }
+
   return (
     <li className="flex justify-between gap-5 rounded-lg border p-5">
       <div className="flex gap-4">
@@ -40,10 +117,22 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
           )}
         </div>
       </div>
-      <div>
-        <span className="whitespace-nowrap text-sm text-muted-foreground">
-          {formatDate(review.createdAt)}
-        </span>
+      <div className="space-y-1">
+        {isOwner && (
+          <div className="space-x-2">
+            <Button size="sm" variant="outline" onClick={handleEdit}>
+              <Edit />
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleDelete}>
+              <Delete />
+            </Button>
+          </div>
+        )}
+        <div>
+          <span className="whitespace-nowrap text-sm text-muted-foreground">
+            {formatDate(review.createdAt)}
+          </span>
+        </div>
       </div>
     </li>
   );

@@ -14,6 +14,7 @@ import { ProductQueryType } from '@/hooks/queries/useProduct.query';
 import { queryClient } from '@/context/react-query-client';
 import { useToast } from '@/hooks/core/use-toast';
 import { ReviewQueryType } from '@/hooks/queries/useReview.query';
+import { IReview } from '@/types';
 
 import { Button } from '@/components/ui/buttons/button';
 import { Textarea } from '@/components/ui/form/textarea';
@@ -30,16 +31,23 @@ type ReviewFormValues = z.infer<typeof CreateReviewSchema>;
 
 type ReviewFormProps = {
   productId: string;
+  reviewToEdit?: IReview | null;
+  onCancel?: () => void;
 };
 
-const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
+const ReviewForm: React.FC<ReviewFormProps> = ({
+  productId,
+  reviewToEdit = null,
+  onCancel,
+}) => {
   const { toast } = useToast();
+  const isEditing = !!reviewToEdit;
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(CreateReviewSchema),
     defaultValues: {
-      rating: 0,
-      comment: '',
+      rating: reviewToEdit?.rating || 0,
+      comment: reviewToEdit?.comment || '',
     },
   });
 
@@ -70,17 +78,27 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
         title: 'Success',
         description: response.message,
       });
+
+      onCancel?.();
     },
   });
 
   const isLoading = mutation.status === 'pending';
 
   const handleCreateReview = async (values: ReviewFormValues) => {
-    mutation.mutateAsync({
-      type: ReviewMutationType.CREATE,
-      productId: productId,
-      data: { ...values },
-    });
+    if (isEditing && reviewToEdit) {
+      mutation.mutateAsync({
+        type: ReviewMutationType.UPDATE,
+        reviewId: reviewToEdit._id,
+        data: { ...values },
+      });
+    } else {
+      mutation.mutateAsync({
+        type: ReviewMutationType.CREATE,
+        productId: productId,
+        data: { ...values },
+      });
+    }
   };
 
   return (
@@ -140,14 +158,20 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId }) => {
             </FormItem>
           )}
         />
-
-        <Button type="submit" disabled={isLoading || !form.formState.isValid}>
-          {isLoading ? (
-            <Loader type="ScaleLoader" height={10} />
-          ) : (
-            'Submit Review'
+        <div className="space-x-2">
+          <Button type="submit" disabled={isLoading || !form.formState.isValid}>
+            {isLoading ? (
+              <Loader type="ScaleLoader" height={10} />
+            ) : (
+              'Submit Review'
+            )}
+          </Button>
+          {isEditing && onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
           )}
-        </Button>
+        </div>
       </form>
     </Form>
   );

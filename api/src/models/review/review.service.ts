@@ -3,10 +3,11 @@ import {
   HttpStatus,
   Inject,
   Injectable,
+  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { DeleteResult, FilterQuery, Model } from 'mongoose';
+import mongoose, { DeleteResult, FilterQuery, Model } from 'mongoose';
 
 import { Review, ReviewDocument } from './schema/review.schema';
 
@@ -51,30 +52,28 @@ export class ReviewService {
     if (!user || !product)
       throw new NotFoundException('User or product not found');
 
+    const existingReview = await this.reviewModel.findOne({
+      user: userId,
+      product: productId,
+    });
+
+    if (existingReview) {
+      throw new NotAcceptableException('You already reviewed this product.');
+    }
+
     const review = await this.reviewModel.create({
       ...body,
       product: productId,
       user: userId,
     });
 
-    const allReviewsForProducts = await this.reviewModel
-      .find({ product: productId })
-      .lean()
-      .exec();
-
-    const totalRatings =
-      allReviewsForProducts.reduce((acc, review) => acc + review.rating, 0) +
-      body.rating;
-
-    const averageRating = totalRatings / (allReviewsForProducts.length + 1);
-
     await Promise.all([
-      await this.userService.findOneByIdAndUpdate(userId, {
+      this.calculateAverageRating(productId),
+      this.productService.findOneByIdAndUpdate(productId, {
         $push: { reviews: review._id },
       }),
-      await this.productService.findOneByIdAndUpdate(productId, {
+      this.userService.findOneByIdAndUpdate(userId, {
         $push: { reviews: review._id },
-        averageRating: averageRating,
       }),
     ]);
 
@@ -97,6 +96,8 @@ export class ReviewService {
 
     if (!updatedReview)
       throw new NotFoundException('Review not found or unauthorized');
+
+    await this.calculateAverageRating(String(updatedReview.product));
 
     return {
       statusCode: HttpStatus.OK,
@@ -130,6 +131,8 @@ export class ReviewService {
         $pull: { reviews: id },
       }),
     ]);
+
+    await this.calculateAverageRating(productId);
 
     return {
       statusCode: HttpStatus.OK,
@@ -165,5 +168,22 @@ export class ReviewService {
         limit,
       },
     };
+  }
+
+  private async calculateAverageRating(productId: string): Promise<any> {
+    const allReviews = await this.reviewModel
+      .find({ product: productId })
+      .lean()
+      .exec();
+
+    const averageRating =
+      allReviews.length > 0
+        ? allReviews.reduce((acc, review) => acc + review.rating, 0) /
+          allReviews.length
+        : 0;
+
+    return await this.productService.findOneByIdAndUpdate(productId, {
+      averageRating: averageRating,
+    });
   }
 }

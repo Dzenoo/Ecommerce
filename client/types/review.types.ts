@@ -15,7 +15,7 @@ export type GetReviewsDto = {
 export interface IReview {
   _id: string;
   user: IUser & string;
-  product: IProduct | string;
+  product: IProduct & string;
   rating: number;
   comment?: string;
   createdAt: Date;
