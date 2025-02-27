@@ -247,7 +247,7 @@ const PriceFilter: React.FC = () => {
         >
           {({ value, onChange }) => (
             <div className="space-y-2">
-              <label className="text-sm font-medium">Min</label>
+              <label className="text-sm font-medium">Max</label>
               <Input
                 placeholder="Max Price"
                 onChange={(event) => onChange(event.target.value)}
