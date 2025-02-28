@@ -54,3 +54,17 @@ export const getReviews = async (
   const queryString = qs.stringify(query, { skipNulls: true });
   return await getApiHandler(`review/all/${productId}?${queryString}`);
 };
+
+export const getReviewsByUser = async (
+  query: GetReviewsDto,
+): Promise<
+  ServerResponse<{
+    data: {
+      reviews: IReview[];
+      totalReviews: number;
+    };
+  }>
+> => {
+  const queryString = qs.stringify(query, { skipNulls: true });
+  return await getApiHandler(`review/user/?${queryString}`);
+};

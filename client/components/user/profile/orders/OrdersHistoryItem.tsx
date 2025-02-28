@@ -55,7 +55,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
               />
             ))}
           </div>
-          <div>
+          <div className="space-y-0">
             <FieldGroup
               title="Order"
               value={order._id}
@@ -68,9 +68,10 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
         <Separator />
         <CardContent>
           {order.items.map((item, i) => (
-            <div key={i} className="flex items-center gap-5">
-              <div className="w-fit rounded-lg border">
+            <div key={i} className="flex gap-5">
+              <div>
                 <Image
+                  className="w-fit rounded-lg border"
                   src={item.product.images[0]}
                   alt={item.product.name}
                   width={150}

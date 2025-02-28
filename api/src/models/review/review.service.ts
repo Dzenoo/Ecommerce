@@ -170,6 +170,37 @@ export class ReviewService {
     };
   }
 
+  async getAllByUser(
+    query: GetReviewsDto,
+    userId: string,
+  ): Promise<ResponseObject> {
+    const { skip = 0, limit = 10, sort = 'desc' } = query;
+
+    const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
+
+    const reviews = await this.reviewModel
+      .find({
+        user: new mongoose.Types.ObjectId(userId),
+      })
+      .populate('user', 'first_name last_name _id')
+      .populate('product')
+      .skip(skip)
+      .limit(limit)
+      .sort(sortOptions);
+
+    const totalReviews = await this.reviewModel.countDocuments({
+      user: userId,
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        reviews,
+        totalReviews,
+      },
+    };
+  }
+
   private async calculateAverageRating(productId: string): Promise<any> {
     const allReviews = await this.reviewModel
       .find({ product: productId })

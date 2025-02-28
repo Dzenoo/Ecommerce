@@ -61,4 +61,13 @@ export class ReviewController {
   ) {
     return await this.reviewService.getAll(query, productId);
   }
+
+  @Get('/user')
+  @UseGuards(JwtAuthGuard)
+  async getReviewsByUser(
+    @Query() query: GetReviewsDto,
+    @User('userId') userId: string,
+  ) {
+    return await this.reviewService.getAllByUser(query, userId);
+  }
 }

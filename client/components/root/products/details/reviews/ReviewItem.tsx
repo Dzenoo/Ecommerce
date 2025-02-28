@@ -88,7 +88,10 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
   }
 
   return (
-    <li className="flex justify-between gap-5 rounded-lg border p-5">
+    <li
+      id={review._id}
+      className="flex justify-between gap-5 rounded-lg border p-5"
+    >
       <div className="flex gap-4">
         <div>
           <Image
