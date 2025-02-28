@@ -21,15 +21,14 @@ export type UpdateOrderDto = {
 
 export interface IOrder {
   _id: string;
-  user: IUser | string;
+  user: IUser & string;
   items: {
-    product: IProduct | string;
+    product: IProduct & string;
     quantity: number;
   }[];
   totalPrice: number;
   status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-  shippingAddress: IAddress | string;
-  manualShippingAddress?: IAddress;
+  address: IAddress | string;
   createdAt: Date;
   updatedAt: Date;
 }

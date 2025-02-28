@@ -32,6 +32,7 @@ export const getOrdersByUser = async (
 ): Promise<
   ServerResponse<{
     orders: IOrder[];
+    totalOrders: number;
   }>
 > => {
   const queryString = qs.stringify(query, { skipNulls: true });

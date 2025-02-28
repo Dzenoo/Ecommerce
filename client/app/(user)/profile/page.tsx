@@ -1,16 +1,11 @@
 'use client';
 
 import React from 'react';
-import { useSearchParams } from 'next/navigation';
 
-import ProfileNavigation from '@/components/user/profile/ProfileNavigation';
-import AccountDetails from '@/components/user/profile/details/AccountDetails';
 import { UserQueryType, useUserQuery } from '@/hooks/queries/useUser.query';
+import AccountDetails from '@/components/user/profile/details/AccountDetails';
 
-const ProfilePage = () => {
-  const searchParams = useSearchParams();
-  const tab = searchParams.get('tab') || '';
-
+const AccountDetailsPage = () => {
   const { data, isLoading } = useUserQuery({
     type: UserQueryType.GET_PROFILE,
   });
@@ -24,22 +19,10 @@ const ProfilePage = () => {
   }
 
   return (
-    <section className="grid grid-cols-[0.4fr,2fr] gap-5 pt-5">
-      <div>
-        <ProfileNavigation />
-      </div>
-      <div>
-        {tab === '' && (
-          <div>
-            <AccountDetails user={data.user} />
-          </div>
-        )}
-        {tab === 'orders' && <div>Orders</div>}
-        {tab === 'reviews' && <div>Reviews</div>}
-        {tab === 'addresses' && <div>Addresses</div>}
-      </div>
+    <section>
+      <AccountDetails user={data.user} />
     </section>
   );
 };
 
-export default ProfilePage;
+export default AccountDetailsPage;

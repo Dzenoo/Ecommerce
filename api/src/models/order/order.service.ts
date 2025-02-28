@@ -155,16 +155,23 @@ export class OrderService {
       .sort({ createdAt: sort === 'desc' ? -1 : 1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('items.product', 'name image price')
-      .select('-user')
+      .populate('items.product', 'name images price category')
+      .populate('user', 'first_name last_name _id')
       .lean()
       .exec();
 
-    if (!orders) throw new NotAcceptableException('Orders not found');
+    if (!orders)
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        orders: [],
+      };
+
+    const totalOrders = await this.orderModel.countDocuments(conditions);
 
     return {
       statusCode: HttpStatus.OK,
       orders,
+      totalOrders,
     };
   }
 

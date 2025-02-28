@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-
-import QueryParamController from '@/components/shared/QueryParamController';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/buttons/button';
 
@@ -11,43 +10,36 @@ const ProfileNavigation: React.FC = () => {
     {
       id: 1,
       title: 'Account Details',
-      path: '',
+      path: '/profile',
     },
     {
       id: 2,
       title: 'Order History',
-      path: 'orders',
+      path: '/profile/orders',
     },
     {
       id: 3,
       title: 'Product Reviews',
-      path: 'reviews',
+      path: '/profile/reviews',
     },
     {
       id: 4,
       title: 'Delivery Addresses',
-      path: 'addresses',
+      path: '/profile/addresses',
     },
   ];
 
   return (
     <nav className="flex flex-col space-y-2">
       {ProfileNavigationLinks.map((link) => (
-        <QueryParamController<string>
+        <Button
           key={link.id}
-          paramKey="tab"
-          defaultValue=""
+          variant="ghost"
+          className="items-start justify-start"
+          asChild
         >
-          {({ onChange }) => (
-            <Button
-              variant="ghost"
-              className="items-start justify-start"
-              onClick={() => onChange(link.path)}
-            >
-              {link.title}
-            </Button>
-          )}
-        </QueryParamController>
+          <Link href={link.path}>{link.title}</Link>
+        </Button>
       ))}
     </nav>
   );
