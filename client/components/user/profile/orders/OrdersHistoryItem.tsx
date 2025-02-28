@@ -1,14 +1,14 @@
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 import { IOrder } from '@/types';
 import FieldGroup from '@/helpers/FieldGroup';
 import { formatDate, getCategory } from '@/lib/utils';
 
+import { Button } from '@/components/ui/buttons/button';
 import { Separator } from '@/components/ui/layout/separator';
 import { Card, CardContent, CardHeader } from '@/components/ui/layout/card';
-import Image from 'next/image';
-import { Button } from '@/components/ui/buttons/button';
-import Link from 'next/link';
 
 type OrdersHistoryItemProps = {
   order: IOrder;
@@ -40,8 +40,6 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
       customStyles,
     },
   ];
-
-  console.log(order);
 
   return (
     <li>
