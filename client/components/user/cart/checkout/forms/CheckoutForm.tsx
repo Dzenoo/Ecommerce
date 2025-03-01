@@ -16,8 +16,10 @@ import {
 } from '@/hooks/queries/useAddress.query';
 import { useToast } from '@/hooks/core/use-toast';
 import { queryClient } from '@/context/react-query-client';
+import { cn } from '@/lib/utils';
 import FieldGroup from '@/helpers/FieldGroup';
 import { AddressType } from '../SelectAddress';
+import AddressInfo from '@/components/user/profile/addresses/AddressInfo';
 
 import { Input } from '@/components/ui/form/input';
 import {
@@ -123,10 +125,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
           {data?.addresses.map((a) => (
             <div
               onClick={() => setSelectedAddress(a._id)}
-              className="cursor-pointer"
+              className={cn(
+                'cursor-pointer rounded-lg border p-5',
+                selectedAddress === a._id && 'border-blue-500',
+              )}
               key={a._id}
             >
-              {a._id}
+              <AddressInfo address={a} />
             </div>
           ))}
         </form>

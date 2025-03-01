@@ -7,7 +7,7 @@ import {
 } from '@/hooks/mutations/useAddress.mutation';
 import { IAddress } from '@/types';
 import { queryClient } from '@/context/react-query-client';
-import FieldGroup from '@/helpers/FieldGroup';
+import AddressInfo from './AddressInfo';
 import AddressForm from './forms/AddressForm';
 
 import { Badge } from '@/components/ui/info/badge';
@@ -111,16 +111,8 @@ const AddressItem: React.FC<AddressItemProps> = ({ address }) => {
           </div>
         </CardHeader>
         <Separator />
-        <CardContent className="grid grid-cols-2 gap-5">
-          <FieldGroup title="Address Line 1" value={address.addressLine1} />
-          <FieldGroup
-            title="Address Line 2"
-            value={address.addressLine2 ?? 'Empty'}
-          />
-          <FieldGroup title="City" value={address.city} />
-          <FieldGroup title="Country" value={address.country} />
-          <FieldGroup title="State" value={address.state} />
-          <FieldGroup title="Postal Code" value={address.postalCode} />
+        <CardContent>
+          <AddressInfo address={address} />
         </CardContent>
       </Card>
     </li>
