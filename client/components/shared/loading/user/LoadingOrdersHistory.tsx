@@ -24,7 +24,7 @@ const LoadingOrdersHistory: React.FC = () => {
       </div>
       <div className="flex flex-col space-y-5">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton className="h-72 w-full" />
+          <Skeleton className="h-72 w-full" key={i} />
         ))}
       </div>
     </div>
