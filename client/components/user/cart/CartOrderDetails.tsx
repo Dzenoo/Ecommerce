@@ -50,7 +50,7 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
         {showApplyCoupon && <ApplyCouponForm cartId={cart._id} />}
         <FieldGroup
           title="Total Price"
-          value={`${cart.totalPrice} DIN`}
+          value={`${cart.totalPrice} $`}
           customStyles={{
             div: 'flex flex-row justify-between items-center',
             p: 'font-bold text-black text-sm',

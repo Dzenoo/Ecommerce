@@ -30,7 +30,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
     {
       id: 2,
       title: 'Total',
-      value: order.totalPrice + ' DIN',
+      value: order.totalPrice + ' $',
       customStyles,
     },
     {
@@ -90,7 +90,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                   <div>
                     <FieldGroup
                       title="Product Price"
-                      value={item.product.price + ' DIN'}
+                      value={item.product.price + ' $'}
                       customStyles={customStyles}
                     />
                   </div>

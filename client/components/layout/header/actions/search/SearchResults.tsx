@@ -77,7 +77,7 @@ export const SearchResults: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{product.price} DIN</p>
+                  <p className="text-sm font-medium">{product.price} $</p>
                 </div>
               </div>
             </div>

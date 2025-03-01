@@ -70,7 +70,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         <Separator />
         <CardFooter className="flex items-center justify-between gap-2">
           <Button type="button" variant="outline" className="flex-1">
-            {product.price} DIN
+            {product.price} $
           </Button>
           <AddToCart product={product} attributes={{}} />
         </CardFooter>

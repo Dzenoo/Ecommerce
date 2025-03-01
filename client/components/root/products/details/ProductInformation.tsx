@@ -72,7 +72,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         </button>
 
         <div>
-          <p className="text-xl font-semibold">{product.price} DIN</p>
+          <p className="text-xl font-semibold">{product.price} $</p>
         </div>
 
         <Separator />
@@ -145,7 +145,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         <div className="flex w-fit items-center gap-5 rounded-md border bg-white p-5">
           <Truck />{' '}
           <p className="text-sm">
-            Isporuka za 1-3 radna dana, cena dostave 360 RSD
+            Delivery for 1-3 working days, price for deliver 5$
           </p>
         </div>
       </div>

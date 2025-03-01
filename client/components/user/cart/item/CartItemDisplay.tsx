@@ -132,13 +132,13 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
 
       {config.showPrice && (
         <div className="col-span-1">
-          <p className="text-sm">{item.product.price} DIN</p>
+          <p className="text-sm">{item.product.price} $</p>
         </div>
       )}
 
       {config.showTotal && (
         <div>
-          <p className="text-sm font-bold">{total} DIN</p>
+          <p className="text-sm font-bold">{total} $</p>
         </div>
       )}
 
