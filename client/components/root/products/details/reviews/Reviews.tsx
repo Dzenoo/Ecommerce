@@ -5,6 +5,7 @@ import {
   ReviewQueryType,
   useReviewQuery,
 } from '@/hooks/queries/useReview.query';
+import { useAuthStore } from '@/store/auth.store';
 import QueryParamController from '@/components/shared/QueryParamController';
 import ReviewList from './ReviewList';
 import ReviewForm from './forms/ReviewForm';
@@ -26,6 +27,7 @@ type ReviewsProps = {
 
 const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
   const searchParams = useSearchParams();
+  const { user } = useAuthStore();
 
   const query = {
     page: Number(searchParams.get('page') || 1),
@@ -82,9 +84,11 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
       <div className="hide-scrollbar max-h-96 overflow-y-scroll">
         <ReviewList reviews={data.data.reviews} />
       </div>
-      <div className="sticky bottom-0">
-        <ReviewForm productId={productId} />
-      </div>
+      {user?.role === 'user' && (
+        <div className="sticky bottom-0">
+          <ReviewForm productId={productId} />
+        </div>
+      )}
     </div>
   );
 };
