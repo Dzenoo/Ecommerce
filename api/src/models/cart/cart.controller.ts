@@ -13,6 +13,9 @@ import { CartService } from './cart.service';
 
 import { User } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/types';
 
 import { AddItemDto } from './dto/add-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
@@ -22,7 +25,8 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post('/add')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async addItem(
     @User('userId') userId: string,
     @Body() { productId, quantity, attributes }: AddItemDto,
@@ -31,7 +35,8 @@ export class CartController {
   }
 
   @Delete('/remove/:itemId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async removeItem(
     @User('userId') userId: string,
     @Param('itemId') itemId: string,
@@ -40,7 +45,8 @@ export class CartController {
   }
 
   @Patch('/update/:itemId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async updateItem(
     @User('userId') userId: string,
     @Param('itemId') itemId: string,
@@ -50,13 +56,15 @@ export class CartController {
   }
 
   @Get('/get')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async getCart(@User('userId') userId: string) {
     return this.cartService.get(userId);
   }
 
   @Delete('/clear')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async clearCart(@User('userId') userId: string) {
     return this.cartService.clear(userId);
   }

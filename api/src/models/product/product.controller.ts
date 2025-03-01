@@ -35,8 +35,8 @@ export class ProductController {
 
   @Post('/create')
   @UseInterceptors(FilesInterceptor('images', 10))
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   async createProduct(
     @Body() body: CreateProductDto,
     @UploadedFiles(

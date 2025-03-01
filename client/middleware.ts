@@ -9,7 +9,22 @@ const rootConfig = {
     {
       pattern: /^\/dashboard(\/.*)?$/,
       allowedRoles: new Set(['admin']),
-      redirect: '/login',
+      redirect: '/',
+    },
+    {
+      pattern: /^\/cart(\/.*)?$/,
+      allowedRoles: new Set(['user']),
+      redirect: '/',
+    },
+    {
+      pattern: /^\/profile(\/.*)?$/,
+      allowedRoles: new Set(['user']),
+      redirect: '/',
+    },
+    {
+      pattern: /^\/wishlist(\/.*)?$/,
+      allowedRoles: new Set(['user']),
+      redirect: '/',
     },
   ],
   authPages: new Set(['/login', '/signup']),
@@ -81,5 +96,12 @@ function checkRouteAccess(
 }
 
 export const config = {
-  matcher: ['/login', '/signup', '/dashboard/:path*'],
+  matcher: [
+    '/login',
+    '/signup',
+    '/dashboard/:path*',
+    '/cart/:path*',
+    '/profile/:path*',
+    '/wishlist/:path*',
+  ],
 };

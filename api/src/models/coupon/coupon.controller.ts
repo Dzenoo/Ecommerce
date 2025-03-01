@@ -54,13 +54,15 @@ export class CouponController {
   }
 
   @Get('/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async getCoupon(@Param('id') id: string) {
     return this.couponService.getOne(id);
   }
 
   @Post('/apply/:cartId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async applyCoupon(
     @Param('cartId') cartId: string,
     @Body('couponCode') couponCode: string,

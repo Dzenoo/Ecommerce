@@ -5,6 +5,7 @@ import {
   Injectable,
   NotAcceptableException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { DeleteResult, FilterQuery, Model } from 'mongoose';
@@ -121,6 +122,10 @@ export class ReviewService {
 
     if (!review)
       throw new NotFoundException('Review not found or unauthorized');
+
+    if (review.user.toString() !== userId) {
+      throw new UnauthorizedException();
+    }
 
     await Promise.all([
       this.reviewModel.deleteOne({ _id: id, user: userId }),

@@ -28,7 +28,8 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post('/create')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async createOrder(
     @Body() body: CreateOrderDto,
     @User('userId') userId: string,
@@ -37,7 +38,8 @@ export class OrderController {
   }
 
   @Get('/user')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async getOrdersByUser(
     @Query() query: GetOrdersDto,
     @User('userId') userId: string,
@@ -46,7 +48,8 @@ export class OrderController {
   }
 
   @Delete('/delete/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async cancelOrder(@Param('id') id: string) {
     return this.orderService.cancel(id);
   }

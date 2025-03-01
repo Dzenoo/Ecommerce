@@ -13,6 +13,9 @@ import {
 import { ReviewService } from './review.service';
 
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/types';
 import { User } from '@/common/decorators/user.decorator';
 
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -24,7 +27,8 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Post('/create/:productId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async createReview(
     @Body() body: CreateReviewDto,
     @User('userId') userId: string,
@@ -34,7 +38,8 @@ export class ReviewController {
   }
 
   @Patch('/update/:reviewId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async updateReview(
     @Body() body: UpdateReviewDto,
     @User('userId') userId: string,
@@ -44,7 +49,8 @@ export class ReviewController {
   }
 
   @Delete('/delete/:reviewId/:productId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async deleteReview(
     @Param('reviewId') reviewId: string,
     @Param('productId') productId: string,
@@ -63,7 +69,8 @@ export class ReviewController {
   }
 
   @Get('/user')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   async getReviewsByUser(
     @Query() query: GetReviewsDto,
     @User('userId') userId: string,
