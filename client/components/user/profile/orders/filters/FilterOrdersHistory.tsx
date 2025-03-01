@@ -38,10 +38,10 @@ const FilterOrdersHistory: React.FC = () => {
   ];
 
   return (
-    <div className="flex items-center justify-between gap-5">
-      <div className="flex items-center space-x-2">
+    <div className="flex items-center justify-between gap-5 max-md:flex-col max-md:items-start">
+      <div className="flex w-full items-center gap-2 max-md:flex-col max-md:items-start">
         {OrdersFilters.map((filter) => (
-          <div key={filter.id}>
+          <div key={filter.id} className="max-md:w-full">
             <QueryParamController<string>
               paramKey="status"
               transform={{
@@ -54,6 +54,7 @@ const FilterOrdersHistory: React.FC = () => {
                 <Button
                   variant={value === filter.status ? 'default' : 'outline'}
                   onClick={() => onChange(filter.status)}
+                  className="max-md:w-full"
                 >
                   {filter.status}
                 </Button>
@@ -62,29 +63,27 @@ const FilterOrdersHistory: React.FC = () => {
           </div>
         ))}
       </div>
-      <div>
-        <QueryParamController<string>
-          paramKey="sort"
-          defaultValue="desc"
-          transform={{
-            decode: (value: string | string[]) =>
-              Array.isArray(value) ? value[0] || '' : value || '',
-            encode: (value) => value,
-          }}
-        >
-          {({ value, onChange }) => (
-            <Select onValueChange={onChange} value={value || undefined}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="desc">Descending</SelectItem>
-                <SelectItem value="asc">Ascending</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
-        </QueryParamController>
-      </div>
+      <QueryParamController<string>
+        paramKey="sort"
+        defaultValue="desc"
+        transform={{
+          decode: (value: string | string[]) =>
+            Array.isArray(value) ? value[0] || '' : value || '',
+          encode: (value) => value,
+        }}
+      >
+        {({ value, onChange }) => (
+          <Select onValueChange={onChange} value={value || undefined}>
+            <SelectTrigger className="w-[180px] max-md:w-full">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desc">Descending</SelectItem>
+              <SelectItem value="asc">Ascending</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+      </QueryParamController>
     </div>
   );
 };

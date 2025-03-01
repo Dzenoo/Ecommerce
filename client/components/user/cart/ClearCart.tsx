@@ -35,7 +35,11 @@ const ClearCart: React.FC = () => {
   };
 
   return (
-    <Button variant="outline" onClick={handleClearCart}>
+    <Button
+      variant="outline"
+      onClick={handleClearCart}
+      className="max-sm:w-full"
+    >
       Clear Cart
     </Button>
   );

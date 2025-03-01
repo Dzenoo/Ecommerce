@@ -44,8 +44,8 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
   return (
     <li>
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-5">
-          <div className="flex flex-row items-start gap-20 space-y-0">
+        <CardHeader className="flex flex-row items-start justify-between gap-5 max-lg:flex-col">
+          <div className="flex flex-row items-start gap-20 space-y-0 max-sm:flex-col max-sm:gap-5">
             {Header.map((h) => (
               <FieldGroup
                 key={h.id}
@@ -68,10 +68,13 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
         <Separator />
         <CardContent>
           {order.items.map((item, i) => (
-            <div key={i} className="flex gap-5">
+            <div
+              key={i}
+              className="hide-scrollbar flex gap-5 max-sm:overflow-x-scroll"
+            >
               <div>
                 <Image
-                  className="w-fit rounded-lg border"
+                  className="min-h-28 w-fit min-w-28 rounded-lg border"
                   src={item.product.images[0]}
                   alt={item.product.name}
                   width={150}

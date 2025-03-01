@@ -47,12 +47,7 @@ const FieldGroup: React.FC<
     }
 
     return (
-      <p
-        className={cn(
-          'truncate text-base text-muted-foreground',
-          customStyles?.p,
-        )}
-      >
+      <p className={cn('text-base text-muted-foreground', customStyles?.p)}>
         {value}
       </p>
     );

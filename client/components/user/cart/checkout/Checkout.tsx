@@ -58,7 +58,7 @@ const Checkout: React.FC = () => {
     );
 
   return (
-    <section className="grid grid-cols-[2.5fr,1fr] gap-5 pt-5">
+    <section className="grid grid-cols-[2.5fr,1fr] gap-5 pt-5 max-lg:grid-cols-1">
       <Card className="h-fit shadow-none">
         <CardHeader className="flex flex-row items-center justify-between gap-5">
           <div className="space-y-1.5">

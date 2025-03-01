@@ -10,7 +10,7 @@ const LoadingProducts: React.FC = () => {
       </div>
       <div className="space-y-5">
         <Skeleton className="h-10 w-28" />
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 2xl:grid-cols-4">
           {Array.from({ length: 20 }, (_, index) => index).map((index) => (
             <Skeleton key={index} className="h-96" />
           ))}

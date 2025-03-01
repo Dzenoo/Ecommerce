@@ -84,7 +84,7 @@
   }
 
   .base-padding {
-    @apply overflow-auto px-28;
+    @apply overflow-auto px-28 max-xl:px-10 max-lg:px-5 max-md:px-2;
   }
 
   .hide-scrollbar::-webkit-scrollbar {
@@ -134,8 +134,6 @@
     }
   }
 }
-
-
 
 @layer base {
   * {

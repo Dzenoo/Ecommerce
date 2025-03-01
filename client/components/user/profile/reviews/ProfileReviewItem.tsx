@@ -18,8 +18,8 @@ const ProfileReviewItem: React.FC<ProfileReviewItemProps> = ({ review }) => {
 
   return (
     <li className="space-y-5 rounded-lg border p-5">
-      <div className="flex items-center justify-between gap-5">
-        <div className="flex items-center gap-5">
+      <div className="flex items-center justify-between gap-5 max-sm:flex-col max-sm:items-start">
+        <div className="flex items-center gap-5 max-sm:flex-col max-sm:items-start">
           <div>
             <Link href={productUrl}>
               <Image
@@ -27,6 +27,7 @@ const ProfileReviewItem: React.FC<ProfileReviewItemProps> = ({ review }) => {
                 alt={review.product.name}
                 width={80}
                 height={80}
+                className="min-h-20 min-w-20 object-cover"
               />
             </Link>
           </div>
@@ -42,7 +43,7 @@ const ProfileReviewItem: React.FC<ProfileReviewItemProps> = ({ review }) => {
           </div>
         </div>
         <div>
-          <Button asChild>
+          <Button className="max-sm:w-full" asChild>
             <Link href={productUrl}>Edit Review</Link>
           </Button>
         </div>

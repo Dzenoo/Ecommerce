@@ -50,35 +50,33 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
 
   return (
     <div id="reviews" className="relative space-y-5">
-      <div className="flex items-center justify-between gap-5">
+      <div className="flex flex-wrap items-center justify-between gap-5">
         <div>
           <h1 className="text-muted-foreground">Reviews and Ratings</h1>
         </div>
-        <div>
-          <QueryParamController<string>
-            paramKey="sort"
-            defaultValue=""
-            transform={{
-              decode: (value: string | string[]) =>
-                Array.isArray(value) ? value[0] || '' : value || '',
-              encode: (value) => value,
-            }}
-          >
-            {({ onChange, value }) => (
-              <Select value={value || undefined} onValueChange={onChange}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Sort Reviews"></SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="desc">Newest</SelectItem>
-                    <SelectItem value="asc">Oldest</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          </QueryParamController>
-        </div>
+        <QueryParamController<string>
+          paramKey="sort"
+          defaultValue=""
+          transform={{
+            decode: (value: string | string[]) =>
+              Array.isArray(value) ? value[0] || '' : value || '',
+            encode: (value) => value,
+          }}
+        >
+          {({ onChange, value }) => (
+            <Select value={value || undefined} onValueChange={onChange}>
+              <SelectTrigger className="w-[150px] max-sm:w-full">
+                <SelectValue placeholder="Sort Reviews"></SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="desc">Newest</SelectItem>
+                  <SelectItem value="asc">Oldest</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
+        </QueryParamController>
       </div>
       <Separator />
       <div className="hide-scrollbar max-h-96 overflow-y-scroll">

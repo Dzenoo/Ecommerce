@@ -20,7 +20,7 @@ const AddressList: React.FC<AddressListProps> = ({ addresses }) => {
     );
 
   return (
-    <ul className="grid grid-cols-2 gap-5">
+    <ul className="grid grid-cols-2 gap-5 max-md:grid-cols-1">
       {addresses.map((address) => (
         <AddressItem key={address._id} address={address} />
       ))}

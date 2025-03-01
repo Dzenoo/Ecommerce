@@ -87,7 +87,7 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
 
   return (
     <div
-      className="grid items-center gap-5"
+      className="grid items-center gap-5 whitespace-nowrap"
       style={{
         gridTemplateColumns: config.showRemove
           ? '2fr 1fr 1fr 1fr auto'
@@ -100,7 +100,7 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
             href={`/products/${category?.name.toLowerCase()}/${item.product._id}`}
           >
             <Image
-              className="border"
+              className="min-h-20 min-w-20 border"
               src={item.product.images[0]}
               alt={item.product.name}
               width={config.imageSize.width}

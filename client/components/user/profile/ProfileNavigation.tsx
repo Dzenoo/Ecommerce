@@ -30,7 +30,7 @@ const ProfileNavigation: React.FC = () => {
   ];
 
   return (
-    <nav className="flex flex-col space-y-2">
+    <nav className="hide-scrollbar flex flex-col space-y-2 max-lg:flex-row max-lg:space-y-0 max-lg:overflow-x-auto">
       {ProfileNavigationLinks.map((link) => (
         <Button
           key={link.id}

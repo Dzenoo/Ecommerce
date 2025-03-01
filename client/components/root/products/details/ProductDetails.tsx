@@ -36,15 +36,24 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
   }
 
   return (
-    <div className="grid grid-cols-[1fr_2fr] gap-10">
+    <div className="grid grid-cols-[1fr_2fr] gap-10 max-xl:grid-cols-1 max-sm:gap-20">
       <div className="space-y-10">
         <BreadcrumbProducts page={data.product.name} />
         <ProductImages images={data.product.images} />
-        {isAuthenticated && <Reviews productId={productId} />}
+        {isAuthenticated && (
+          <div className="max-xl:hidden">
+            <Reviews productId={productId} />
+          </div>
+        )}
       </div>
       <div>
         <ProductInformation product={data.product} />
       </div>
+      {isAuthenticated && (
+        <div className="hidden max-xl:block">
+          <Reviews productId={productId} />
+        </div>
+      )}
     </div>
   );
 };

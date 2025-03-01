@@ -2,6 +2,7 @@ import React from 'react';
 import { ShoppingBag } from 'lucide-react';
 
 import { CartDisplayMode, ICart } from '@/types';
+import { cn } from '@/lib/utils';
 import Empty from '@/helpers/Empty';
 import CartItem from './item/CartItem';
 import { displayConfigs } from './item/CartItemDisplay';
@@ -35,12 +36,12 @@ const CartList: React.FC<CartListProps> = ({ cart, mode }) => {
   return (
     <div className="hide-scrollbar max-h-screen space-y-5 overflow-y-auto">
       <div
-        className="grid gap-5"
-        style={{
-          gridTemplateColumns: config.showRemove
-            ? '2fr 1fr 1fr 1fr auto'
-            : '2fr 1fr 1fr',
-        }}
+        className={cn(
+          'grid gap-5 max-sm:hidden',
+          config.showRemove
+            ? 'grid-cols-[2fr,1fr,1fr,1fr,auto]'
+            : 'grid-cols-[2fr,1fr,1fr]',
+        )}
       >
         {headers.map((item, index) => (
           <h2 key={index} className="text-base font-medium">
@@ -48,7 +49,7 @@ const CartList: React.FC<CartListProps> = ({ cart, mode }) => {
           </h2>
         ))}
       </div>
-      <Separator />
+      <Separator className="max-sm:hidden" />
       <div className="flex flex-col gap-5">
         {cart.items.map((item, i) => (
           <CartItem key={i} item={item} mode={mode} />

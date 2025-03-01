@@ -50,7 +50,7 @@ const ProfileReviews: React.FC = () => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-5">
+      <CardHeader className="flex flex-row items-center justify-between gap-5 max-sm:flex-col max-sm:items-start">
         <div className="flex flex-col space-y-1.5">
           <CardTitle>My Reviews</CardTitle>
           <CardDescription>All your reviews for products.</CardDescription>

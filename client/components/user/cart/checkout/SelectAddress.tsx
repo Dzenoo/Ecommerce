@@ -17,7 +17,7 @@ const SelectAddress: React.FC<SelectAddressProps> = ({ children }) => {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-5">
+      <div className="flex items-center justify-between gap-5 max-sm:flex-col">
         <SelectAddressButton
           type="auto"
           addressType={addressType}

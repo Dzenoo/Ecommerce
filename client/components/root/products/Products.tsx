@@ -75,25 +75,25 @@ const Products: React.FC<ProductsProps> = ({ category }) => {
   if (!data) return <NotFound />;
 
   return (
-    <div className="grid grid-cols-[1fr_3fr] gap-10">
+    <div className="grid grid-cols-[1fr_3fr] gap-10 max-lg:grid-cols-1">
       <div className="space-y-5">
         <BreadcrumbProducts page={selectedCategory.name} />
         <FilterProducts selectedCategory={selectedCategory} />
       </div>
 
       <div className="space-y-5">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 max-md:flex-col max-md:items-start">
           <div className="basis-full">
             <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
           </div>
-          <div>
-            <Button variant="outline" onClick={clearAllQueryParams}>
-              Clear All Filters
-            </Button>
-          </div>
-          <div>
-            <SortProducts />
-          </div>
+          <Button
+            variant="outline"
+            onClick={clearAllQueryParams}
+            className="max-md:w-full"
+          >
+            Clear All Filters
+          </Button>
+          <SortProducts />
         </div>
 
         <ProductsList products={data.products} />

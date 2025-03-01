@@ -46,7 +46,7 @@ export const SearchResults: React.FC = () => {
   const productsData = data.products.slice(0, 5);
 
   return (
-    <div className="flex flex-col gap-5 p-5">
+    <div className="flex flex-col gap-5 p-5 max-md:p-0">
       {productsData.map((product: IProduct) => {
         const category = getCategory('id', product.category);
 
@@ -54,9 +54,9 @@ export const SearchResults: React.FC = () => {
           <Link
             key={product._id}
             href={`/products/${category?.name.toLowerCase()}/${product._id}`}
-            className="transition-all hover:bg-[#F5F5F5]"
+            className="whitespace-nowrap transition-all hover:bg-[#F5F5F5]"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-5">
               <div className="flex items-center gap-2">
                 <div>
                   <Image
@@ -64,6 +64,7 @@ export const SearchResults: React.FC = () => {
                     alt={product.name}
                     width={50}
                     height={50}
+                    className="min-h-[50px] min-w-[50px] object-cover"
                   />
                 </div>
                 <div>

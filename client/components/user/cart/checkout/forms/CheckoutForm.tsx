@@ -38,6 +38,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/form/select';
+import Empty from '@/helpers/Empty';
+import { Truck } from 'lucide-react';
 
 export type CheckoutFormValues = z.infer<typeof CreateOrderSchema>;
 
@@ -128,6 +130,17 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
   };
 
   if (type === 'auto') {
+    if (data?.addresses.length === 0) {
+      return (
+        <Empty
+          customStyles={{ container: 'pt-5' }}
+          icon={<Truck size={25} />}
+          title="No Saved Addresses"
+          description="Saved addresses will appear here"
+        />
+      );
+    }
+
     return (
       <div className="space-y-10 pt-5">
         <form
@@ -164,7 +177,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
             onSubmit={form.handleSubmit(handleCreateManualOrder)}
             className="w-full space-y-5"
           >
-            <div className="grid grid-cols-2 items-center gap-5">
+            <div className="grid grid-cols-2 items-center gap-5 max-[400px]:grid-cols-1">
               <FormField
                 name="addressLine1"
                 control={form.control}
@@ -198,7 +211,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 items-center gap-5">
+            <div className="grid grid-cols-2 items-center gap-5 max-[400px]:grid-cols-1">
               <FormField
                 name="country"
                 control={form.control}
@@ -239,7 +252,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 items-center gap-5">
+            <div className="grid grid-cols-2 items-center gap-5 max-[400px]:grid-cols-1">
               <FormField
                 name="state"
                 control={form.control}

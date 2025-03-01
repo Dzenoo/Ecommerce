@@ -9,7 +9,7 @@ type AddressInfo = {
 
 const AddressInfo: React.FC<AddressInfo> = ({ address }) => {
   return (
-    <div className="grid grid-cols-2 gap-5">
+    <div className="grid grid-cols-2 gap-5 max-sm:grid-cols-1">
       <FieldGroup title="Address Line 1" value={address.addressLine1} />
       <FieldGroup
         title="Address Line 2"

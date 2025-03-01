@@ -38,9 +38,9 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-10">
+    <div className="grid grid-cols-2 gap-10 max-md:grid-cols-1">
       <div className="hide-scrollbar space-y-5 overflow-auto">
-        <div className="flex items-center justify-between gap-5">
+        <div className="flex flex-wrap items-center justify-between gap-5">
           <div>
             <h1 className="text-4xl font-semibold capitalize">
               {product.name}

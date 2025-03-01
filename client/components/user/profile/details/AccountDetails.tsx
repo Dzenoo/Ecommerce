@@ -35,8 +35,8 @@ const AccountDetails: React.FC = () => {
 
   return (
     <Card className="shadow-none">
-      <CardContent className="flex justify-between">
-        <div className="flex items-center gap-5">
+      <CardContent className="flex justify-between gap-10 max-lg:flex-col">
+        <div className="flex flex-wrap items-center gap-5">
           <Avatar className="h-36 w-36 rounded-full">
             <AvatarImage src="/images/avatar.jpg" alt="Avatar" />
             <AvatarFallback className="rounded-full">CN</AvatarFallback>
@@ -49,7 +49,7 @@ const AccountDetails: React.FC = () => {
             <FieldGroup title="Email" value={user.email} />
           </div>
         </div>
-        <div className="flex space-x-5">
+        <div className="flex gap-5 whitespace-nowrap max-sm:flex-col">
           <FieldGroup title="Total Orders" value={user.orders.length} />
           <FieldGroup title="Total Reviews" value={user.reviews.length} />
           <FieldGroup title="Total Addresses" value={user.addresses.length} />

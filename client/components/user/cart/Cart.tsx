@@ -40,17 +40,17 @@ const Cart: React.FC = () => {
 
   return (
     <div
-      className={`grid gap-5${isEmpty ? 'grid-cols-1' : 'grid-cols-[2.5fr,1fr]'}`}
+      className={`grid gap-5 ${isEmpty ? 'grid-cols-1' : 'grid-cols-[2.5fr,1fr] max-xl:grid-cols-1'}`}
     >
       <Card className="h-fit shadow-none">
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-5">
           <div className="space-y-1.5">
             <CardTitle>Your Cart ({cart.items.length})</CardTitle>
             <CardDescription>
               Add items to your cart, and they will appear here.
             </CardDescription>
           </div>
-          {cart.items.length > 0 && <ClearCart />}
+          {!isEmpty && <ClearCart />}
         </CardHeader>
         <Separator />
         <CardContent>
