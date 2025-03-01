@@ -1,37 +1,15 @@
-'use client';
+import DashboardEditCoupon from '@/components/admin/dashboard/coupons/DashboardEditCoupon';
 
-import { use } from 'react';
-
-import HandleCoupon from '@/components/admin/dashboard/coupons/handle/HandleCoupon';
-
-import {
-  CouponQueryType,
-  useCouponQuery,
-} from '@/hooks/queries/useCoupon.query';
-
-const DashboardEditCouponPage = ({
+const DashboardEditCouponPage = async ({
   params,
 }: {
   params: Promise<{ couponId: string }>;
 }) => {
-  const { couponId } = use(params);
-
-  const { data, isLoading } = useCouponQuery({
-    type: CouponQueryType.GET_ONE,
-    params: { couponId: couponId },
-  });
-
-  if (isLoading) {
-    return 'Loading...';
-  }
-
-  if (!data) {
-    return 'No coupon found';
-  }
+  const { couponId } = await params;
 
   return (
     <section className="h-full">
-      <HandleCoupon isEdit={true} coupon={data.coupon} />
+      <DashboardEditCoupon couponId={couponId} />
     </section>
   );
 };

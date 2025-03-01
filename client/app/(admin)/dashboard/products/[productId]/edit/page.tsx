@@ -1,37 +1,15 @@
-'use client';
+import DashboardEditProduct from '@/components/admin/dashboard/products/DashboardEditProduct';
 
-import { use } from 'react';
-
-import HandleProduct from '@/components/admin/dashboard/products/handle/HandleProduct';
-
-import {
-  useProductQuery,
-  ProductQueryType,
-} from '@/hooks/queries/useProduct.query';
-
-const DashboardEditProductPage = ({
+const DashboardEditProductPage = async ({
   params,
 }: {
   params: Promise<{ productId: string }>;
 }) => {
-  const { productId } = use(params);
-
-  const { data, isLoading } = useProductQuery({
-    type: ProductQueryType.GET_ONE,
-    params: { productId: productId },
-  });
-
-  if (isLoading) {
-    return 'Loading...';
-  }
-
-  if (!data) {
-    return 'No product found';
-  }
+  const { productId } = await params;
 
   return (
     <section className="h-full">
-      <HandleProduct isEdit={true} product={data?.product} />
+      <DashboardEditProduct productId={productId} />
     </section>
   );
 };

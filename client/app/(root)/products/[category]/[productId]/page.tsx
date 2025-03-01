@@ -1,52 +1,17 @@
-'use client';
+import React from 'react';
 
-import React, { use } from 'react';
+import ProductDetails from '@/components/root/products/details/ProductDetails';
 
-import {
-  ProductQueryType,
-  useProductQuery,
-} from '@/hooks/queries/useProduct.query';
-import { useAuthStore } from '@/store/auth.store';
-
-import ProductImages from '@/components/root/products/details/ProductImages';
-import ProductInformation from '@/components/root/products/details/ProductInformation';
-import NotFound from '@/components/shared/NotFound';
-import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
-import LoadingProductDetails from '@/components/shared/loading/products/LoadingProductDetails';
-import Reviews from '@/components/root/products/details/reviews/Reviews';
-
-const ProductDetailsPage = ({
+const ProductDetailsPage = async ({
   params,
 }: {
   params: Promise<{ productId: string }>;
 }) => {
-  const { productId } = use(params);
-
-  const { isAuthenticated } = useAuthStore();
-
-  const { data, isLoading } = useProductQuery({
-    type: ProductQueryType.GET_ONE,
-    params: { productId: productId },
-  });
-
-  if (isLoading) {
-    return <LoadingProductDetails />;
-  }
-
-  if (!data) {
-    return <NotFound />;
-  }
+  const { productId } = await params;
 
   return (
-    <section className="grid grid-cols-[1fr_2fr] gap-10 pt-5">
-      <div className="space-y-10">
-        <BreadcrumbProducts page={data.product.name} />
-        <ProductImages images={data.product.images} />
-        {isAuthenticated && <Reviews productId={productId} />}
-      </div>
-      <div>
-        <ProductInformation product={data.product} />
-      </div>
+    <section className="pt-5">
+      <ProductDetails productId={productId} />
     </section>
   );
 };

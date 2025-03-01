@@ -1,7 +1,11 @@
+'use client';
+
 import React from 'react';
 
+import { UserQueryType, useUserQuery } from '@/hooks/queries/useUser.query';
 import FieldGroup from '@/helpers/FieldGroup';
-import { IUser } from '@/types';
+import NotFound from '@/components/shared/NotFound';
+import LoadingAccountDetails from '@/components/shared/loading/user/LoadingAccountDetails';
 
 import { Card, CardContent } from '@/components/ui/layout/card';
 import {
@@ -10,11 +14,25 @@ import {
   AvatarImage,
 } from '@/components/ui/info/avatar';
 
-type AccountDetailsProps = {
-  user: IUser;
-};
+const AccountDetails: React.FC = () => {
+  const { data, isLoading } = useUserQuery({
+    type: UserQueryType.GET_PROFILE,
+  });
 
-const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
+  if (isLoading) {
+    return <LoadingAccountDetails />;
+  }
+
+  if (!data) {
+    return (
+      <div className="pt-5">
+        <NotFound />
+      </div>
+    );
+  }
+
+  const user = data.user;
+
   return (
     <Card className="shadow-none">
       <CardContent className="flex justify-between">

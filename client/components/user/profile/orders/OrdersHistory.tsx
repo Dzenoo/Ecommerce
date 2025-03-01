@@ -1,40 +1,60 @@
-import React from 'react';
+'use client';
 
-import { IOrder } from '@/types';
+import React from 'react';
+import { useSearchParams } from 'next/navigation';
+
+import { OrderQueryType, useOrderQuery } from '@/hooks/queries/useOrder.query';
 
 import FilterOrdersHistory from './filters/FilterOrdersHistory';
 import OrdersHistoryList from './OrdersHistoryList';
 import QueryParamController from '@/components/shared/QueryParamController';
 import PaginateList from '@/components/ui/pagination/paginate-list';
+import LoadingOrdersHistory from '@/components/shared/loading/user/LoadingOrdersHistory';
 
-type OrdersHistoryProps = {
-  data: {
-    orders: IOrder[];
-    totalOrders: number;
+const OrdersHistory: React.FC = () => {
+  const searchParams = useSearchParams();
+
+  const query = {
+    page: Number(searchParams.get('page')) || 1,
+    limit: Number(searchParams.get('limit')) || 10,
+    sort: searchParams.get('sort') || 'desc',
+    status: searchParams.get('status') || 'Pending',
   };
-};
 
-const OrdersHistory: React.FC<OrdersHistoryProps> = ({ data }) => {
+  const { data, isLoading } = useOrderQuery({
+    type: OrderQueryType.GET_BY_USER,
+    params: { query: query },
+  });
+
+  if (isLoading) {
+    return <LoadingOrdersHistory />;
+  }
+
+  if (!data) {
+    return;
+  }
+
+  const orders = data.orders;
+  const totalOrders = data.totalOrders;
+
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-medium">
-          Your Orders ({data.orders.length})
-        </h1>
+        <h1 className="text-xl font-medium">Your Orders ({orders.length})</h1>
       </div>
       <div>
         <FilterOrdersHistory />
       </div>
       <div>
-        <OrdersHistoryList orders={data.orders} />
+        <OrdersHistoryList orders={orders} />
       </div>
       <div>
-        {data.totalOrders > 10 && (
+        {totalOrders > 10 && (
           <QueryParamController<string> paramKey="page" defaultValue="1">
             {({ value, onChange }) => (
               <PaginateList
                 onPageChange={(value) => onChange(String(value))}
-                totalItems={data.totalOrders}
+                totalItems={totalOrders}
                 itemsPerPage={10}
                 currentPage={Number(value)}
               />

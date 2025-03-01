@@ -1,9 +1,15 @@
+'use client';
+
 import React from 'react';
 
-import { IAddress } from '@/types';
+import {
+  AddressQueryType,
+  useAddressQuery,
+} from '@/hooks/queries/useAddress.query';
 import AddressList from './AddressList';
 import FieldGroup from '@/helpers/FieldGroup';
 import AddressForm from './forms/AddressForm';
+import LoadingAddresses from '@/components/shared/loading/user/LoadingAddresses';
 
 import { Button } from '@/components/ui/buttons/button';
 import {
@@ -15,14 +21,20 @@ import {
   DialogTrigger,
 } from '@/components/ui/layout/dialog';
 
-type AddressesProps = {
-  data: {
-    addresses: IAddress[];
-    totalAddresses: number;
-  };
-};
+const Addresses: React.FC = () => {
+  const { data, isLoading } = useAddressQuery({
+    type: AddressQueryType.GET_ADDRESSES,
+    params: { query: {} },
+  });
 
-const Addresses: React.FC<AddressesProps> = ({ data }) => {
+  if (isLoading) {
+    return <LoadingAddresses />;
+  }
+
+  if (!data) {
+    return;
+  }
+
   return (
     <div className="space-y-10">
       <div className="flex items-center justify-between gap-5">

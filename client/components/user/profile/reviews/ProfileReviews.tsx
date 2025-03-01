@@ -1,10 +1,19 @@
+'use client';
+
 import React from 'react';
+import { useSearchParams } from 'next/navigation';
 
-import { IReview } from '@/types';
+import {
+  ReviewQueryType,
+  useReviewQuery,
+} from '@/hooks/queries/useReview.query';
 import ProfileReviewList from './ProfileReviewList';
-import QueryParamController from '@/components/shared/QueryParamController';
 import FilterReviewsProfile from './filters/FilterReviewsProfile';
+import QueryParamController from '@/components/shared/QueryParamController';
+import LoadingProfileReviews from '@/components/shared/loading/user/LoadingProfileReviews';
 
+import PaginateList from '@/components/ui/pagination/paginate-list';
+import { Separator } from '@/components/ui/layout/separator';
 import {
   Card,
   CardContent,
@@ -13,17 +22,32 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/layout/card';
-import { Separator } from '@/components/ui/layout/separator';
-import PaginateList from '@/components/ui/pagination/paginate-list';
 
-type ProfileReviewsProps = {
-  data: {
-    reviews: IReview[];
-    totalReviews: number;
+const ProfileReviews: React.FC = () => {
+  const searchParams = useSearchParams();
+
+  const query = {
+    page: Number(searchParams.get('page')) || 1,
+    limit: Number(searchParams.get('limit')) || 10,
+    sort: searchParams.get('sort') || 'desc',
   };
-};
 
-const ProfileReviews: React.FC<ProfileReviewsProps> = ({ data }) => {
+  const { data, isLoading } = useReviewQuery({
+    type: ReviewQueryType.GET_ALL_BY_USER,
+    params: { query: query },
+  });
+
+  if (isLoading) {
+    return <LoadingProfileReviews />;
+  }
+
+  if (!data) {
+    return;
+  }
+
+  const reviews = data.data.reviews;
+  const totalReviews = data.data.totalReviews;
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-5">
@@ -35,15 +59,15 @@ const ProfileReviews: React.FC<ProfileReviewsProps> = ({ data }) => {
       </CardHeader>
       <Separator />
       <CardContent>
-        <ProfileReviewList reviews={data.reviews} />
+        <ProfileReviewList reviews={reviews} />
       </CardContent>
-      {data.totalReviews > 10 && (
+      {totalReviews > 10 && (
         <CardFooter>
           <QueryParamController<string> paramKey="page" defaultValue="1">
             {({ value, onChange }) => (
               <PaginateList
                 onPageChange={(value) => onChange(String(value))}
-                totalItems={data.totalReviews}
+                totalItems={totalReviews}
                 itemsPerPage={10}
                 currentPage={Number(value)}
               />
