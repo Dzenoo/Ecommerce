@@ -4,6 +4,8 @@ import React from 'react';
 
 import { UserQueryType, useUserQuery } from '@/hooks/queries/useUser.query';
 import AccountDetails from '@/components/user/profile/details/AccountDetails';
+import NotFound from '@/components/shared/NotFound';
+import LoadingAccountDetails from '@/components/shared/loading/user/LoadingAccountDetails';
 
 const AccountDetailsPage = () => {
   const { data, isLoading } = useUserQuery({
@@ -11,11 +13,15 @@ const AccountDetailsPage = () => {
   });
 
   if (isLoading) {
-    return 'Loading';
+    return <LoadingAccountDetails />;
   }
 
   if (!data) {
-    return null;
+    return (
+      <div className="pt-5">
+        <NotFound />
+      </div>
+    );
   }
 
   return (

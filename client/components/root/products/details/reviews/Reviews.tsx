@@ -8,7 +8,7 @@ import {
 import QueryParamController from '@/components/shared/QueryParamController';
 import ReviewList from './ReviewList';
 import ReviewForm from './forms/ReviewForm';
-import LoadingReviews from '@/components/shared/loading/LoadingReviews';
+import LoadingReviews from '@/components/shared/loading/products/LoadingReviews';
 
 import { Separator } from '@/components/ui/layout/separator';
 import {

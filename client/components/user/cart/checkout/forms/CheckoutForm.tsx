@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -56,6 +56,19 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
     type: AddressQueryType.GET_ADDRESSES,
     params: { query: {} },
   });
+
+  useEffect(() => {
+    if (type === 'auto') {
+      const handleSelectDefaultAddress = () => {
+        const defaultAddress = data?.addresses.find(
+          (a) => a.isDefault === true,
+        );
+        setSelectedAddress(defaultAddress ? defaultAddress._id : '');
+      };
+
+      handleSelectDefaultAddress();
+    }
+  }, [type, data]);
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(CreateOrderSchema),

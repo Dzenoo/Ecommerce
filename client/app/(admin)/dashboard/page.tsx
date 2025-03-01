@@ -12,7 +12,7 @@ import SalesPerformance from '@/components/admin/dashboard/SalesPerformance';
 import OrdersByStatus from '@/components/admin/dashboard/OrdersByStatus';
 import TopSellingProducts from '@/components/admin/dashboard/TopSellingProducts';
 import CustomerGrowth from '@/components/admin/dashboard/CustomerGrowth';
-import LoadingDashboard from '@/components/shared/loading/LoadingDashboard';
+import LoadingDashboard from '@/components/shared/loading/dashboard/LoadingDashboard';
 import NotFound from '@/components/shared/NotFound';
 
 const DashboardPage = () => {
@@ -24,7 +24,7 @@ const DashboardPage = () => {
     return <LoadingDashboard />;
   }
 
-  if (!data && !isLoading) {
+  if (!data) {
     return <NotFound href="/dashboard" />;
   }
 

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { OrderQueryType, useOrderQuery } from '@/hooks/queries/useOrder.query';
 import OrdersHistory from '@/components/user/profile/orders/OrdersHistory';
+import LoadingOrdersHistory from '@/components/shared/loading/user/LoadingOrdersHistory';
 
 const OrdersHistoryPage = () => {
   const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ const OrdersHistoryPage = () => {
   });
 
   if (isLoading) {
-    return 'Loading.....';
+    return <LoadingOrdersHistory />;
   }
 
   if (!data) {

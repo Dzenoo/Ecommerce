@@ -16,7 +16,7 @@ import ProductsList from '@/components/root/products/ProductsList';
 import QueryParamController from '@/components/shared/QueryParamController';
 import PaginateList from '@/components/ui/pagination/paginate-list';
 import FilterProducts from '@/components/root/products/filters/FilterProducts';
-import LoadingProducts from '@/components/shared/loading/LoadingProducts';
+import LoadingProducts from '@/components/shared/loading/products/LoadingProducts';
 import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
 import SortProducts from '@/components/root/products/filters/SortProducts';
 

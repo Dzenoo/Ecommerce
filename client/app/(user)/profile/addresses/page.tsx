@@ -7,6 +7,7 @@ import {
   useAddressQuery,
 } from '@/hooks/queries/useAddress.query';
 import Addresses from '@/components/user/profile/addresses/Addresses';
+import LoadingAddresses from '@/components/shared/loading/user/LoadingAddresses';
 
 const AddressesPage = () => {
   const { data, isLoading } = useAddressQuery({
@@ -15,7 +16,7 @@ const AddressesPage = () => {
   });
 
   if (isLoading) {
-    return 'Loading.....';
+    return <LoadingAddresses />;
   }
 
   if (!data) {

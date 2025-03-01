@@ -12,7 +12,7 @@ import ProductImages from '@/components/root/products/details/ProductImages';
 import ProductInformation from '@/components/root/products/details/ProductInformation';
 import NotFound from '@/components/shared/NotFound';
 import BreadcrumbProducts from '@/components/root/products/BreadcrumbProducts';
-import LoadingProductDetails from '@/components/shared/loading/LoadingProductDetails';
+import LoadingProductDetails from '@/components/shared/loading/products/LoadingProductDetails';
 import Reviews from '@/components/root/products/details/reviews/Reviews';
 
 const ProductDetailsPage = ({

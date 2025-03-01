@@ -11,7 +11,7 @@ import DashboardProductsList from '@/components/admin/dashboard/products/Dashboa
 import PaginateList from '@/components/ui/pagination/paginate-list';
 import QueryParamController from '@/components/shared/QueryParamController';
 import SearchDashboardProducts from '@/components/admin/dashboard/products/filters/SearchDashboardProducts';
-import LoadingDashboardProducts from '@/components/shared/loading/LoadingDashboardProducts';
+import LoadingDashboardProducts from '@/components/shared/loading/dashboard/LoadingDashboardProducts';
 import NotFound from '@/components/shared/NotFound';
 
 const DashboardProductsPage = () => {

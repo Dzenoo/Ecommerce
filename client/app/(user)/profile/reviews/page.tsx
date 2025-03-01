@@ -8,6 +8,7 @@ import {
   useReviewQuery,
 } from '@/hooks/queries/useReview.query';
 import ProfileReviews from '@/components/user/profile/reviews/ProfileReviews';
+import LoadingProfileReviews from '@/components/shared/loading/user/LoadingProfileReviews';
 
 const ProfileReviewsPage = () => {
   const searchParams = useSearchParams();
@@ -24,7 +25,7 @@ const ProfileReviewsPage = () => {
   });
 
   if (isLoading) {
-    return 'Loading.....';
+    return <LoadingProfileReviews />;
   }
 
   if (!data) {

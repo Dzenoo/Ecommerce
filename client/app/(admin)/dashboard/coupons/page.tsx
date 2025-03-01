@@ -8,7 +8,7 @@ import {
 } from '@/hooks/queries/useCoupon.query';
 
 import DashboardCouponsList from '@/components/admin/dashboard/coupons/DashboardCouponsList';
-import LoadingDashboardCoupons from '@/components/shared/loading/LoadingDashboardCoupons';
+import LoadingDashboardCoupons from '@/components/shared/loading/dashboard/LoadingDashboardCoupons';
 import NotFound from '@/components/shared/NotFound';
 
 const DashboardCouponsPage = () => {
