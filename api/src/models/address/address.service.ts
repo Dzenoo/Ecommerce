@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 import { Address } from './schema/address.schema';
 
@@ -44,6 +44,22 @@ export class AddressService {
     body: UpdateAddressDto,
     userId: string,
   ): Promise<ResponseObject> {
+    const allAddresses = await this.addressModel.find({
+      user: userId,
+    });
+
+    if (body.isDefault) {
+      await Promise.all(
+        allAddresses
+          .filter((address) => address._id.toString() !== id)
+          .map((address) =>
+            this.addressModel.findByIdAndUpdate(address._id, {
+              isDefault: false,
+            }),
+          ),
+      );
+    }
+
     const address = await this.addressModel.findOneAndUpdate(
       {
         _id: id,

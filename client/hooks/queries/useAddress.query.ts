@@ -12,7 +12,7 @@ enum AddressQueryType {
 }
 
 const useAddressQuery = createGenericQueryHook(
-  'products',
+  'addresses',
   AddressQueryFunctions,
 );
 
