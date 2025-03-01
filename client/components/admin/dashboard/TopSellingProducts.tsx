@@ -32,22 +32,25 @@ const chartConfig = {
 const TopSellingProducts: React.FC<TopSellingProductsProps> = ({ data }) => {
   const aggregatedSales = data.reduce(
     (acc, order) => {
-      order.items.forEach((item) => {
-        acc[item.product] = (acc[item.product] || 0) + item.quantity;
+      order.items.forEach((item, index) => {
+        const productKey =
+          item.product || `Product ${index + 1} (Order ${order.id.slice(-4)})`;
+
+        acc[productKey] = (acc[productKey] || 0) + item.quantity;
       });
       return acc;
     },
     {} as Record<string, number>,
   );
 
-  let chartData = Object.entries(aggregatedSales).map(
-    ([product, quantity]) => ({
+  let chartData = Object.entries(aggregatedSales)
+    .map(([product, quantity]) => ({
       product,
       quantity,
-    }),
-  );
+    }))
+    .sort((a, b) => b.quantity - a.quantity)
+    .slice(0, 5);
 
-  // If no data exists, provide a dummy entry so the chart still renders
   if (chartData.length === 0) {
     chartData = [{ product: 'No Sales', quantity: 0 }];
   }
@@ -82,14 +85,12 @@ const TopSellingProducts: React.FC<TopSellingProductsProps> = ({ data }) => {
               axisLine={false}
               tickFormatter={(value) => String(Math.round(value))}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Bar
               dataKey="quantity"
               fill={chartConfig.quantity.color}
               radius={8}
+              barSize={30}
             />
           </BarChart>
         </ChartContainer>
@@ -99,7 +100,7 @@ const TopSellingProducts: React.FC<TopSellingProductsProps> = ({ data }) => {
           Data is updated periodically
         </div>
         <div className="leading-none text-muted-foreground">
-          Aggregated sales from recent orders.
+          Showing total quantity sold by product.
         </div>
       </CardFooter>
     </Card>

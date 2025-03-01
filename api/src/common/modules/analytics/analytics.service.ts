@@ -117,7 +117,11 @@ export class AnalyticsService {
   }
 
   private async getTopSellingProducts() {
-    const allOrders = await this.orderService.find({}, 'items _id');
+    const allOrders = await this.orderService.find(
+      {},
+      'items _id',
+      'items.product',
+    );
 
     const transformedOrders = allOrders.map((order: OrderDocument) => {
       return {
