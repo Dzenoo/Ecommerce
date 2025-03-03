@@ -14,7 +14,6 @@ const FilterReviewsProfile = () => {
   return (
     <QueryParamController<string>
       paramKey="sort"
-      defaultValue="desc"
       transform={{
         decode: (value: string | string[]) =>
           Array.isArray(value) ? value[0] || '' : value || '',

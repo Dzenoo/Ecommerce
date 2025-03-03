@@ -65,7 +65,6 @@ const FilterOrdersHistory: React.FC = () => {
       </div>
       <QueryParamController<string>
         paramKey="sort"
-        defaultValue="desc"
         transform={{
           decode: (value: string | string[]) =>
             Array.isArray(value) ? value[0] || '' : value || '',
