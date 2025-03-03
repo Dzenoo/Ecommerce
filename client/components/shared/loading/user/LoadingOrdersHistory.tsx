@@ -9,17 +9,13 @@ const LoadingOrdersHistory: React.FC = () => {
         <Skeleton className="h-2 w-52" />
       </div>
       <div>
-        <div className="flex items-center justify-between gap-5">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between gap-5 max-md:flex-col max-md:items-start">
+          <div className="flex items-center gap-2 max-md:w-full max-md:flex-col max-md:items-start">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i}>
-                <Skeleton className="h-10 w-28" />
-              </div>
+              <Skeleton key={i} className="h-10 w-28 max-md:w-full" />
             ))}
           </div>
-          <div>
-            <Skeleton className="h-10 w-28" />
-          </div>
+          <Skeleton className="h-10 w-28 max-md:w-full" />
         </div>
       </div>
       <div className="flex flex-col space-y-5">

@@ -5,8 +5,8 @@ import { Separator } from '@/components/ui/layout/separator';
 
 const LoadingProductDetails: React.FC = () => {
   return (
-    <div className="grid grid-cols-[1fr_2fr] gap-10 pt-5">
-      <div className="space-y-5">
+    <div className="grid grid-cols-[1fr_2fr] gap-10 pt-5 max-xl:grid-cols-1 max-sm:gap-20">
+      <div className="space-y-10">
         <Skeleton className="h-5 w-28" />
         <Skeleton className="h-[500px]" />
         <div className="flex gap-5">
@@ -15,7 +15,7 @@ const LoadingProductDetails: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-10">
+      <div className="grid grid-cols-2 gap-10 max-md:grid-cols-1">
         <div className="space-y-5">
           <div className="flex justify-between gap-5">
             <Skeleton className="h-5 w-40" />

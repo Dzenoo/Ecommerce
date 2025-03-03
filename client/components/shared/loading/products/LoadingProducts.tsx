@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/utilities/skeleton';
 
 const LoadingProducts: React.FC = () => {
   return (
-    <div className="grid grid-cols-[1fr_4fr] gap-10 pt-5">
+    <div className="grid grid-cols-[1fr_3fr] gap-10 pt-5 max-lg:grid-cols-1">
       <div>
         <Skeleton className="min-h-full" />
       </div>
