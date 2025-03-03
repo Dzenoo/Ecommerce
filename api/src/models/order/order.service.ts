@@ -202,6 +202,15 @@ export class OrderService {
   }
 
   async cancel(id: string): Promise<ResponseObject> {
+    const alreadyCancelled = await this.orderModel.findOne({
+      _id: id,
+      status: 'Cancelled',
+    });
+
+    if (alreadyCancelled) {
+      throw new NotAcceptableException('Order is already cancelled');
+    }
+
     const order = await this.orderModel.findByIdAndUpdate(
       id,
       {

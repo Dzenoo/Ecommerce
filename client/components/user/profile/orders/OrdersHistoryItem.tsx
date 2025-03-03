@@ -74,8 +74,12 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
     },
   ];
 
+  const isCancelled = order.status === 'Cancelled';
+
   const handleCancelOrder = () => {
-    mutation.mutateAsync({
+    if (isCancelled) return;
+
+    return mutation.mutateAsync({
       type: OrderMutationType.CANCEL,
       orderId: order._id,
     });
@@ -103,34 +107,36 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                 div: 'flex flex-row',
               }}
             />
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="link" className="px-0">
-                  Cancel Order
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Are you sure to cancel this order?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will change order status to cancelled and order will
-                    not be shipped
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogAction onClick={handleCancelOrder}>
-                    {mutation.status === 'pending' ? (
-                      <Loader type="ScaleLoader" height={10} />
-                    ) : (
-                      'Confirm'
-                    )}
-                  </AlertDialogAction>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            {!isCancelled && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="link" className="px-0">
+                    Cancel Order
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure to cancel this order?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will change order status to cancelled and order will
+                      not be shipped
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogAction onClick={handleCancelOrder}>
+                      {mutation.status === 'pending' ? (
+                        <Loader type="ScaleLoader" height={10} />
+                      ) : (
+                        'Confirm'
+                      )}
+                    </AlertDialogAction>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </div>
         </CardHeader>
         <Separator />
