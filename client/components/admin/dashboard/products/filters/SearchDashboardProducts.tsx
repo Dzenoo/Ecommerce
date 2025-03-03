@@ -17,8 +17,8 @@ import {
 
 const SearchDashboardProducts: React.FC = () => {
   return (
-    <div className="flex items-center gap-5">
-      <div className="flex-1 basis-7/12">
+    <div className="flex items-center gap-5 max-lg:flex-col max-lg:items-start">
+      <div className="flex-1 basis-7/12 max-lg:w-full max-lg:basis-full">
         <QueryParamController<string> paramKey="search" defaultValue="">
           {({ value, onChange }) => (
             <Input
@@ -31,7 +31,7 @@ const SearchDashboardProducts: React.FC = () => {
         </QueryParamController>
       </div>
 
-      <div className="flex-1 basis-1/12">
+      <div className="flex-1 basis-1/12 max-lg:w-full max-lg:basis-full">
         <QueryParamController<string> paramKey="limit" defaultValue="10">
           {({ value, onChange }) => (
             <Select value={value} onValueChange={onChange}>
@@ -51,7 +51,7 @@ const SearchDashboardProducts: React.FC = () => {
         </QueryParamController>
       </div>
 
-      <div className="flex-1 basis-1/12">
+      <div className="flex-1 basis-1/12 max-lg:w-full max-lg:basis-full">
         <QueryParamController<string> paramKey="sort" defaultValue="default">
           {({ value, onChange }) => (
             <Select value={value} onValueChange={onChange}>

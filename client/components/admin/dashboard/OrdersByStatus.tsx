@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Pie, PieChart, Cell } from 'recharts';
+import { Pie, PieChart, Cell, ResponsiveContainer } from 'recharts';
 
 import {
   Card,
@@ -64,29 +64,35 @@ const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={pieChartData}
-              dataKey="count"
-              nameKey="status"
-              label
-              innerRadius={80}
-            >
-              {pieChartData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={
-                    chartConfig[entry.status as keyof typeof chartConfig]
-                      ?.color || '#e5e7eb'
-                  }
-                />
-              ))}
-            </Pie>
-          </PieChart>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={pieChartData}
+                dataKey="count"
+                nameKey="status"
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={4}
+                label
+              >
+                {pieChartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      chartConfig[entry.status as keyof typeof chartConfig]
+                        ?.color || '#e5e7eb'
+                    }
+                  />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
       <CardFooter>

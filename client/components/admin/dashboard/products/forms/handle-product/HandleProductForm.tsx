@@ -189,7 +189,7 @@ const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleFormSubmit)}
-        className="grid grid-cols-2 gap-10"
+        className="grid grid-cols-2 gap-10 max-lg:grid-cols-1"
       >
         <div className="space-y-10">
           <FormField
@@ -242,7 +242,7 @@ const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-5 max-sm:grid-cols-1">
             <FormField
               control={form.control}
               name="stock"
