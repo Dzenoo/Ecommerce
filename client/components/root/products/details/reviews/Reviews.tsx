@@ -11,6 +11,7 @@ import ReviewList from './ReviewList';
 import ReviewForm from './forms/ReviewForm';
 import LoadingReviews from '@/components/shared/loading/products/LoadingReviews';
 
+import { Button } from '@/components/ui/buttons/button';
 import { Separator } from '@/components/ui/layout/separator';
 import {
   Select,
@@ -48,6 +49,9 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
     return null;
   }
 
+  const totalReviews = data.data.totalReviews;
+  const remainingReviews = totalReviews - query.limit;
+
   return (
     <div id="reviews" className="relative space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-5">
@@ -79,8 +83,23 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
         </QueryParamController>
       </div>
       <Separator />
-      <div className="hide-scrollbar max-h-96 overflow-y-scroll">
+      <div className="hide-scrollbar max-h-96 space-y-5 overflow-y-scroll">
         <ReviewList reviews={data.data.reviews} />
+        <div className="flex items-center justify-center">
+          {remainingReviews > 0 && (
+            <QueryParamController<string> paramKey="limit" defaultValue="10">
+              {({ value, onChange }) => (
+                <Button
+                  onClick={() =>
+                    onChange(String(Math.min(query.limit + 10, totalReviews)))
+                  }
+                >
+                  Load More
+                </Button>
+              )}
+            </QueryParamController>
+          )}
+        </div>
       </div>
       {user?.role === 'user' && (
         <div className="sticky bottom-0">

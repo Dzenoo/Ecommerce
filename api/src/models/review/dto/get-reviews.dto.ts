@@ -5,7 +5,7 @@ export class GetReviewsDto {
   @IsOptional()
   @IsNumber()
   @Transform(({ value }) => (value ? Number(value) : 0))
-  readonly skip?: number = 0;
+  readonly page?: number = 0;
 
   @IsOptional()
   @IsNumber()

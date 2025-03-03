@@ -151,7 +151,7 @@ export class ReviewService {
     query: GetReviewsDto,
     productId: string,
   ): Promise<ResponseObject> {
-    const { skip = 0, limit = 10, sort = 'desc' } = query;
+    const { page = 0, limit = 10, sort = 'desc' } = query;
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
 
@@ -160,7 +160,7 @@ export class ReviewService {
         product: productId,
       })
       .populate('user', 'first_name last_name _id')
-      .skip(skip)
+      .skip((page - 1) * limit)
       .limit(limit)
       .sort(sortOptions);
 
@@ -171,8 +171,6 @@ export class ReviewService {
       data: {
         reviews,
         totalReviews,
-        skip,
-        limit,
       },
     };
   }
@@ -181,7 +179,7 @@ export class ReviewService {
     query: GetReviewsDto,
     userId: string,
   ): Promise<ResponseObject> {
-    const { skip = 0, limit = 10, sort = 'desc' } = query;
+    const { page = 0, limit = 10, sort = 'desc' } = query;
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
 
@@ -191,7 +189,7 @@ export class ReviewService {
       })
       .populate('user', 'first_name last_name _id')
       .populate('product')
-      .skip(skip)
+      .skip((page - 1) * limit)
       .limit(limit)
       .sort(sortOptions);
 

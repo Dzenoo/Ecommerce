@@ -90,7 +90,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
   return (
     <li
       id={review._id}
-      className="flex justify-between gap-5 rounded-lg border p-5"
+      className="hide-scrollbar flex justify-between gap-5 overflow-x-scroll whitespace-nowrap rounded-lg border p-5"
     >
       <div className="flex gap-4">
         <div>
