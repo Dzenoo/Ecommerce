@@ -20,7 +20,7 @@ const WishList: React.FC = () => {
 
   const query = {
     page: Number(searchParams.get('page')) || 1,
-    limit: Number(searchParams.get('limit')) || 10,
+    limit: Math.min(Math.max(Number(searchParams.get('limit')) || 10, 1), 100),
   };
 
   const { data, isLoading } = useWishlistQuery({
@@ -68,13 +68,13 @@ const WishList: React.FC = () => {
           </ul>
         )}
       </div>
-      {data.totalProducts > 10 && (
+      {data.totalProducts > query.limit && (
         <QueryParamController<string> paramKey="page" defaultValue="1">
           {({ value, onChange }) => (
             <PaginateList
               onPageChange={(value) => onChange(String(value))}
               totalItems={data.totalProducts}
-              itemsPerPage={10}
+              itemsPerPage={query.limit}
               currentPage={Number(value)}
             />
           )}

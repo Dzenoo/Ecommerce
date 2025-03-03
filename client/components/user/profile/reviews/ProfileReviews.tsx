@@ -28,7 +28,7 @@ const ProfileReviews: React.FC = () => {
 
   const query = {
     page: Number(searchParams.get('page')) || 1,
-    limit: Number(searchParams.get('limit')) || 10,
+    limit: Math.min(Math.max(Number(searchParams.get('limit')) || 10, 1), 100),
     sort: searchParams.get('sort') || 'desc',
   };
 
@@ -61,14 +61,14 @@ const ProfileReviews: React.FC = () => {
       <CardContent>
         <ProfileReviewList reviews={reviews} />
       </CardContent>
-      {totalReviews > 10 && (
+      {totalReviews > query.limit && (
         <CardFooter>
           <QueryParamController<string> paramKey="page" defaultValue="1">
             {({ value, onChange }) => (
               <PaginateList
                 onPageChange={(value) => onChange(String(value))}
                 totalItems={totalReviews}
-                itemsPerPage={10}
+                itemsPerPage={query.limit}
                 currentPage={Number(value)}
               />
             )}

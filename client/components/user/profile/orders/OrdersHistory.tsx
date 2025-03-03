@@ -16,7 +16,7 @@ const OrdersHistory: React.FC = () => {
 
   const query = {
     page: Number(searchParams.get('page')) || 1,
-    limit: Number(searchParams.get('limit')) || 10,
+    limit: Math.min(Math.max(Number(searchParams.get('limit')) || 10, 1), 100),
     sort: searchParams.get('sort') || 'desc',
     status: searchParams.get('status') || 'Pending',
   };
@@ -49,13 +49,13 @@ const OrdersHistory: React.FC = () => {
         <OrdersHistoryList orders={orders} />
       </div>
       <div>
-        {totalOrders > 10 && (
+        {totalOrders > query.limit && (
           <QueryParamController<string> paramKey="page" defaultValue="1">
             {({ value, onChange }) => (
               <PaginateList
                 onPageChange={(value) => onChange(String(value))}
                 totalItems={totalOrders}
-                itemsPerPage={10}
+                itemsPerPage={query.limit}
                 currentPage={Number(value)}
               />
             )}

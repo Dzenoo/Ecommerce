@@ -35,7 +35,7 @@ const Products: React.FC<ProductsProps> = ({ category }) => {
 
   const query: GetProductsDto = {
     page: Number(searchParams.get('page')) || 1,
-    limit: Number(searchParams.get('limit')) || 10,
+    limit: Math.min(Math.max(Number(searchParams.get('limit')) || 10, 1), 100),
     search: searchParams.get('search') || undefined,
     sort: searchParams.get('sort') || undefined,
     category: selectedCategory.id,
@@ -98,13 +98,13 @@ const Products: React.FC<ProductsProps> = ({ category }) => {
 
         <ProductsList products={data.products} />
 
-        {data.totalProducts > 10 && (
+        {data.totalProducts > (query.limit ?? 10) && (
           <QueryParamController<string> paramKey="page" defaultValue="1">
             {({ value, onChange }) => (
               <PaginateList
                 onPageChange={(value) => onChange(String(value))}
                 totalItems={data.totalProducts}
-                itemsPerPage={10}
+                itemsPerPage={query.limit || 10}
                 currentPage={Number(value)}
               />
             )}
