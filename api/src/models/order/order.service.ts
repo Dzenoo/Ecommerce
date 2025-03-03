@@ -92,6 +92,7 @@ export class OrderService {
     return {
       statusCode: HttpStatus.CREATED,
       order,
+      message: 'Order successfully created',
     };
   }
 
@@ -196,6 +197,7 @@ export class OrderService {
     return {
       statusCode: HttpStatus.CREATED,
       order,
+      message: 'Order status updated successfully',
     };
   }
 
@@ -213,6 +215,7 @@ export class OrderService {
     return {
       statusCode: HttpStatus.OK,
       order,
+      message: 'Order canceled successfully',
     };
   }
 }

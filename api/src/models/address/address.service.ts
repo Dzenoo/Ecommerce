@@ -36,6 +36,7 @@ export class AddressService {
     return {
       statusCode: HttpStatus.CREATED,
       address,
+      message: 'Address created successfully',
     };
   }
 
@@ -75,6 +76,7 @@ export class AddressService {
     return {
       statusCode: HttpStatus.CREATED,
       address,
+      message: 'Address updated successfully',
     };
   }
 

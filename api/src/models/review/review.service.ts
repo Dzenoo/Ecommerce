@@ -81,6 +81,7 @@ export class ReviewService {
     return {
       statusCode: HttpStatus.CREATED,
       review,
+      message: 'Successfully created review',
     };
   }
 
@@ -103,6 +104,7 @@ export class ReviewService {
     return {
       statusCode: HttpStatus.OK,
       updatedReview,
+      message: 'Successfully updated review',
     };
   }
 

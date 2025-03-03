@@ -94,6 +94,7 @@ export class CartService {
     return {
       statusCode: HttpStatus.CREATED,
       cart,
+      message: 'Product added to cart',
     };
   }
 
@@ -121,6 +122,7 @@ export class CartService {
     return {
       statusCode: HttpStatus.OK,
       cart,
+      message: 'Product removed successfully',
     };
   }
 
