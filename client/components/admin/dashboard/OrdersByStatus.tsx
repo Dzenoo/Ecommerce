@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Pie, PieChart, Cell, ResponsiveContainer } from 'recharts';
+import { Pie, PieChart, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 import {
   Card,
@@ -17,6 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/utilities/chart';
+import { useMediaQuery } from '@/hooks/core/useMediaQuery.hook';
 
 type OrdersByStatusProps = {
   data: { id: string; status: string }[];
@@ -42,6 +43,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+
   const groupedData = data.reduce((acc: Record<string, number>, order) => {
     acc[order.status] = (acc[order.status] || 0) + 1;
     return acc;
@@ -70,14 +73,15 @@ const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
+              <Legend />
               <Pie
                 data={pieChartData}
                 dataKey="count"
                 nameKey="status"
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
-                outerRadius={80}
+                innerRadius={isDesktop ? 100 : 60}
+                outerRadius={isDesktop ? 130 : 80}
                 paddingAngle={4}
                 label
               >
