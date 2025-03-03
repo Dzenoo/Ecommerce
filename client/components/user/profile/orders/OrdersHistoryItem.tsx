@@ -5,16 +5,49 @@ import Image from 'next/image';
 import { IOrder } from '@/types';
 import FieldGroup from '@/helpers/FieldGroup';
 import { formatDate, getCategory } from '@/lib/utils';
+import {
+  OrderMutationType,
+  useOrderMutation,
+} from '@/hooks/mutations/useOrder.mutation';
+import { useToast } from '@/hooks/core/use-toast';
+import { queryClient } from '@/context/react-query-client';
+import Loader from '@/components/ui/info/loader';
 
 import { Button } from '@/components/ui/buttons/button';
 import { Separator } from '@/components/ui/layout/separator';
 import { Card, CardContent, CardHeader } from '@/components/ui/layout/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/layout/alert-dialog';
 
 type OrdersHistoryItemProps = {
   order: IOrder;
 };
 
 const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
+  const { toast } = useToast();
+
+  const mutation = useOrderMutation({
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ['orders'],
+      });
+
+      toast({
+        title: 'Success',
+        description: response.message,
+      });
+    },
+  });
+
   const customStyles = {
     h1: 'font-medium text-muted-foreground text-sm',
     p: 'font-medium text-black',
@@ -41,6 +74,13 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
     },
   ];
 
+  const handleCancelOrder = () => {
+    mutation.mutateAsync({
+      type: OrderMutationType.CANCEL,
+      orderId: order._id,
+    });
+  };
+
   return (
     <li>
       <Card>
@@ -55,7 +95,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
               />
             ))}
           </div>
-          <div className="space-y-0">
+          <div className="space-y-2">
             <FieldGroup
               title="Order"
               value={order._id}
@@ -63,6 +103,34 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                 div: 'flex flex-row',
               }}
             />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="link" className="px-0">
+                  Cancel Order
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure to cancel this order?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will change order status to cancelled and order will
+                    not be shipped
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogAction onClick={handleCancelOrder}>
+                    {mutation.status === 'pending' ? (
+                      <Loader type="ScaleLoader" height={10} />
+                    ) : (
+                      'Confirm'
+                    )}
+                  </AlertDialogAction>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </CardHeader>
         <Separator />
