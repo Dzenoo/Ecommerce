@@ -32,7 +32,7 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
 
   const query = {
     page: Number(searchParams.get('page') || 1),
-    limit: Number(searchParams.get('limit') || 10),
+    limit: Math.min(Math.max(Number(searchParams.get('limit')) || 10, 1), 100),
     sort: searchParams.get('sort') || 'desc',
   };
 
