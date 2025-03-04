@@ -74,6 +74,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
   };
 
   const isOwner = user?.userId === review.user._id;
+  const isAdmin = user?.role === 'admin';
 
   if (isEditing) {
     return (
@@ -121,7 +122,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
         </div>
       </div>
       <div className="space-y-1">
-        {isOwner && (
+        {isOwner && !isAdmin && (
           <div className="space-x-2">
             <Button size="sm" variant="outline" onClick={handleEdit}>
               <Edit />
