@@ -45,13 +45,13 @@ const DashboardProducts: React.FC = () => {
 
       <DashboardProductsList productsData={data} />
 
-      {totalProducts > 10 && (
+      {totalProducts > query.limit && (
         <QueryParamController<string> paramKey="page" defaultValue="1">
           {({ value, onChange }) => (
             <PaginateList
               onPageChange={(value) => onChange(String(value))}
               totalItems={totalProducts}
-              itemsPerPage={10}
+              itemsPerPage={query.limit}
               currentPage={Number(value)}
             />
           )}

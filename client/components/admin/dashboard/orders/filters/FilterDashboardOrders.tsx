@@ -1,16 +1,9 @@
 import { useQueryParams } from '@/hooks/core/useQueryParams';
+import { SORT_OPTIONS } from '@/constants';
 import QueryParamController from '@/components/shared/QueryParamController';
 
 import { Button } from '@/components/ui/buttons/button';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/form/select';
+import { SelectWrapper } from '@/components/ui/form/select';
 
 const FilterDashboardOrders: React.FC = () => {
   const { clearAllQueryParams } = useQueryParams();
@@ -38,19 +31,18 @@ const FilterDashboardOrders: React.FC = () => {
             }}
           >
             {({ value, onChange }) => (
-              <Select value={value} onValueChange={onChange}>
-                <SelectTrigger className="w-[150px] max-lg:w-full">
-                  <SelectValue placeholder="Sort by created date" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Sort orders by</SelectLabel>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="asc">Ascending</SelectItem>
-                    <SelectItem value="desc">Descending</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectWrapper
+                className="max-lg:w-full"
+                value={value}
+                onChange={onChange}
+                placeholder="Sort by created date"
+                groups={[
+                  {
+                    label: 'Sort orders by',
+                    options: SORT_OPTIONS,
+                  },
+                ]}
+              />
             )}
           </QueryParamController>
         </div>
@@ -64,21 +56,39 @@ const FilterDashboardOrders: React.FC = () => {
             }}
           >
             {({ value, onChange }) => (
-              <Select value={value} onValueChange={onChange}>
-                <SelectTrigger className="w-[150px] max-lg:w-full">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Select by status</SelectLabel>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="Processing">Processing</SelectItem>
-                    <SelectItem value="Shipped">Shipped</SelectItem>
-                    <SelectItem value="Delivered">Delivered</SelectItem>
-                    <SelectItem value="Cancelled">Cancelled</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectWrapper
+                className="max-lg:w-full"
+                value={value}
+                onChange={onChange}
+                placeholder="Status"
+                groups={[
+                  {
+                    label: 'Change status',
+                    options: [
+                      {
+                        label: 'Pending',
+                        value: 'Pending',
+                      },
+                      {
+                        label: 'Processing',
+                        value: 'Processing',
+                      },
+                      {
+                        label: 'Shipped',
+                        value: 'Shipped',
+                      },
+                      {
+                        label: 'Delivered',
+                        value: 'Delivered',
+                      },
+                      {
+                        label: 'Cancelled',
+                        value: 'Cancelled',
+                      },
+                    ],
+                  },
+                ]}
+              />
             )}
           </QueryParamController>
         </div>

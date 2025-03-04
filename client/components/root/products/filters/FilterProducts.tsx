@@ -110,7 +110,6 @@ const CategoryField: React.FC<{
       return (
         <QueryParamController<string[]>
           paramKey={field.name}
-          defaultValue={[]}
           transform={{
             decode: (value) =>
               Array.isArray(value) ? value : value ? [value] : [],
@@ -149,7 +148,6 @@ const CategoryField: React.FC<{
       return (
         <QueryParamController<string>
           paramKey={field.name}
-          defaultValue=""
           transform={{
             decode: (value: string | string[]) =>
               Array.isArray(value) ? value[0] || '' : value || '',
@@ -216,7 +214,6 @@ const PriceFilter: React.FC = () => {
       <div className="flex items-center gap-5">
         <QueryParamController<string>
           paramKey="priceMin"
-          defaultValue=""
           transform={{
             decode: (value: string | string[]) =>
               Array.isArray(value) ? value[0] || '' : value || '',
@@ -238,7 +235,6 @@ const PriceFilter: React.FC = () => {
         </QueryParamController>
         <QueryParamController<string>
           paramKey="priceMax"
-          defaultValue=""
           transform={{
             decode: (value: string | string[]) =>
               Array.isArray(value) ? value[0] || '' : value || '',

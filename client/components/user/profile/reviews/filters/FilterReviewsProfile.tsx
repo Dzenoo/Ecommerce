@@ -1,12 +1,7 @@
+import { SORT_OPTIONS } from '@/constants';
 import QueryParamController from '@/components/shared/QueryParamController';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/form/select';
+import { SelectWrapper } from '@/components/ui/form/select';
 
 const FilterReviewsProfile = () => {
   return (
@@ -19,15 +14,17 @@ const FilterReviewsProfile = () => {
       }}
     >
       {({ value, onChange }) => (
-        <Select onValueChange={onChange} value={value || undefined}>
-          <SelectTrigger className="w-[180px] max-sm:w-full">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="desc">Descending</SelectItem>
-            <SelectItem value="asc">Ascending</SelectItem>
-          </SelectContent>
-        </Select>
+        <SelectWrapper
+          className="max-sm:w-full"
+          value={value}
+          onChange={onChange}
+          placeholder="Sort by"
+          groups={[
+            {
+              options: SORT_OPTIONS,
+            },
+          ]}
+        />
       )}
     </QueryParamController>
   );

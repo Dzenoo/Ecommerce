@@ -44,13 +44,13 @@ const DashboardOrders: React.FC = () => {
 
       <DashboardOrdersList ordersData={data} />
 
-      {totalOrders > 10 && (
+      {totalOrders > query.limit && (
         <QueryParamController<string> paramKey="page" defaultValue="1">
           {({ value, onChange }) => (
             <PaginateList
               onPageChange={(value) => onChange(String(value))}
               totalItems={totalOrders}
-              itemsPerPage={10}
+              itemsPerPage={query.limit}
               currentPage={Number(value)}
             />
           )}

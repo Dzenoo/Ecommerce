@@ -144,6 +144,49 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
+const SelectWrapper: React.FC<{
+  value?: string;
+  onChange: (value: string) => void;
+  groups: {
+    label?: string;
+    options: {
+      label: string;
+      value: string;
+    }[];
+  }[];
+  placeholder?: string;
+  className?: string;
+}> = ({
+  value,
+  onChange,
+  groups,
+  placeholder = 'Select an option',
+  className,
+}) => {
+  return (
+    <Select value={value ?? ''} onValueChange={onChange}>
+      <SelectTrigger className={cn('w-[150px]', className)}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {groups.map((group, groupIndex) => (
+          <React.Fragment key={groupIndex}>
+            <SelectGroup>
+              {group.label && <SelectLabel>{group.label}</SelectLabel>}
+              {group.options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+            {groupIndex < groups.length - 1 && <SelectSeparator />}
+          </React.Fragment>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
 export {
   Select,
   SelectGroup,
@@ -155,4 +198,5 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
+  SelectWrapper,
 };

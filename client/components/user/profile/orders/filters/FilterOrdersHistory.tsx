@@ -1,15 +1,10 @@
 'use client';
 
+import { SORT_OPTIONS } from '@/constants';
 import QueryParamController from '@/components/shared/QueryParamController';
 
 import { Button } from '@/components/ui/buttons/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/form/select';
+import { SelectWrapper } from '@/components/ui/form/select';
 
 const FilterOrdersHistory: React.FC = () => {
   const OrdersFilters = [
@@ -70,15 +65,17 @@ const FilterOrdersHistory: React.FC = () => {
         }}
       >
         {({ value, onChange }) => (
-          <Select onValueChange={onChange} value={value || undefined}>
-            <SelectTrigger className="w-[180px] max-md:w-full">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="desc">Descending</SelectItem>
-              <SelectItem value="asc">Ascending</SelectItem>
-            </SelectContent>
-          </Select>
+          <SelectWrapper
+            className="max-md:w-full"
+            value={value}
+            onChange={onChange}
+            placeholder="Sort by"
+            groups={[
+              {
+                options: SORT_OPTIONS,
+              },
+            ]}
+          />
         )}
       </QueryParamController>
     </div>

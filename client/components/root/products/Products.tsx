@@ -103,7 +103,7 @@ const Products: React.FC<ProductsProps> = ({ category }) => {
               <PaginateList
                 onPageChange={(value) => onChange(String(value))}
                 totalItems={data.totalProducts}
-                itemsPerPage={query.limit || 10}
+                itemsPerPage={query.limit ?? 10}
                 currentPage={Number(value)}
               />
             )}

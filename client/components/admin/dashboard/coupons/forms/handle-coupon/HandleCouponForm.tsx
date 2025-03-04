@@ -31,13 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/form/select';
+import { SelectWrapper } from '@/components/ui/form/select';
 import {
   Popover,
   PopoverContent,
@@ -162,20 +156,26 @@ const HandleCouponForm: React.FC<HandleCouponFormProps> = (props) => {
               <FormItem>
                 <FormLabel>Discount Type</FormLabel>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a discount type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="fixed">Fixed</SelectItem>
-                      <SelectItem value="percentage">Percentage</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <SelectWrapper
+                    className="w-full"
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select a discount type"
+                    groups={[
+                      {
+                        options: [
+                          {
+                            label: 'percentage',
+                            value: 'Percentage',
+                          },
+                          {
+                            label: 'fixed',
+                            value: 'Fixed',
+                          },
+                        ],
+                      },
+                    ]}
+                  />
                 </FormControl>
                 <FormDescription>
                   Please select the discount type for this coupon.

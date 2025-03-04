@@ -1,23 +1,23 @@
 'use client';
 
 import QueryParamController from '@/components/shared/QueryParamController';
+import { SORT_OPTIONS } from '@/constants';
 
 import { Input } from '@/components/ui/form/input';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/form/select';
+import { SelectWrapper } from '@/components/ui/form/select';
 
 const SearchDashboardProducts: React.FC = () => {
   return (
     <div className="flex items-center gap-5 max-lg:flex-col max-lg:items-start">
       <div className="flex-1 basis-7/12 max-lg:w-full max-lg:basis-full">
-        <QueryParamController<string> paramKey="search" defaultValue="">
+        <QueryParamController<string>
+          paramKey="search"
+          transform={{
+            decode: (value: string | string[]) =>
+              Array.isArray(value) ? value[0] || '' : value || '',
+            encode: (value) => value,
+          }}
+        >
           {({ value, onChange }) => (
             <Input
               type="text"
@@ -30,41 +30,66 @@ const SearchDashboardProducts: React.FC = () => {
       </div>
 
       <div className="flex-1 basis-1/12 max-lg:w-full max-lg:basis-full">
-        <QueryParamController<string> paramKey="limit" defaultValue="10">
+        <QueryParamController<string>
+          paramKey="limit"
+          transform={{
+            decode: (value: string | string[]) =>
+              Array.isArray(value) ? value[0] || '' : value || '',
+            encode: (value) => value,
+          }}
+        >
           {({ value, onChange }) => (
-            <Select value={value} onValueChange={onChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Products per page" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Products per page</SelectLabel>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <SelectWrapper
+              className="w-full"
+              value={value}
+              onChange={onChange}
+              placeholder="Products per page"
+              groups={[
+                {
+                  label: 'Products per page',
+                  options: [
+                    {
+                      label: '10',
+                      value: '10',
+                    },
+                    {
+                      label: '25',
+                      value: '25',
+                    },
+                    {
+                      label: '50',
+                      value: '50',
+                    },
+                  ],
+                },
+              ]}
+            />
           )}
         </QueryParamController>
       </div>
 
       <div className="flex-1 basis-1/12 max-lg:w-full max-lg:basis-full">
-        <QueryParamController<string> paramKey="sort" defaultValue="default">
+        <QueryParamController<string>
+          paramKey="sort"
+          transform={{
+            decode: (value: string | string[]) =>
+              Array.isArray(value) ? value[0] || '' : value || '',
+            encode: (value) => value,
+          }}
+        >
           {({ value, onChange }) => (
-            <Select value={value} onValueChange={onChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Sort products by</SelectLabel>
-                  <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="asc">Ascending</SelectItem>
-                  <SelectItem value="desc">Descending</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <SelectWrapper
+              className="w-full"
+              value={value}
+              onChange={onChange}
+              placeholder="Sort products by"
+              groups={[
+                {
+                  label: 'Products per page',
+                  options: SORT_OPTIONS,
+                },
+              ]}
+            />
           )}
         </QueryParamController>
       </div>

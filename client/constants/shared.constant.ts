@@ -48,3 +48,18 @@ export const COLORS = [
 ];
 
 export const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
+
+export const SORT_OPTIONS = [
+  {
+    label: 'Default',
+    value: 'default',
+  },
+  {
+    label: 'Ascending',
+    value: 'asc',
+  },
+  {
+    label: 'Descending',
+    value: 'desc',
+  },
+];

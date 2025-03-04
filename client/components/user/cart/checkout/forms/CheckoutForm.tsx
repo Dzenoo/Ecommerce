@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { Truck } from 'lucide-react';
 
 import { CreateOrderSchema } from '@/lib/zod/order.zod';
 import { COUNTRIES } from '@/constants';
@@ -18,6 +19,7 @@ import { useToast } from '@/hooks/core/use-toast';
 import { queryClient } from '@/context/react-query-client';
 import { cn } from '@/lib/utils';
 import FieldGroup from '@/helpers/FieldGroup';
+import Empty from '@/helpers/Empty';
 import { AddressType } from '../SelectAddress';
 import AddressInfo from '@/components/user/profile/addresses/AddressInfo';
 
@@ -31,15 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/form/select';
-import Empty from '@/helpers/Empty';
-import { Truck } from 'lucide-react';
+import { SelectWrapper } from '@/components/ui/form/select';
 
 export type CheckoutFormValues = z.infer<typeof CreateOrderSchema>;
 
@@ -218,20 +212,20 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Country *</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a country" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {COUNTRIES.map((country, i) => (
-                          <SelectItem key={i} value={country.name}>
-                            {country.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <SelectWrapper
+                      className="w-full"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Select a country"
+                      groups={[
+                        {
+                          options: COUNTRIES.map((c) => ({
+                            label: c.name,
+                            value: c.name,
+                          })),
+                        },
+                      ]}
+                    />
                     <FormDescription>Select your country</FormDescription>
                     <FormMessage />
                   </FormItem>

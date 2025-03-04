@@ -12,14 +12,7 @@ import LoadingReviews from '@/components/shared/loading/products/LoadingReviews'
 
 import { Button } from '@/components/ui/buttons/button';
 import { Separator } from '@/components/ui/layout/separator';
-import {
-  Select,
-  SelectContent,
-  SelectValue,
-  SelectItem,
-  SelectTrigger,
-  SelectGroup,
-} from '@/components/ui/form/select';
+import { SelectWrapper } from '@/components/ui/form/select';
 
 type ReviewsProps = {
   productId: string;
@@ -59,7 +52,6 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
         </div>
         <QueryParamController<string>
           paramKey="sort"
-          defaultValue=""
           transform={{
             decode: (value: string | string[]) =>
               Array.isArray(value) ? value[0] || '' : value || '',
@@ -67,17 +59,26 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
           }}
         >
           {({ onChange, value }) => (
-            <Select value={value || undefined} onValueChange={onChange}>
-              <SelectTrigger className="w-[150px] max-sm:w-full">
-                <SelectValue placeholder="Sort Reviews"></SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="desc">Newest</SelectItem>
-                  <SelectItem value="asc">Oldest</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <SelectWrapper
+              className="max-sm:w-full"
+              value={value}
+              onChange={onChange}
+              placeholder="Sort Reviews"
+              groups={[
+                {
+                  options: [
+                    {
+                      label: 'desc',
+                      value: 'Newest',
+                    },
+                    {
+                      label: 'asc',
+                      value: 'Oldest',
+                    },
+                  ],
+                },
+              ]}
+            />
           )}
         </QueryParamController>
       </div>
@@ -87,7 +88,7 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
         <div className="flex items-center justify-center">
           {remainingReviews > 0 && (
             <QueryParamController<string> paramKey="limit" defaultValue="10">
-              {({ value, onChange }) => (
+              {({ onChange }) => (
                 <Button
                   onClick={() =>
                     onChange(String(Math.min(query.limit + 10, totalReviews)))

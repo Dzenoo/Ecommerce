@@ -28,13 +28,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/form/select';
+import { SelectWrapper } from '@/components/ui/form/select';
 
 type AddressFormProps = {
   addressToEdit?: IAddress | null;
@@ -153,20 +147,20 @@ const AddressForm: React.FC<AddressFormProps> = ({ addressToEdit = null }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Country *</FormLabel>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a country" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {COUNTRIES.map((country, i) => (
-                    <SelectItem key={i} value={country.name}>
-                      {country.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SelectWrapper
+                className="w-full"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Select a country"
+                groups={[
+                  {
+                    options: COUNTRIES.map((c) => ({
+                      label: c.name,
+                      value: c.name,
+                    })),
+                  },
+                ]}
+              />
               <FormDescription>Select your country</FormDescription>
               <FormMessage />
             </FormItem>
