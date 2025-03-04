@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { DropzoneOptions, useDropzone } from 'react-dropzone';
 import { FileIcon, Upload, X } from 'lucide-react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
@@ -101,7 +102,7 @@ const Uploader = <T extends FieldValues>({
       files.forEach(
         (file) => file.preview && URL.revokeObjectURL(file.preview),
       );
-  }, []);
+  }, [files]);
 
   const { getInputProps, getRootProps, isDragActive } = useDropzone({
     ...dropzoneOptions,
@@ -150,10 +151,12 @@ const Uploader = <T extends FieldValues>({
             >
               <div className="flex items-center space-x-2">
                 {file.type.startsWith('image/') ? (
-                  <img
+                  <Image
                     src={previews[index]}
                     alt={file.name}
                     className="h-10 w-10 rounded object-cover"
+                    width={10}
+                    height={10}
                   />
                 ) : (
                   <FileIcon className="h-10 w-10 text-gray-400" />

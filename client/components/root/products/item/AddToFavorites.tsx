@@ -30,10 +30,6 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuthStore();
 
-  if (!isAuthenticated || user?.role === 'admin') {
-    return null;
-  }
-
   const { data } = useWishlistQuery({
     type: WishlistQueryType.GET_WISHLIST,
     params: { query: {} },
@@ -55,6 +51,10 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
       });
     },
   });
+
+  if (!isAuthenticated || user?.role === 'admin') {
+    return null;
+  }
 
   const isAlreadyInWishlist = data?.wishlist?.products?.some(
     (item: IProduct) => item._id === product._id,

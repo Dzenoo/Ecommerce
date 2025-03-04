@@ -23,8 +23,8 @@ export function getTruncatedPageRange(
 
   pages.push(firstPage);
 
-  let leftBound = Math.max(currentPage - siblingCount, 2);
-  let rightBound = Math.min(currentPage + siblingCount, totalPages - 1);
+  const leftBound = Math.max(currentPage - siblingCount, 2);
+  const rightBound = Math.min(currentPage + siblingCount, totalPages - 1);
 
   if (leftBound > 2) {
     pages.push('...');

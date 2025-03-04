@@ -30,14 +30,13 @@ const Products: React.FC<ProductsProps> = ({ category }) => {
   const searchParams = useSearchParams();
 
   const selectedCategory = getCategory('name', category);
-  if (!selectedCategory) return <NotFound />;
 
   const query: GetProductsDto = {
     page: Number(searchParams.get('page')) || 1,
     limit: Math.min(Math.max(Number(searchParams.get('limit')) || 10, 1), 100),
     search: searchParams.get('search') || undefined,
     sort: searchParams.get('sort') || undefined,
-    category: selectedCategory.id,
+    category: selectedCategory?.id,
     attributes: {},
   };
 
@@ -50,7 +49,7 @@ const Products: React.FC<ProductsProps> = ({ category }) => {
     };
   }
 
-  selectedCategory.fields?.forEach((field) => {
+  selectedCategory?.fields?.forEach((field) => {
     const values = searchParams.getAll(field.name);
     if (values.length > 0) {
       if (query.attributes) {
@@ -69,8 +68,8 @@ const Products: React.FC<ProductsProps> = ({ category }) => {
     },
   );
 
+  if (!selectedCategory) return <NotFound />;
   if (isLoading) return <LoadingProducts />;
-
   if (!data) return <NotFound />;
 
   return (

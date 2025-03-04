@@ -29,10 +29,6 @@ const AddToCart: React.FC<AddToCartProps> = ({
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuthStore();
 
-  if (!isAuthenticated || user?.role === 'admin') {
-    return null;
-  }
-
   const mutation = useCartMutation({
     onSuccess: (response) => {
       toast({
@@ -48,6 +44,10 @@ const AddToCart: React.FC<AddToCartProps> = ({
       });
     },
   });
+
+  if (!isAuthenticated || user?.role === 'admin') {
+    return null;
+  }
 
   const handleAddToCart = () => {
     if (

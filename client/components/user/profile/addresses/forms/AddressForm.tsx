@@ -60,7 +60,9 @@ const AddressForm: React.FC<AddressFormProps> = ({ addressToEdit = null }) => {
         queryKey: ['addresses'],
       });
 
-      !isEditing && form.reset();
+      if (!isEditing) {
+        form.reset();
+      }
 
       toast({
         title: 'Success',

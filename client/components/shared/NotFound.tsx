@@ -10,7 +10,7 @@ const NotFound: React.FC<{ href?: string }> = ({ href = '/' }) => {
         Oops! Page Not Found
       </h2>
       <p className="mb-8 max-w-md text-center text-muted-foreground dark:text-muted-foreground">
-        We're sorry, but the page you're looking for doesn't exist or has been
+        We are sorry, but the page you are looking for doesnt exist or has been
         moved.
       </p>
       <Link href={href}>

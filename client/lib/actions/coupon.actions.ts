@@ -28,7 +28,9 @@ export const deleteCoupon = async (
   return await deleteApiHandler(`coupon/delete/${couponId}`);
 };
 
-export const getCoupons = async (query?: {}): Promise<
+export const getCoupons = async (
+  query?: object,
+): Promise<
   ServerResponse<{
     coupons: ICoupon[];
     totalCoupons: number;

@@ -25,11 +25,6 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
   className,
 }) => {
   const { user, isAuthenticated } = useAuthStore();
-
-  if (!isAuthenticated || user?.role === 'admin') {
-    return null;
-  }
-
   const [quantity, setQuantity] = useState(defaultQuantity);
   const isOutOfStock = product.stock === 0;
   const isDecreaseEnabled = isOutOfStock || quantity <= 1;
@@ -38,6 +33,10 @@ const PickQuantity: React.FC<PickQuantityProps> = ({
   useEffect(() => {
     setQuantity(defaultQuantity);
   }, [defaultQuantity]);
+
+  if (!isAuthenticated || user?.role === 'admin') {
+    return null;
+  }
 
   const handleDecrease = () => {
     if (isDecreaseEnabled) return;

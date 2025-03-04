@@ -46,7 +46,7 @@ const SelectAddressButton: React.FC<{
 }> = ({ type, addressType, setAddressType, children }) => {
   const handleAddressTypeChange = useCallback(
     () => setAddressType(type),
-    [type],
+    [type, setAddressType],
   );
 
   return (

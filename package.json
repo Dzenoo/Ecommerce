@@ -5,6 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:api": "pnpm --filter api start:dev",
-    "start:client": "pnpm --filter client dev"
+    "start:client": "pnpm --filter client dev",
+    "build:api": "pnpm --filter api build",
+    "build:client": "pnpm --filter client build"
   }
 }

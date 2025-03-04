@@ -73,6 +73,7 @@ const QueryParamController = <T,>({
     transform,
     debounce,
     isInitialized,
+    deleteQueryParam,
   ]);
 
   return children({
