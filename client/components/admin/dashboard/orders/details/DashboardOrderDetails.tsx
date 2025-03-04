@@ -9,6 +9,7 @@ import { OrderQueryType, useOrderQuery } from '@/hooks/queries/useOrder.query';
 import FieldGroup from '@/helpers/FieldGroup';
 import NotFound from '@/components/shared/NotFound';
 import DashboardOrderDetailsProducts from './DashboardOrderDetailsProducts';
+import LoadingDashboardOrderDetails from '@/components/shared/loading/dashboard/LoadingDashboardOrderDetails';
 
 import { Separator } from '@/components/ui/layout/separator';
 import {
@@ -39,7 +40,7 @@ const DashboardOrderDetails: React.FC<DashboardOrderDetailsProps> = ({
   });
 
   if (isLoading) {
-    return 'Loading....';
+    return <LoadingDashboardOrderDetails />;
   }
 
   if (!data) {
@@ -48,7 +49,7 @@ const DashboardOrderDetails: React.FC<DashboardOrderDetailsProps> = ({
 
   return (
     <Card className="shadow-none">
-      <CardHeader className="space-y-4">
+      <CardHeader className="hide-scrollbar space-y-4 overflow-x-scroll whitespace-nowrap">
         <CardTitle>Order Id: {data.order._id}</CardTitle>
         <FieldGroup
           title={formatDate(data.order.createdAt, 'PPPPpppp')}
@@ -67,7 +68,7 @@ const DashboardOrderDetails: React.FC<DashboardOrderDetailsProps> = ({
       </CardHeader>
       <Separator />
       <CardContent className="space-y-5">
-        <div className="grid grid-cols-3 gap-5">
+        <div className="hide-scrollbar grid grid-cols-3 gap-10 overflow-x-scroll whitespace-nowrap max-xl:grid-cols-2 max-lg:grid-cols-1">
           <CardContentItem
             icon={<User />}
             title="Customer"
@@ -151,7 +152,7 @@ const CardContentItem = ({
   title: string;
 }) => {
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex items-start gap-2 max-md:flex-col">
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
         {icon}
       </div>

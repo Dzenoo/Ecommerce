@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 
 import { IOrder } from '@/types';
@@ -63,34 +63,34 @@ const DashboardOrderDetailsProducts: React.FC<
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-end justify-end gap-5">
-        <div className="space-y-4">
+      <div className="flex items-end justify-end gap-5 max-sm:items-start max-sm:justify-between">
+        <div className="space-y-4 max-sm:w-full">
           <FieldGroup
             title="Subtotal:"
             value={`${order.totalPrice}$`}
             customStyles={{
-              div: 'flex-row gap-40 items-center justify-between',
+              div: 'flex-row gap-40 items-center justify-between max-sm:gap-5',
             }}
           />
           <FieldGroup
             title="Tax(20%):"
             value={`${tax}$`}
             customStyles={{
-              div: 'flex-row gap-40 items-center justify-between',
+              div: 'flex-row gap-40 items-center justify-between max-sm:gap-5',
             }}
           />
           <FieldGroup
             title="Total:"
             value={`${order.totalPrice + tax}$`}
             customStyles={{
-              div: 'flex-row gap-40 items-center justify-between font-bold text-xl',
+              div: 'flex-row gap-40 items-center justify-between font-bold text-xl max-sm:gap-5',
             }}
           />
           <FieldGroup
             title="Status:"
             value={`${order.status}`}
             customStyles={{
-              div: 'flex-row gap-40 items-center justify-between',
+              div: 'flex-row gap-40 items-center justify-between max-sm:gap-5',
             }}
           />
         </div>
