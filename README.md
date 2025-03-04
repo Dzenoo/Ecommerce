@@ -4,22 +4,22 @@ Welcome to the Ecommerce Project, a modern and fully functional eCommerce platfo
 
 ## Features
 
-- **User Authentication/**: User registration, login, and authentication mechanisms to ensure secure access.
-- **Product Management/**: Add, edit, delete, and view products with comprehensive details.
-- **Shopping Cart/**: Add products to the cart, update quantities, and proceed to checkout.
-- **Admin Dashboard/**: Manage products, orders, coupons and users through an intuitive administrative interface.
+- **User Authentication**: User registration, login, and authentication mechanisms to ensure secure access.
+- **Product Management**: Add, edit, delete, and view products with comprehensive details.
+- **Shopping Cart**: Add products to the cart, update quantities, and proceed to checkout.
+- **Admin Dashboard**: Manage products, orders, coupons and users through an intuitive administrative interface.
 
 ## Technologies Used
 
-- **Frontend/**
+- **Frontend**
 
-  - **React with TypeScript/**
-  - **Next.js for server-side rendering and routing/**
-  - **Tailwind CSS for responsive and modern UI design/**
+  - **React with TypeScript**
+  - **Next.js for server-side rendering and routing**
+  - **Tailwind CSS for responsive and modern UI design**
 
-- **Backend/**
-  - **NestJS for building efficient and scalable server-side applications/**
-  - **MongoDB for database management/**
+- **Backend**
+  - **NestJS for building efficient and scalable server-side applications**
+  - **MongoDB for database management**
 
 ## Installation
 
