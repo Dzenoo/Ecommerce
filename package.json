@@ -2,6 +2,7 @@
   "name": "ecommerce",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:api": "pnpm --filter api start:dev",
