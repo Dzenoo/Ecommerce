@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import {
@@ -15,6 +16,14 @@ import LoadingDashboardProducts from '@/components/shared/loading/dashboard/Load
 import NotFound from '@/components/shared/NotFound';
 
 const DashboardProducts: React.FC = () => {
+  return (
+    <Suspense fallback={<LoadingDashboardProducts />}>
+      <DashboardProductsContent />
+    </Suspense>
+  );
+};
+
+const DashboardProductsContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   const query = {

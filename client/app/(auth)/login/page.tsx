@@ -9,6 +9,14 @@ import { useToast } from '@/hooks/core/use-toast';
 import Login from '@/components/auth/login/Login';
 
 const LoginPage = () => {
+  return (
+    <Suspense>
+      <LoginPageContent />
+    </Suspense>
+  );
+};
+
+const LoginPageContent = () => {
   const { isMounted } = useMounted();
   const { toast } = useToast();
   const searchParams = useSearchParams();
@@ -31,12 +39,4 @@ const LoginPage = () => {
   );
 };
 
-const SuspenseLoginPage = () => {
-  return (
-    <Suspense>
-      <LoginPage />
-    </Suspense>
-  );
-};
-
-export default SuspenseLoginPage;
+export default LoginPage;

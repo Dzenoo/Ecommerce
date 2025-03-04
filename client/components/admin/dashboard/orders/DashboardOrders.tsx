@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { OrderQueryType, useOrderQuery } from '@/hooks/queries/useOrder.query';
@@ -12,6 +13,14 @@ import NotFound from '@/components/shared/NotFound';
 import LoadingDashboardOrders from '@/components/shared/loading/dashboard/LoadingDashboardOrders';
 
 const DashboardOrders: React.FC = () => {
+  return (
+    <Suspense fallback={<LoadingDashboardOrders />}>
+      <DashboardOrdersContent />
+    </Suspense>
+  );
+};
+
+const DashboardOrdersContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   const query = {

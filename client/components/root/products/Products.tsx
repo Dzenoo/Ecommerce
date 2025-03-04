@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { GetProductsDto } from '@/types';
@@ -26,6 +27,14 @@ type ProductsProps = {
 };
 
 const Products: React.FC<ProductsProps> = ({ category }) => {
+  return (
+    <Suspense fallback={<LoadingProducts />}>
+      <ProductsContent category={category} />
+    </Suspense>
+  );
+};
+
+const ProductsContent: React.FC<ProductsProps> = ({ category }) => {
   const { clearAllQueryParams } = useQueryParams();
   const searchParams = useSearchParams();
 

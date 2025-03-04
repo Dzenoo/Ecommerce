@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
@@ -14,7 +15,15 @@ import LoadingWishlist from '@/components/shared/loading/LoadingWishlist';
 import QueryParamController from '@/components/shared/QueryParamController';
 import PaginateList from '@/components/ui/pagination/paginate-list';
 
-const WishList: React.FC = () => {
+const WishList = () => {
+  return (
+    <Suspense fallback={<LoadingWishlist />}>
+      <WishListContent />
+    </Suspense>
+  );
+};
+
+const WishListContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   const query = {

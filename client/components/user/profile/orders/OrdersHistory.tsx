@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { OrderQueryType, useOrderQuery } from '@/hooks/queries/useOrder.query';
@@ -11,6 +12,14 @@ import PaginateList from '@/components/ui/pagination/paginate-list';
 import LoadingOrdersHistory from '@/components/shared/loading/user/LoadingOrdersHistory';
 
 const OrdersHistory: React.FC = () => {
+  return (
+    <Suspense fallback={<LoadingOrdersHistory />}>
+      <OrdersHistoryContent />
+    </Suspense>
+  );
+};
+
+const OrdersHistoryContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   const query = {

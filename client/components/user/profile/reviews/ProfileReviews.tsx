@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import {
@@ -23,6 +24,14 @@ import {
 } from '@/components/ui/layout/card';
 
 const ProfileReviews: React.FC = () => {
+  return (
+    <Suspense fallback={<LoadingProfileReviews />}>
+      <ProfileReviewsContent />
+    </Suspense>
+  );
+};
+
+const ProfileReviewsContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   const query = {
