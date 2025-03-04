@@ -37,9 +37,9 @@ type OrderStatus = IOrder['status'];
 
 const OrdersColors: Record<OrderStatus, string> = {
   Pending: 'bg-yellow-500',
-  Delivered: 'bg-green-500',
-  Shipped: 'bg-blue-500',
   Processing: 'bg-orange-500',
+  Shipped: 'bg-blue-500',
+  Delivered: 'bg-green-500',
   Cancelled: 'bg-red-500',
 };
 

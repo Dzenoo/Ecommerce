@@ -24,21 +24,25 @@ type OrdersByStatusProps = {
 };
 
 const chartConfig = {
-  pending: {
+  Pending: {
     label: 'Pending',
-    color: '#2563eb',
+    color: '#eab308',
   },
-  completed: {
-    label: 'Completed',
-    color: '#60a8fb',
+  Processing: {
+    label: 'Processing',
+    color: '#f97316',
   },
-  shipped: {
+  Shipped: {
     label: 'Shipped',
-    color: '#3b86f7',
+    color: '#3b82f6',
   },
-  cancelled: {
+  Delivered: {
+    label: 'Delivered',
+    color: '#22c55e',
+  },
+  Cancelled: {
     label: 'Cancelled',
-    color: '#bedcfe',
+    color: '#ef4444',
   },
 } satisfies ChartConfig;
 

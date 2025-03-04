@@ -20,9 +20,9 @@ import {
 
 const OrdersColors: Record<IOrder['status'], string> = {
   Pending: 'text-yellow-500',
-  Delivered: 'text-green-500',
-  Shipped: 'text-blue-500',
   Processing: 'text-orange-500',
+  Shipped: 'text-blue-500',
+  Delivered: 'text-green-500',
   Cancelled: 'text-red-500',
 };
 
