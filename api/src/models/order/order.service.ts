@@ -132,8 +132,9 @@ export class OrderService {
   async getOne(id: string): Promise<ResponseObject> {
     const order = await this.orderModel
       .findById(id)
-      .populate('user', 'first_name last_name image')
-      .populate('items.product', 'name image price')
+      .populate('user', 'first_name last_name email')
+      .populate('items.product', 'name images price')
+      .populate('address')
       .lean()
       .exec();
 

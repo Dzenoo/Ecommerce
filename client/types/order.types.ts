@@ -23,12 +23,13 @@ export interface IOrder {
   _id: string;
   user: IUser & string;
   items: {
+    _id: string;
     product: IProduct & string;
     quantity: number;
   }[];
   totalPrice: number;
   status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-  address: IAddress | string;
+  address: IAddress & string;
   createdAt: Date;
   updatedAt: Date;
 }
