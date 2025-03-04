@@ -1,56 +1,56 @@
 'use client';
 
+import React from 'react';
 import { useSearchParams } from 'next/navigation';
 
-import {
-  ProductQueryType,
-  useProductQuery,
-} from '@/hooks/queries/useProduct.query';
+import { OrderQueryType, useOrderQuery } from '@/hooks/queries/useOrder.query';
 
-import DashboardProductsList from '@/components/admin/dashboard/products/DashboardProductsList';
-import PaginateList from '@/components/ui/pagination/paginate-list';
+import FilterDashboardOrders from './filters/FilterDashboardOrders';
+import DashboardOrdersList from './DashboardOrdersList';
 import QueryParamController from '@/components/shared/QueryParamController';
-import SearchDashboardProducts from '@/components/admin/dashboard/products/filters/SearchDashboardProducts';
-import LoadingDashboardProducts from '@/components/shared/loading/dashboard/LoadingDashboardProducts';
+import PaginateList from '@/components/ui/pagination/paginate-list';
 import NotFound from '@/components/shared/NotFound';
+import LoadingDashboardOrders from '@/components/shared/loading/dashboard/LoadingDashboardOrders';
 
-const DashboardProducts: React.FC = () => {
+const DashboardOrders: React.FC = () => {
   const searchParams = useSearchParams();
 
   const query = {
     page: Number(searchParams.get('page')) || 1,
     limit: Math.min(Math.max(Number(searchParams.get('limit')) || 10, 1), 100),
-    search: searchParams.get('search') || '',
+    status: searchParams.get('status') || '',
     sort: searchParams.get('sort') || '',
   };
 
-  const { data, isLoading } = useProductQuery({
-    type: ProductQueryType.GET_ALL,
-    params: { query },
+  const { data, isLoading } = useOrderQuery({
+    type: OrderQueryType.GET_ALL,
+    params: {
+      query,
+    },
   });
 
   if (isLoading) {
-    return <LoadingDashboardProducts />;
+    return <LoadingDashboardOrders />;
   }
 
   if (!data) {
     return <NotFound href="/dashboard" />;
   }
 
-  const totalProducts = data.totalProducts;
+  const totalOrders = data.totalOrders;
 
   return (
     <div className="flex flex-col gap-5">
-      <SearchDashboardProducts />
+      <FilterDashboardOrders />
 
-      <DashboardProductsList productsData={data} />
+      <DashboardOrdersList ordersData={data} />
 
-      {totalProducts > 10 && (
+      {totalOrders > 10 && (
         <QueryParamController<string> paramKey="page" defaultValue="1">
           {({ value, onChange }) => (
             <PaginateList
               onPageChange={(value) => onChange(String(value))}
-              totalItems={totalProducts}
+              totalItems={totalOrders}
               itemsPerPage={10}
               currentPage={Number(value)}
             />
@@ -61,4 +61,4 @@ const DashboardProducts: React.FC = () => {
   );
 };
 
-export default DashboardProducts;
+export default DashboardOrders;

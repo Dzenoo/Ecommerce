@@ -96,81 +96,82 @@ const DashboardCouponsList: React.FC<DashboardCouponsListProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {couponsData.coupons.length === 0 && (
+        {couponsData.coupons.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={10}>No coupons found</TableCell>
+            <TableCell colSpan={8}>No coupons found</TableCell>
           </TableRow>
-        )}
-        {couponsData.coupons.map((coupon) => (
-          <TableRow className="whitespace-nowrap" key={coupon._id}>
-            <TableCell>{coupon._id}</TableCell>
-            <TableCell>{coupon.code}</TableCell>
-            <TableCell>{coupon.discountType}</TableCell>
-            <TableCell>
-              {coupon.discountValue}
-              {coupon.discountType === 'fixed' ? 'DIN' : '%'}
-            </TableCell>
-            <TableCell>{formatDate(coupon.expirationDate)}</TableCell>
-            <TableCell>{coupon.maxUsage}</TableCell>
-            <TableCell>{coupon.usageCount}</TableCell>
-            <TableCell>{coupon.minPurchaseAmount}</TableCell>
-            <TableCell>
-              <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost">
-                    <MoreHorizontal />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <Link href={`/dashboard/coupons/${coupon._id}/edit`}>
-                      <DropdownMenuItem>
-                        <Edit />
-                        Edit Coupon
-                      </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
-                      <Delete />
-                      Delete Coupon
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Delete Coupon</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. Are you sure you want to
-                      permanently delete this coupon?
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <Button
-                      type="submit"
-                      variant="destructive"
-                      disabled={couponMutation.status === 'pending'}
-                      onClick={() =>
-                        couponMutation.mutate({
-                          type: CouponMutationType.DELETE,
-                          couponId: coupon._id,
-                        })
-                      }
-                    >
-                      {couponMutation.status === 'pending' ? (
-                        <Loader type="ScaleLoader" height={20} />
-                      ) : (
-                        'Confirm'
-                      )}
+        ) : (
+          couponsData.coupons.map((coupon) => (
+            <TableRow className="whitespace-nowrap" key={coupon._id}>
+              <TableCell>{coupon._id}</TableCell>
+              <TableCell>{coupon.code}</TableCell>
+              <TableCell>{coupon.discountType}</TableCell>
+              <TableCell>
+                {coupon.discountValue}
+                {coupon.discountType === 'fixed' ? 'DIN' : '%'}
+              </TableCell>
+              <TableCell>{formatDate(coupon.expirationDate)}</TableCell>
+              <TableCell>{coupon.maxUsage}</TableCell>
+              <TableCell>{coupon.usageCount}</TableCell>
+              <TableCell>{coupon.minPurchaseAmount}</TableCell>
+              <TableCell>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost">
+                      <MoreHorizontal />
                     </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </TableCell>
-          </TableRow>
-        ))}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <Link href={`/dashboard/coupons/${coupon._id}/edit`}>
+                        <DropdownMenuItem>
+                          <Edit />
+                          Edit Coupon
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
+                        <Delete />
+                        Delete Coupon
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Delete Coupon</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. Are you sure you want to
+                        permanently delete this coupon?
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        type="submit"
+                        variant="destructive"
+                        disabled={couponMutation.status === 'pending'}
+                        onClick={() =>
+                          couponMutation.mutate({
+                            type: CouponMutationType.DELETE,
+                            couponId: coupon._id,
+                          })
+                        }
+                      >
+                        {couponMutation.status === 'pending' ? (
+                          <Loader type="ScaleLoader" height={20} />
+                        ) : (
+                          'Confirm'
+                        )}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
       <TableFooter>
         <TableRow>

@@ -28,6 +28,5 @@ export class GetOrdersDto {
   readonly sort?: string;
 
   @IsOptional()
-  @IsEnum(['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'])
   readonly status?: string;
 }
