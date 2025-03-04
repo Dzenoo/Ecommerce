@@ -43,6 +43,8 @@ cd client
 pnpm install
 ```
 
+- Add a .env file in the client directory and configure the necessary environment variables. Use .env.example as a reference.
+
 3. **Backend Setup:**
 
 - Navigate to the api directory::
@@ -56,6 +58,8 @@ cd api
 ```bash
 pnpm install
 ```
+
+Add a .env file in the api directory and configure the necessary environment variables. Use .env.example as a reference.
 
 4. **Start Servers:**
 
@@ -74,10 +78,10 @@ pnpm start:api
 ## Usage
 
 Create account and start exploring application.
-Login as admin with next credentials:
 
-**admin@gmail.com**
-**Adminpassword1!**
+## Admin Access
+
+Users cannot sign in as an admin by default. To gain admin privileges, you must use your MongoDB account and manually update the user's role in MongoDB Atlas by changing the role property to "admin".
 
 ## Contributing
 
