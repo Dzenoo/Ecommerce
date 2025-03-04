@@ -112,7 +112,7 @@ const DashboardOrdersList: React.FC<DashboardOrdersListProps> = ({
                 <div className="flex items-center gap-2">
                   <Image
                     className="h-8 w-8 rounded-full"
-                    src={'/images/avatar.jpg'}
+                    src={'/images/avatar.png'}
                     alt={'avatar'}
                     width={50}
                     height={50}

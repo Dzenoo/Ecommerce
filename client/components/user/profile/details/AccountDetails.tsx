@@ -36,7 +36,7 @@ const AccountDetails: React.FC = () => {
       <CardContent className="flex justify-between gap-10 max-lg:flex-col">
         <div className="flex flex-wrap items-center gap-5">
           <Avatar className="h-36 w-36 rounded-full">
-            <AvatarImage src="/images/avatar.jpg" alt="Avatar" />
+            <AvatarImage src="/images/avatar.png" alt="Avatar" />
             <AvatarFallback className="rounded-full">CN</AvatarFallback>
           </Avatar>
           <div className="space-y-4">

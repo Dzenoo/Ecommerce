@@ -97,7 +97,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
         <div>
           <Image
             className="h-10 min-h-10 w-10 min-w-10 rounded-full object-cover"
-            src="/images/avatar.jpg"
+            src="/images/avatar.png"
             alt="user-avatar"
             width={50}
             height={50}
