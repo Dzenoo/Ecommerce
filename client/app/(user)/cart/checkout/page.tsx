@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Checkout from '@/components/user/cart/checkout/Checkout';
 
 const CheckoutPage = () => {

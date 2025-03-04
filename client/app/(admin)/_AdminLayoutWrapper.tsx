@@ -1,5 +1,3 @@
-import React from 'react';
-
 import DashboardSidebar from '@/components/admin/dashboard/sidebar/DashboardSidebar';
 import AdminHeader from '@/components/admin/dashboard/sidebar/AdminHeader';
 

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Skeleton } from '@/components/ui/utilities/skeleton';
 import { Separator } from '@/components/ui/layout/separator';
 

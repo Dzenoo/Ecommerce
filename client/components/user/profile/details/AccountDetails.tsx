@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { UserQueryType, useUserQuery } from '@/hooks/queries/useUser.query';
 import FieldGroup from '@/helpers/FieldGroup';
 import NotFound from '@/components/shared/NotFound';

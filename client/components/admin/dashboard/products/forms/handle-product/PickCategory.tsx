@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { getCategory } from '@/lib/utils';
 import { Category } from '@/types';
 

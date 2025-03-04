@@ -1,4 +1,3 @@
-import React from 'react';
 import NavBanner from './NavBanner';
 import NavActions from './actions/NavActions';
 import NavList from './list/NavList';

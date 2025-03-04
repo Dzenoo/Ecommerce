@@ -1,5 +1,3 @@
-import React from 'react';
-
 import OrdersHistory from '@/components/user/profile/orders/OrdersHistory';
 
 const OrdersHistoryPage = () => {

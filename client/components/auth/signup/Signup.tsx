@@ -1,5 +1,3 @@
-import React from 'react';
-
 import RedirectToLoginLink from './RedirectToLoginLink';
 import SignupForm from './forms/SignupForm';
 import Logo from '@/components/layout/header/Logo';

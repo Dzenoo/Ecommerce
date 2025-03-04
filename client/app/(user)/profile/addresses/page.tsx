@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Addresses from '@/components/user/profile/addresses/Addresses';
 
 const AddressesPage = () => {

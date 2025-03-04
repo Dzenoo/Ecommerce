@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { ICoupon } from '@/types';
 
 import HandleCouponForm from '../forms/handle-coupon/HandleCouponForm';

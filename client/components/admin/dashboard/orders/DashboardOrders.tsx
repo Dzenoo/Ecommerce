@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { OrderQueryType, useOrderQuery } from '@/hooks/queries/useOrder.query';

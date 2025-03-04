@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import * as loaders from 'react-spinners';
 
 type LoaderType = keyof typeof loaders;

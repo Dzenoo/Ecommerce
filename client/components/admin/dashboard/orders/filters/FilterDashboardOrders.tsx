@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useQueryParams } from '@/hooks/core/useQueryParams';
 import QueryParamController from '@/components/shared/QueryParamController';
 

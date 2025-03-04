@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { CartQueryType, useCartQuery } from '@/hooks/queries/useCart.query';
 import ClearCart from './ClearCart';
 import CartList from './CartList';

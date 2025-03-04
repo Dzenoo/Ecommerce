@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ProfileNavigation from '@/components/user/profile/ProfileNavigation';
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {

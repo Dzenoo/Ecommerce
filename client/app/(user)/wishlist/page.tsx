@@ -1,5 +1,3 @@
-import React from 'react';
-
 import WishList from '@/components/user/wishlist/WishList';
 
 const WishlistPage = () => {

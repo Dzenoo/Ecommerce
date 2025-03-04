@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 import Link from 'next/link';

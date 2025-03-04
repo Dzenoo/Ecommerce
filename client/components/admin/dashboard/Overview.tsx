@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { ClipboardList, DollarSign, ShoppingBag, Users } from 'lucide-react';
 
 import {

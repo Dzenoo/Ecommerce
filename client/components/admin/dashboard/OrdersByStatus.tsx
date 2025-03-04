@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Pie, PieChart, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 import {

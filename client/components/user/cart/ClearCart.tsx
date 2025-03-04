@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { queryClient } from '@/context/react-query-client';
 import { useToast } from '@/hooks/core/use-toast';
 import {

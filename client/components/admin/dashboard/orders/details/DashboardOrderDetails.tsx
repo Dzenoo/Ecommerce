@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Calendar, Send, ShoppingBag, User } from 'lucide-react';
 
 import { IOrder } from '@/types';

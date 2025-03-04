@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { BadgeHelp, Truck } from 'lucide-react';
 
 import { renderIconText } from '@/helpers/render-icon-text';

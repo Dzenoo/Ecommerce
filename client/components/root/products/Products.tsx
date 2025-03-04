@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { GetProductsDto } from '@/types';

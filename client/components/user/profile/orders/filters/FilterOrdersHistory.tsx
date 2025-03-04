@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import QueryParamController from '@/components/shared/QueryParamController';
 
 import { Button } from '@/components/ui/buttons/button';

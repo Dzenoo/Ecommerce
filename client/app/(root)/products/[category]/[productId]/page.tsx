@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ProductDetails from '@/components/root/products/details/ProductDetails';
 
 const ProductDetailsPage = async ({

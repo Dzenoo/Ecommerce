@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import Branding from './Branding';
 import SidebarNav from './SidebarNav';
 import UserInfo from './UserInfo';

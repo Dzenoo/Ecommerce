@@ -1,5 +1,3 @@
-import React from 'react';
-
 import DashboardOrderDetails from '@/components/admin/dashboard/orders/details/DashboardOrderDetails';
 
 const DashboardOrderDetailsPage = async ({

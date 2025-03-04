@@ -1,5 +1,3 @@
-import React from 'react';
-
 import QueryParamController from '@/components/shared/QueryParamController';
 
 import { Input } from '@/components/ui/form/input';

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import HandleProductForm from '../forms/handle-product/HandleProductForm';
 
 import { IProduct } from '@/types';

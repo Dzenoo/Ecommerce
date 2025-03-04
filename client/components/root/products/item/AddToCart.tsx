@@ -1,4 +1,3 @@
-import React from 'react';
 import { ShoppingBag } from 'lucide-react';
 
 import { useToast } from '@/hooks/core/use-toast';

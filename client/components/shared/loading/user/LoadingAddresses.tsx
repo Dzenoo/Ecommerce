@@ -1,6 +1,4 @@
 import { Skeleton } from '@/components/ui/utilities/skeleton';
-import React from 'react';
-
 const LoadingAddresses: React.FC = () => {
   return (
     <div className="space-y-10">

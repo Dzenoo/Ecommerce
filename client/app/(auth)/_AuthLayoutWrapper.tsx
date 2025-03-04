@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { useZoomLevel } from '@/hooks/core/useZoomLevel.hook';
 
 const AuthLayoutWrapper: React.FC<{

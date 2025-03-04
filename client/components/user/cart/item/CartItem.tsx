@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { CartDisplayMode, ICartItem } from '@/types';
 import CartItemDisplay, { displayConfigs } from './CartItemDisplay';
 

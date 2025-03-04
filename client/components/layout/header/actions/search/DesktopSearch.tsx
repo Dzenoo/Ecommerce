@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useMounted } from '@/hooks/core/useMounted.hook';
 
 import { SearchInput } from './SearchInput';

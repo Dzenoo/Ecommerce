@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Products from '@/components/root/products/Products';
 
 const ProductsPage = async ({

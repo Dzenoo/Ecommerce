@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 
 import { useAuthStore } from '@/store/auth.store';
