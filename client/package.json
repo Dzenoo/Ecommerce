@@ -77,6 +77,7 @@
     "@radix-ui/react-toast": "^1.2.5",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@radix-ui/react-visually-hidden": "^1.1.1",
+    "@tauri-apps/cli": "^2.3.1",
     "@types/dompurify": "^3.2.0",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^20",
