@@ -21,5 +21,4 @@ export interface IUser {
   addresses: IAddress[] | [];
   reviews: IReview[] | [];
   role: Role;
-  isGoogleAccount: boolean;
 }

@@ -53,10 +53,11 @@ export class User {
 
   @Prop({
     type: String,
+    required: true,
     trim: true,
     select: false,
   })
-  password?: string;
+  password: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Cart', default: null })
   cart: Cart | mongoose.Types.ObjectId;
@@ -88,9 +89,6 @@ export class User {
 
   @Prop({ type: String, default: 'user', enum: Role })
   role: Role;
-
-  @Prop({ default: false })
-  isGoogleAccount: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

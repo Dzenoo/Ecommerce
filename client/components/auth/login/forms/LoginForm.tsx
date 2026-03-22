@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
@@ -56,12 +54,6 @@ const LoginForm: React.FC = () => {
     await loginToAccount(data);
   };
 
-  const handleGoogleSignIn = () => {
-    if (form.formState.isSubmitting) return;
-
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -103,22 +95,6 @@ const LoginForm: React.FC = () => {
             ) : (
               'Login'
             )}
-          </Button>
-          <p className="text-muted-foreground">Or</p>
-          <Button
-            variant="outline"
-            className="flex w-full items-center justify-center"
-            disabled={form.formState.isSubmitting}
-            type="button"
-            onClick={() => handleGoogleSignIn()}
-          >
-            <Image
-              src="/icons/google-icon-logo-transparent.png"
-              alt="google-logo"
-              width={40}
-              height={40}
-            />
-            Sign in with Google
           </Button>
         </div>
       </form>

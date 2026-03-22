@@ -14,10 +14,8 @@ import { Throttle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 
 import { LocalAuthService } from '@/authentication/services/local-auth.service';
-import { GoogleAuthService } from '@/authentication/services/google-auth.service';
 
 import { LocalAuthGuard } from '@/authentication/guards/local-auth.guard';
-import { GoogleOAuthGuard } from '@/authentication/guards/google-auth.guard';
 import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
 
 import { getRedirectUrl } from '@/common/utils';
@@ -27,28 +25,7 @@ import { SignupDto } from '../dto/signup.dto';
 
 @Controller('/auth')
 export class AuthController {
-  constructor(
-    private readonly localAuthService: LocalAuthService,
-    private readonly googleAuthService: GoogleAuthService,
-  ) {}
-
-  @Get('/google')
-  @UseGuards(GoogleOAuthGuard)
-  googleAuth() {}
-
-  @Get('/google/redirect')
-  @UseGuards(GoogleOAuthGuard)
-  async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    try {
-      const authResult = await this.googleAuthService.googleLogin(req);
-      res.cookie('access_token', authResult.access_token, cookieOptions);
-      const redirectUrl = getRedirectUrl(authResult.role);
-      return res.redirect(redirectUrl);
-    } catch (error) {
-      const message = encodeURIComponent(error.message);
-      return res.redirect(`${process.env.FRONTEND_URL}/login?error=${message}`);
-    }
-  }
+  constructor(private readonly localAuthService: LocalAuthService) {}
 
   @Throttle({ default: { ttl: 60000, limit: 5 } })
   @UseGuards(LocalAuthGuard)

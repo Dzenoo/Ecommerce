@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { z } from 'zod';
@@ -57,10 +56,6 @@ const SignupForm: React.FC = () => {
 
   const onSubmit = async (values: z.infer<typeof SignupSchema>) => {
     await signupMutation(values);
-  };
-
-  const handleGoogleSignUp = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
 
   return (
@@ -139,22 +134,6 @@ const SignupForm: React.FC = () => {
             ) : (
               'Register'
             )}
-          </Button>
-          <p className="text-muted-foreground">Or</p>
-          <Button
-            variant="outline"
-            className="flex w-full items-center justify-center"
-            disabled={form.formState.isSubmitting}
-            type="button"
-            onClick={() => handleGoogleSignUp()}
-          >
-            <Image
-              src="/icons/google-icon-logo-transparent.png"
-              alt="google-logo"
-              width={40}
-              height={40}
-            />
-            Sign up with Google
           </Button>
         </div>
       </form>

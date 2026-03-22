@@ -7,13 +7,11 @@ import { UserModule } from '@/models/user/user.module';
 
 import { AuthController } from './controllers/auth.controller';
 
-import { GoogleAuthService } from './services/google-auth.service';
 import { LocalAuthService } from './services/local-auth.service';
 import { BlockedDomainsService } from '@/common/services/blocked-domains.service';
 
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -31,8 +29,6 @@ import { GoogleStrategy } from './strategies/google.strategy';
   ],
   controllers: [AuthController],
   providers: [
-    GoogleAuthService,
-    GoogleStrategy,
     LocalAuthService,
     LocalStrategy,
     JwtStrategy,

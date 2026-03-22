@@ -34,12 +34,6 @@ export class LocalAuthService {
       );
     }
 
-    if (user.isGoogleAccount && user.password === null) {
-      throw new NotFoundException(
-        'Your account is registered via Google. Please log in with Google.',
-      );
-    }
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
