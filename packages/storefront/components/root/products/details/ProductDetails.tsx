@@ -4,7 +4,7 @@ import {
   ProductQueryType,
   useProductQuery,
 } from '@shared/hooks/queries/useProduct.query';
-import { useAuthStore } from '@shared/store/auth.store';
+import { useCurrentUser } from '@shared/hooks/useCurrentUser';
 
 import ProductImages from '@/components/root/products/details/ProductImages';
 import ProductInformation from '@/components/root/products/details/ProductInformation';
@@ -18,7 +18,7 @@ type ProductDetailsProps = {
 };
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useCurrentUser();
 
   const { data, isLoading } = useProductQuery({
     type: ProductQueryType.GET_ONE,

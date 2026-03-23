@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
+import { ClerkProvider } from '@clerk/nextjs';
 
 import { QueryContextProvider } from '@shared/context/react-query-client';
-import { AuthProvider } from '@shared/components/shared/AuthProvider';
+import { ClerkTokenProvider } from '@shared/components/shared/ClerkTokenProvider';
+import { Toaster } from '@shared/components/ui/info/toaster';
 
 import '../globals.css';
 import UserLayoutWrapper from './_UserLayoutWrapper';
-import { Toaster } from '@shared/components/ui/info/toaster';
 
 export const metadata: Metadata = {
   icons: 'favicon.ico',
@@ -22,15 +23,17 @@ export default function UsersLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={GeistSans.className}>
-        <QueryContextProvider>
-          <AuthProvider>
-            <UserLayoutWrapper>{children}</UserLayoutWrapper>
-          </AuthProvider>
-          <Toaster />
-        </QueryContextProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={GeistSans.className}>
+          <ClerkTokenProvider>
+            <QueryContextProvider>
+              <UserLayoutWrapper>{children}</UserLayoutWrapper>
+              <Toaster />
+            </QueryContextProvider>
+          </ClerkTokenProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

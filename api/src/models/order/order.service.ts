@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { FilterQuery, Model, mongo } from 'mongoose';
+import mongoose, { FilterQuery, Model } from 'mongoose';
 
 import { Order } from './schema/order.schema';
 
@@ -115,8 +115,8 @@ export class OrderService {
       .sort(sortOptions)
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('user', 'first_name last_name image')
-      .populate('items.product', 'name image price')
+      .populate('user', 'username email')
+      .populate('items.product', 'name images price')
       .lean()
       .exec();
 
@@ -129,16 +129,25 @@ export class OrderService {
     };
   }
 
-  async getOne(id: string): Promise<ResponseObject> {
+  async getOne(
+    id: string,
+    userId: string,
+    role: string,
+  ): Promise<ResponseObject> {
     const order = await this.orderModel
       .findById(id)
-      .populate('user', 'first_name last_name email')
+      .populate('user', 'username email')
       .populate('items.product', 'name images price')
       .populate('address')
       .lean()
       .exec();
 
     if (!order) throw new NotAcceptableException('Order not found');
+
+    const isOwner = String(order.user?._id || order.user) === userId;
+    if (role !== 'admin' && !isOwner) {
+      throw new NotAcceptableException('Not authorized to view this order');
+    }
 
     return {
       statusCode: HttpStatus.OK,
@@ -164,7 +173,7 @@ export class OrderService {
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('items.product', 'name images price category')
-      .populate('user', 'first_name last_name _id')
+      .populate('user', 'username email _id')
       .lean()
       .exec();
 

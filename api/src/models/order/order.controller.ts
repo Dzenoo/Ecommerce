@@ -16,8 +16,8 @@ import { User } from '@/common/decorators/user.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '@/types';
 
-import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
-import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+import { ClerkAuthGuard } from '@/common/guards/clerk-auth.guard';
+import { ClerkRolesGuard } from '@/common/guards/clerk-roles.guard';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
@@ -28,7 +28,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post('/create')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async createOrder(
     @Body() body: CreateOrderDto,
@@ -38,7 +38,7 @@ export class OrderController {
   }
 
   @Get('/user')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async getOrdersByUser(
     @Query() query: GetOrdersDto,
@@ -48,26 +48,31 @@ export class OrderController {
   }
 
   @Delete('/delete/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async cancelOrder(@Param('id') id: string) {
     return this.orderService.cancel(id);
   }
 
   @Get('/all')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
   async getOrders(@Query() query: GetOrdersDto) {
     return this.orderService.getAll(query);
   }
 
   @Get('/:id')
-  async getOrder(@Param('id') id: string) {
-    return this.orderService.getOne(id);
+  @UseGuards(ClerkAuthGuard)
+  async getOrder(
+    @Param('id') id: string,
+    @User('userId') userId: string,
+    @User('role') role: string,
+  ) {
+    return this.orderService.getOne(id, userId, role);
   }
 
   @Patch('/update/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
   async updateOrderStatus(
     @Param('id') id: string,

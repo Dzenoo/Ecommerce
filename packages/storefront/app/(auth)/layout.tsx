@@ -1,17 +1,18 @@
 import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
+import { ClerkProvider } from '@clerk/nextjs';
 
 import { QueryContextProvider } from '@shared/context/react-query-client';
+import { Toaster } from '@shared/components/ui/info/toaster';
 
 import '../globals.css';
 import AuthLayoutWrapper from './_AuthLayoutWrapper';
-import { Toaster } from '@shared/components/ui/info/toaster';
 
 export const metadata: Metadata = {
   icons: 'favicon.ico',
   title: {
-    default: 'DzenvoShop | Your Online Ecommerce Store',
-    template: '%s | DzenvoShop',
+    default: 'Ecommerce | Authentication',
+    template: '%s | Ecommerce',
   },
 };
 
@@ -21,13 +22,15 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={GeistSans.className}>
-        <QueryContextProvider>
-          <AuthLayoutWrapper>{children}</AuthLayoutWrapper>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={GeistSans.className}>
+          <QueryContextProvider>
+            <AuthLayoutWrapper>{children}</AuthLayoutWrapper>
+          </QueryContextProvider>
           <Toaster />
-        </QueryContextProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

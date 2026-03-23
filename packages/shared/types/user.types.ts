@@ -6,14 +6,13 @@ import { IReview } from './review.types';
 import { Role } from './shared.types';
 
 export type UpdateProfileDto = {
-  first_name?: string;
-  last_name?: string;
+  username?: string;
 };
 
 export interface IUser {
   _id: string;
-  first_name: string;
-  last_name: string;
+  clerkId: string;
+  username: string;
   email: string;
   cart: ICart | null;
   wishlist: IWishlist | null;

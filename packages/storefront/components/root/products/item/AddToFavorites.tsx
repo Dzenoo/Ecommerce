@@ -1,7 +1,7 @@
 import { Heart } from 'lucide-react';
 
 import { useToast } from '@shared/hooks/core/use-toast';
-import { useAuthStore } from '@shared/store/auth.store';
+import { useCurrentUser } from '@shared/hooks/useCurrentUser';
 import {
   useWishlistMutation,
   WishlistMutationType,
@@ -28,7 +28,7 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
   ...rest
 }) => {
   const { toast } = useToast();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated } = useCurrentUser();
 
   const { data } = useWishlistQuery({
     type: WishlistQueryType.GET_WISHLIST,

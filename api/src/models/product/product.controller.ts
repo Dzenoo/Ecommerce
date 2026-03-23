@@ -22,8 +22,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '@/types';
 
-import { RolesGuard } from '@/authentication/guards/role-auth.guard';
-import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
+import { ClerkRolesGuard } from '@/common/guards/clerk-roles.guard';
+import { ClerkAuthGuard } from '@/common/guards/clerk-auth.guard';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -35,7 +35,7 @@ export class ProductController {
 
   @Post('/create')
   @UseInterceptors(FilesInterceptor('images', 10))
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
   async createProduct(
     @Body() body: CreateProductDto,
@@ -57,14 +57,14 @@ export class ProductController {
   }
 
   @Patch('/update/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
   async updateProduct(@Body() body: UpdateProductDto, @Param('id') id: string) {
     return await this.productService.update({ body, id });
   }
 
   @Delete('/delete/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
   async deleteProduct(@Param('id') id: string) {
     return await this.productService.delete(id);

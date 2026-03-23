@@ -1,12 +1,12 @@
 import { createGenericQueryHook } from './createGenericQueryHook';
-import { getProfile } from '../../lib/actions/user.actions';
+import { getCurrentUser } from '../../lib/actions/user.actions';
 
 const UserQueryFunctions = {
-  GET_PROFILE: () => getProfile(),
+  GET_CURRENT_USER: () => getCurrentUser(),
 } as const;
 
 enum UserQueryType {
-  GET_PROFILE = 'GET_PROFILE',
+  GET_CURRENT_USER = 'GET_CURRENT_USER',
 }
 
 const useUserQuery = createGenericQueryHook('user', UserQueryFunctions);

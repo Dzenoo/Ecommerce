@@ -159,7 +159,7 @@ export class ReviewService {
       .find({
         product: productId,
       })
-      .populate('user', 'first_name last_name _id')
+      .populate('user', 'username email _id')
       .skip((page - 1) * limit)
       .limit(limit)
       .sort(sortOptions);
@@ -187,7 +187,7 @@ export class ReviewService {
       .find({
         user: new mongoose.Types.ObjectId(userId),
       })
-      .populate('user', 'first_name last_name _id')
+      .populate('user', 'username email _id')
       .populate('product')
       .skip((page - 1) * limit)
       .limit(limit)

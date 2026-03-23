@@ -3,9 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { LogOut, User } from 'lucide-react';
+import { useClerk } from '@clerk/nextjs';
 
+import { useCurrentUser } from '../../../../hooks/useCurrentUser';
 import { getRoleSpecificData } from '../../../../lib/utils';
-import { useAuthStore } from '../../../../store/auth.store';
 
 import Logo from '../Logo';
 import { NavSearch } from './search/NavSearch';
@@ -16,9 +17,10 @@ import { TooltipWrapper } from '../../../ui/info/tooltip-wrapper';
 const NavActions: React.FC<{
   showSearch?: boolean;
 }> = ({ showSearch = true }) => {
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated } = useCurrentUser();
+  const { signOut } = useClerk();
 
-  const isAdmin = (user && user.role === 'admin') || false;
+  const isAdmin = user?.role === 'admin';
   const roleData = getRoleSpecificData(isAdmin);
 
   return (
@@ -42,16 +44,16 @@ const NavActions: React.FC<{
           ))}
 
         {!isAuthenticated && (
-          <Link href="/signup">
+          <Link href="/sign-up">
             <Button>
               <User />
-              Signup
+              Sign Up
             </Button>
           </Link>
         )}
 
         {isAuthenticated && (
-          <button onClick={logout}>
+          <button onClick={() => signOut()}>
             <LogOut />
           </button>
         )}

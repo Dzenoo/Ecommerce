@@ -10,8 +10,8 @@ import {
 
 import { WishlistService } from './wishlist.service';
 
-import { JwtAuthGuard } from '@/authentication/guards/jwt-auth.guard';
-import { RolesGuard } from '@/authentication/guards/role-auth.guard';
+import { ClerkAuthGuard } from '@/common/guards/clerk-auth.guard';
+import { ClerkRolesGuard } from '@/common/guards/clerk-roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '@/types';
 
@@ -24,7 +24,7 @@ export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
   @Post('/add/:productId')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async addToWishlist(
     @User('userId') userId: string,
@@ -34,7 +34,7 @@ export class WishlistController {
   }
 
   @Patch('/remove/:productId')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async removeFromWishlist(
     @User('userId') userId: string,
@@ -44,7 +44,7 @@ export class WishlistController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async getWishlist(
     @Query() query: GetWishlistDto,

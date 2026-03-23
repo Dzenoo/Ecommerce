@@ -4,7 +4,7 @@ import {
   ReviewQueryType,
   useReviewQuery,
 } from '@shared/hooks/queries/useReview.query';
-import { useAuthStore } from '@shared/store/auth.store';
+import { useCurrentUser } from '@shared/hooks/useCurrentUser';
 import QueryParamController from '@shared/components/shared/QueryParamController';
 import ReviewList from './ReviewList';
 import ReviewForm from './forms/ReviewForm';
@@ -20,7 +20,7 @@ type ReviewsProps = {
 
 const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
   const searchParams = useSearchParams();
-  const { user } = useAuthStore();
+  const { user } = useCurrentUser();
 
   const query = {
     page: Number(searchParams.get('page') || 1),

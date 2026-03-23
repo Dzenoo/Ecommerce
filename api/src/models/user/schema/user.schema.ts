@@ -1,8 +1,6 @@
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import * as bcrypt from 'bcryptjs';
-
 import { Cart } from '@/models/cart/schema/cart.schema';
 import { Order } from '@/models/order/schema/order.schema';
 import { Address } from '@/models/address/schema/address.schema';
@@ -16,42 +14,31 @@ export type UserDocument = HydratedDocument<User>;
   timestamps: true,
 })
 export class User {
-  @Prop({
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 15,
-    trim: true,
-  })
-  first_name: string;
+  @Prop({ required: true, unique: true })
+  clerkId: string;
 
   @Prop({
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 15,
+    minlength: 5,
+    maxlength: 25,
     trim: true,
+    unique: true,
   })
-  last_name: string;
+  username: string;
 
   @Prop({
     type: String,
     required: true,
     minlength: 5,
     maxlength: 255,
-    unique: true,
-    lowercase: true,
     trim: true,
+    unique: true,
   })
   email: string;
 
-  @Prop({
-    type: String,
-    required: true,
-    trim: true,
-    select: false,
-  })
-  password: string;
+  @Prop({ type: String, enum: Role, default: Role.User })
+  role: Role;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Cart', default: null })
   cart: Cart | mongoose.Types.ObjectId;
@@ -80,20 +67,6 @@ export class User {
     default: [],
   })
   reviews: (Review | mongoose.Types.ObjectId)[];
-
-  @Prop({ type: String, default: 'user', enum: Role })
-  role: Role;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-UserSchema.pre('save', async function (next) {
-  const user = this as UserDocument;
-
-  if (user.isModified('password') && user.password) {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-  }
-
-  next();
-});

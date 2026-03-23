@@ -68,7 +68,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
     {
       id: 3,
       title: 'Ship To',
-      value: order.user.first_name + ` ${order.user.last_name}`,
+      value: order.user.username,
       customStyles,
     },
   ];

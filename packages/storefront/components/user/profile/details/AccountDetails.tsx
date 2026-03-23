@@ -14,7 +14,7 @@ import {
 
 const AccountDetails: React.FC = () => {
   const { data, isLoading } = useUserQuery({
-    type: UserQueryType.GET_PROFILE,
+    type: UserQueryType.GET_CURRENT_USER,
   });
 
   if (isLoading) {
@@ -42,7 +42,7 @@ const AccountDetails: React.FC = () => {
           <div className="space-y-4">
             <FieldGroup
               title="Name"
-              value={user.first_name + ` ${user.last_name}`}
+              value={user.username}
             />
             <FieldGroup title="Email" value={user.email} />
           </div>

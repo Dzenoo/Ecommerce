@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { ProductModule } from '@/models/product/product.module';
@@ -11,8 +10,8 @@ import { WishlistModule } from '@/models/wishlist/wishlist.module';
 import { OrderModule } from '@/models/order/order.module';
 import { CouponModule } from '@/models/coupon/coupon.module';
 import { CartModule } from '@/models/cart/cart.module';
-import { AuthModule } from '@/authentication/auth.module';
 import { AnalyticsModule } from './common/modules/analytics/analytics.module';
+import { ClerkWebhookModule } from './common/modules/clerk/clerk-webhook.module';
 
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
@@ -36,7 +35,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
         dbName: configService.get<string>('MONGO_DB_NAME'),
       }),
     }),
-    AuthModule,
     ProductModule,
     UserModule,
     AddressModule,
@@ -46,6 +44,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     CouponModule,
     CartModule,
     AnalyticsModule,
+    ClerkWebhookModule,
   ],
   providers: [
     {

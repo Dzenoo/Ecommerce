@@ -37,8 +37,11 @@ export class CartService {
   async findOneByIdAndUpdate(
     id: string,
     update: UpdateQuery<Cart> = {},
-  ): Promise<void> {
-    await this.cartModel.findByIdAndUpdate(id, update).exec();
+  ): Promise<Cart> {
+    return this.cartModel
+      .findByIdAndUpdate(id, update, { new: true })
+      .lean()
+      .exec();
   }
 
   async findOne(query: FilterQuery<Cart>): Promise<Cart> {

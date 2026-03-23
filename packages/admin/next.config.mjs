@@ -1,4 +1,5 @@
 const nextConfig = {
+  devIndicators: false,
   productionBrowserSourceMaps: false,
   transpilePackages: ['@ecommerce/shared'],
   images: {

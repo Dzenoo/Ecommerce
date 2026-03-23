@@ -5,7 +5,7 @@ import { Delete, Edit } from 'lucide-react';
 import { IReview } from '@shared/types';
 import { renderRating } from '@shared/helpers/render-rating';
 import { formatDate } from '@shared/lib/utils';
-import { useAuthStore } from '@shared/store/auth.store';
+import { useCurrentUser } from '@shared/hooks/useCurrentUser';
 import {
   ReviewMutationType,
   useReviewMutation,
@@ -25,7 +25,7 @@ type ReviewItemProps = {
 
 const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const { user } = useAuthStore();
+  const { user } = useCurrentUser();
   const { toast } = useToast();
 
   const mutation = useReviewMutation({
@@ -73,7 +73,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
     setIsEditing(false);
   };
 
-  const isOwner = user?.userId === review.user._id;
+  const isOwner = user?._id === review.user._id;
   const isAdmin = user?.role === 'admin';
 
   if (isEditing) {
@@ -107,7 +107,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, productId }) => {
           <div className="flex gap-2">
             <div className="pt-1">
               <h1 className="font-medium">
-                {review.user.first_name} {review.user.last_name}
+                {review.user.username}
               </h1>
             </div>
             <div className="flex items-center gap-1">

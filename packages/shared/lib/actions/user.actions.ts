@@ -7,10 +7,10 @@ export const updateProfile = async (
   return await patchApiHandler('user/update', data);
 };
 
-export const getProfile = async (): Promise<
+export const getCurrentUser = async (): Promise<
   ServerResponse<{
     user: IUser;
   }>
 > => {
-  return await getApiHandler('user/profile');
+  return await getApiHandler('user');
 };

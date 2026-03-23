@@ -4,8 +4,6 @@ import { FilterQuery, Model, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
 
 import { User } from './schema/user.schema';
 
-import { UpdateProfileDto } from './dto/update-profile.dto';
-
 @Injectable()
 export class UserService {
   constructor(
@@ -14,6 +12,10 @@ export class UserService {
 
   async find(query: FilterQuery<User> = {}, select?: string): Promise<User[]> {
     return await this.userModel.find(query).select(select).lean().exec();
+  }
+
+  async findOne(query: FilterQuery<User> = {}): Promise<User | null> {
+    return await this.userModel.findOne(query).exec();
   }
 
   async countDocuments(
@@ -49,31 +51,12 @@ export class UserService {
     return await this.userModel.create(body);
   }
 
-  async updateOne(id: string, body: UpdateProfileDto): Promise<ResponseObject> {
-    const user = await this.userModel.findById(id).exec();
-
-    if (
-      body.first_name === user.first_name &&
-      body.last_name === user.last_name
-    )
-      throw new NotFoundException('No changes found');
-
-    const updatedProfile = await this.userModel.findByIdAndUpdate(
-      id,
-      { $set: body },
-      { new: true, runValidators: true },
-    );
-
-    if (!updatedProfile) throw new NotFoundException('User not found');
-
-    return {
-      statusCode: HttpStatus.ACCEPTED,
-      message: 'Profile updated successfully',
-    };
+  async deleteOne(id: string): Promise<void> {
+    await this.userModel.findByIdAndDelete(id).exec();
   }
 
   async getOne(id: string): Promise<ResponseObject> {
-    const user = await this.userModel.findById(id).select('-role');
+    const user = await this.userModel.findById(id);
 
     if (!user) throw new NotFoundException('User not found');
 
