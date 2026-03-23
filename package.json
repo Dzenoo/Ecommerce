@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:api": "pnpm --filter api start:dev",
-    "start:client": "pnpm --filter client dev",
-    "build:api": "pnpm --filter api build",
-    "build:client": "pnpm --filter client build"
+    "dev": "pnpm run --parallel dev:all",
+    "dev:all": "pnpm --filter @ecommerce/storefront dev & pnpm --filter @ecommerce/admin dev & pnpm --filter api start:dev",
+    "dev:storefront": "pnpm --filter @ecommerce/storefront dev",
+    "dev:admin": "pnpm --filter @ecommerce/admin dev",
+    "dev:api": "pnpm --filter api start:dev",
+    "build:storefront": "pnpm --filter @ecommerce/storefront build",
+    "build:admin": "pnpm --filter @ecommerce/admin build",
+    "build:api": "pnpm --filter api build"
   }
 }

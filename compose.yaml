@@ -1,16 +1,32 @@
 version: "3.9"
 services:
-  client:
+  storefront:
     build:
-      context: ./client
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: packages/storefront/Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./client:/app
+      - ./packages/storefront:/app/packages/storefront
+      - ./packages/shared:/app/packages/shared
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://api:8080
+
+  admin:
+    build:
+      context: .
+      dockerfile: packages/admin/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./packages/admin:/app/packages/admin
+      - ./packages/shared:/app/packages/shared
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://api:8080
 
   api:
     build:
