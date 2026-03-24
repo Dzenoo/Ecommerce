@@ -264,12 +264,12 @@ const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
               name="discount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Discount</FormLabel>
+                  <FormLabel>Discount (%)</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
                   <FormDescription>
-                    Add potential discount for this product.
+                    Add potential discount for this product. Min 0%, Max 100%
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
