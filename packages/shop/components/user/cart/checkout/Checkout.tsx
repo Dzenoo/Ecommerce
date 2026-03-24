@@ -3,7 +3,10 @@
 import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 
-import { CartQueryType, useCartQuery } from '@shared/hooks/queries/useCart.query';
+import {
+  CartQueryType,
+  useCartQuery,
+} from '@shared/hooks/queries/useCart.query';
 import NotFound from '@shared/components/shared/NotFound';
 import CartOrderDetails from '@/components/user/cart/CartOrderDetails';
 import Empty from '@shared/helpers/Empty';
@@ -77,13 +80,7 @@ const Checkout: React.FC = () => {
           </SelectAddress>
         </CardContent>
       </Card>
-      <CartOrderDetails
-        showSummary
-        showApplyCoupon
-        showFooter
-        type="checkout"
-        cart={cart}
-      />
+      <CartOrderDetails showSummary showFooter type="checkout" cart={cart} />
     </section>
   );
 };

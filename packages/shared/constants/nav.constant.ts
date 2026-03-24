@@ -65,24 +65,4 @@ export const AdminNavbarActions = [
     href: "/dashboard/orders",
     subActions: [],
   },
-  {
-    id: 4,
-    icon: TicketCheck,
-    text: "Coupons",
-    href: "/dashboard/coupons",
-    subActions: [
-      {
-        id: 4.1,
-        icon: Plus,
-        text: "Create Coupon",
-        href: "/dashboard/coupons/create",
-      },
-      {
-        id: 4.2,
-        icon: View,
-        text: "View Coupons",
-        href: "/dashboard/coupons/",
-      },
-    ],
-  },
 ];

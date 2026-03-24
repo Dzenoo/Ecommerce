@@ -7,7 +7,6 @@ import { Order } from '@/models/order/schema/order.schema';
 import { Address } from '@/models/address/schema/address.schema';
 import { Review } from '@/models/review/schema/review.schema';
 import { Wishlist } from '@/models/wishlist/schema/wishlist.schema';
-import { Coupon } from '@/models/coupon/schema/coupon.schema';
 
 export interface DatabaseModels {
   user: Model<User>;
@@ -17,7 +16,6 @@ export interface DatabaseModels {
   address: Model<Address>;
   review: Model<Review>;
   wishlist: Model<Wishlist>;
-  coupon: Model<Coupon>;
 }
 
 export const DATABASE_MODELS_TOKEN = 'DATABASE_MODELS_TOKEN';

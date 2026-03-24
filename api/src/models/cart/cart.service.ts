@@ -74,7 +74,6 @@ export class CartService {
 
     cart.totalPrice = await this.calculateTotalPrice(cart.items);
     cart.isActive = cart.items.length > 0;
-    cart.couponApplied = null;
 
     await cart.save();
 
@@ -97,7 +96,6 @@ export class CartService {
 
     cart.totalPrice = await this.calculateTotalPrice(cart.items);
     cart.isActive = cart.items.length > 0;
-    cart.couponApplied = null;
 
     await cart.save();
 

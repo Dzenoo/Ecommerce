@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { ICart } from '@shared/types';
 import { getCategory } from '@shared/lib/utils';
 import FieldGroup from '@shared/helpers/FieldGroup';
-import ApplyCouponForm from './checkout/forms/ApplyCouponForm';
 import CartList from './CartList';
 import CreateOrder from './checkout/CreateOrder';
 
@@ -23,7 +22,6 @@ type Type = 'cart' | 'checkout';
 type CartOrderDetailsProps = {
   showSummary?: boolean;
   showFooter?: boolean;
-  showApplyCoupon?: boolean;
   type: Type;
   cart: ICart;
 };
@@ -31,7 +29,6 @@ type CartOrderDetailsProps = {
 const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
   showSummary = false,
   showFooter = true,
-  showApplyCoupon = false,
   type,
   cart,
 }) => {
@@ -46,7 +43,6 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
       <Separator />
       <CardContent className="space-y-5">
         {showSummary && <CartList cart={cart} mode="summary" />}
-        {showApplyCoupon && <ApplyCouponForm cartId={cart._id} />}
         <FieldGroup
           title="Total Price"
           value={`${cart.totalPrice} $`}

@@ -12,7 +12,6 @@ import { OrderModule } from '@/models/order/order.module';
 import { AddressModule } from '@/models/address/address.module';
 import { ReviewModule } from '@/models/review/review.module';
 import { WishlistModule } from '@/models/wishlist/wishlist.module';
-import { CouponModule } from '@/models/coupon/coupon.module';
 import { AnalyticsModule } from './common/modules/analytics/analytics.module';
 
 @Module({
@@ -49,7 +48,6 @@ import { AnalyticsModule } from './common/modules/analytics/analytics.module';
     AddressModule,
     ReviewModule,
     WishlistModule,
-    CouponModule,
     AnalyticsModule,
   ],
   providers: [

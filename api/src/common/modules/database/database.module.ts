@@ -13,7 +13,6 @@ import {
   Wishlist,
   WishlistSchema,
 } from '@/models/wishlist/schema/wishlist.schema';
-import { Coupon, CouponSchema } from '@/models/coupon/schema/coupon.schema';
 
 @Global()
 @Module({
@@ -29,7 +28,6 @@ import { Coupon, CouponSchema } from '@/models/coupon/schema/coupon.schema';
       { name: Address.name, schema: AddressSchema },
       { name: Review.name, schema: ReviewSchema },
       { name: Wishlist.name, schema: WishlistSchema },
-      { name: Coupon.name, schema: CouponSchema },
     ]),
   ],
   providers: [
@@ -43,7 +41,6 @@ import { Coupon, CouponSchema } from '@/models/coupon/schema/coupon.schema';
         address: DatabaseModels['address'],
         review: DatabaseModels['review'],
         wishlist: DatabaseModels['wishlist'],
-        coupon: DatabaseModels['coupon'],
       ): DatabaseModels => ({
         user,
         product,
@@ -52,7 +49,6 @@ import { Coupon, CouponSchema } from '@/models/coupon/schema/coupon.schema';
         address,
         review,
         wishlist,
-        coupon,
       }),
       inject: [
         getModelToken(User.name),
@@ -62,7 +58,6 @@ import { Coupon, CouponSchema } from '@/models/coupon/schema/coupon.schema';
         getModelToken(Address.name),
         getModelToken(Review.name),
         getModelToken(Wishlist.name),
-        getModelToken(Coupon.name),
       ],
     },
   ],

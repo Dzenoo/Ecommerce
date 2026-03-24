@@ -1,5 +1,5 @@
-import { IProduct } from './product.types';
-import { IUser } from './user.types';
+import { IProduct } from "./product.types";
+import { IUser } from "./user.types";
 
 export type AddItemToCartDto = {
   productId: string;
@@ -20,9 +20,8 @@ export interface ICart {
   items: ICartItem[];
   totalPrice: number;
   isActive: boolean;
-  couponApplied: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type CartDisplayMode = 'full' | 'summary';
+export type CartDisplayMode = "full" | "summary";
