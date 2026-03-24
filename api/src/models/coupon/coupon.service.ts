@@ -1,13 +1,15 @@
 import {
   HttpStatus,
+  Inject,
   Injectable,
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
 
-import { CartService } from '../cart/cart.service';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '@/common/modules/database/database.types';
 
 import { Coupon, CouponDocument } from './schema/coupon.schema';
 
@@ -17,12 +19,12 @@ import { UpdateCouponDto } from './dto/update-coupon.dto';
 @Injectable()
 export class CouponService {
   constructor(
-    @InjectModel(Coupon.name) private readonly couponModel: Model<Coupon>,
-    private readonly cartService: CartService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
   ) {}
 
   async create(body: CreateCouponDto): Promise<ResponseObject> {
-    const coupon = await this.couponModel.create(body);
+    const coupon = await this.db.coupon.create(body);
     if (!coupon)
       throw new NotAcceptableException('Coupon could not be created');
 
@@ -34,7 +36,7 @@ export class CouponService {
   }
 
   async update(id: string, body: UpdateCouponDto): Promise<ResponseObject> {
-    const coupon = await this.couponModel.findByIdAndUpdate(id, body, {
+    const coupon = await this.db.coupon.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
@@ -48,14 +50,11 @@ export class CouponService {
   }
 
   async delete(id: string): Promise<ResponseObject> {
-    const coupon = await this.couponModel.findById(id);
+    const coupon = await this.db.coupon.findById(id);
     if (!coupon) throw new NotFoundException('Coupon not found');
 
-    await this.cartService.findAndUpdateMany(
-      {},
-      { $unset: { couponApplied: '' } },
-    );
-    await this.couponModel.findByIdAndDelete(id);
+    await this.db.cart.updateMany({}, { $unset: { couponApplied: '' } });
+    await this.db.coupon.findByIdAndDelete(id);
 
     return {
       statusCode: HttpStatus.OK,
@@ -63,14 +62,10 @@ export class CouponService {
     };
   }
 
-  async getAll(active: boolean): Promise<ResponseObject> {
+  async getAll(): Promise<ResponseObject> {
     const query: any = {};
 
-    if (active !== undefined) {
-      query.active = active;
-    }
-
-    const coupons = await this.couponModel.find(query);
+    const coupons = await this.db.coupon.find(query);
 
     return {
       statusCode: HttpStatus.OK,
@@ -79,7 +74,7 @@ export class CouponService {
   }
 
   async getOne(id: string): Promise<ResponseObject> {
-    const coupon = await this.couponModel.findById(id);
+    const coupon = await this.db.coupon.findById(id);
     if (!coupon) throw new NotFoundException('Coupon not found');
 
     return {
@@ -89,7 +84,7 @@ export class CouponService {
   }
 
   async apply(cartId: string, couponCode: string): Promise<ResponseObject> {
-    const cart = await this.cartService.findOne({ _id: cartId });
+    const cart = await this.db.cart.findOne({ _id: cartId });
     if (!cart) throw new NotFoundException('Cart not found');
 
     if (cart.couponApplied) {
@@ -113,7 +108,7 @@ export class CouponService {
       discountAmount = cart.totalPrice;
     }
 
-    const updatedCart = await this.cartService.findOneByIdAndUpdate(cartId, {
+    const updatedCart = await this.db.cart.findByIdAndUpdate(cartId, {
       totalPrice: cart.totalPrice - discountAmount,
       couponApplied: coupon.code,
     });
@@ -123,12 +118,15 @@ export class CouponService {
     );
 
     if (userUsage) {
-      await this.couponModel.findOneAndUpdate(
-        { _id: (coupon as CouponDocument)._id, 'usedBy.userId': cart.user.toString() },
+      await this.db.coupon.findOneAndUpdate(
+        {
+          _id: (coupon as CouponDocument)._id,
+          'usedBy.userId': cart.user.toString(),
+        },
         { $inc: { usageCount: 1, 'usedBy.$.count': 1 } },
       );
     } else {
-      await this.couponModel.findByIdAndUpdate((coupon as CouponDocument)._id, {
+      await this.db.coupon.findByIdAndUpdate((coupon as CouponDocument)._id, {
         $inc: { usageCount: 1 },
         $push: { usedBy: { userId: cart.user.toString(), count: 1 } },
       });
@@ -142,7 +140,7 @@ export class CouponService {
   }
 
   async validateCoupon(couponCode: string, userId: string): Promise<Coupon> {
-    const coupon = await this.couponModel.findOne({ code: couponCode });
+    const coupon = await this.db.coupon.findOne({ code: couponCode });
     if (!coupon) {
       throw new NotFoundException('Invalid coupon code');
     }
@@ -156,7 +154,11 @@ export class CouponService {
     }
 
     const userUsage = coupon.usedBy?.find((u) => u.userId === userId);
-    if (userUsage && coupon.maxUsagePerUser && userUsage.count >= coupon.maxUsagePerUser) {
+    if (
+      userUsage &&
+      coupon.maxUsagePerUser &&
+      userUsage.count >= coupon.maxUsagePerUser
+    ) {
       throw new NotAcceptableException(
         `You have already used this coupon the maximum number of times`,
       );

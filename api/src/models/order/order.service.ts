@@ -1,46 +1,30 @@
-import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { FilterQuery, Model } from 'mongoose';
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
+import mongoose from 'mongoose';
 
-import { Order } from './schema/order.schema';
-
-import { AddressService } from '../address/address.service';
-import { CartService } from '../cart/cart.service';
-import { UserService } from '../user/user.service';
-import { ProductService } from '../product/product.service';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '@/common/modules/database/database.types';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
+import { CartService } from '../cart/cart.service';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel(Order.name) private readonly orderModel: Model<Order>,
-    private readonly addressService: AddressService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
     private readonly cartService: CartService,
-    private readonly userService: UserService,
-    private readonly productService: ProductService,
   ) {}
 
-  async find(
-    query: FilterQuery<Order> = {},
-    select?: string,
-    populate?: string,
-  ): Promise<Order[]> {
-    return await this.orderModel
-      .find(query)
-      .select(select)
-      .populate(populate)
-      .lean()
-      .exec();
-  }
-
-  async countDocuments(query: FilterQuery<Order> = {}): Promise<number> {
-    return await this.orderModel.countDocuments(query).exec();
-  }
-
   async create(body: CreateOrderDto, userId: string): Promise<ResponseObject> {
-    const cart = await this.cartService.findOne({
+    const cart = await this.db.cart.findOne({
       _id: body.cartId,
       user: userId,
     });
@@ -57,7 +41,7 @@ export class OrderService {
       );
     }
 
-    const order = await this.orderModel.create({
+    const order = await this.db.order.create({
       user: new mongoose.Types.ObjectId(userId),
       items: cart.items,
       totalPrice: cart.totalPrice,
@@ -66,12 +50,12 @@ export class OrderService {
     if (!order) throw new NotAcceptableException('Order could not be created');
 
     await this.cartService.clear(userId);
-    await this.userService.findOneByIdAndUpdate(userId, {
+    await this.db.user.findByIdAndUpdate(userId, {
       $push: { orders: order._id },
     });
 
     for (const item of cart.items) {
-      const product = await this.productService.findById(String(item.product));
+      const product = await this.db.product.findById(String(item.product));
 
       if (!product || product.stock < item.quantity) {
         throw new NotAcceptableException(
@@ -79,7 +63,7 @@ export class OrderService {
         );
       }
 
-      await this.productService.findAndUpdateMany(
+      await this.db.product.updateMany(
         {
           _id: item.product,
         },
@@ -112,7 +96,7 @@ export class OrderService {
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
 
-    const orders = await this.orderModel
+    const orders = await this.db.order
       .find(conditions)
       .sort(sortOptions)
       .skip((page - 1) * limit)
@@ -122,7 +106,7 @@ export class OrderService {
       .lean()
       .exec();
 
-    const totalOrders = await this.orderModel.countDocuments(conditions);
+    const totalOrders = await this.db.order.countDocuments(conditions);
 
     return {
       statusCode: HttpStatus.OK,
@@ -136,7 +120,7 @@ export class OrderService {
     userId: string,
     role: string,
   ): Promise<ResponseObject> {
-    const order = await this.orderModel
+    const order = await this.db.order
       .findById(id)
       .populate('user', 'username email')
       .populate('items.product', 'name images price')
@@ -145,8 +129,11 @@ export class OrderService {
 
     if (!order) throw new NotAcceptableException('Order not found');
 
-    if (typeof order.address === 'string' || order.address instanceof mongoose.Types.ObjectId) {
-      const address = await this.addressService.findById(String(order.address));
+    if (
+      typeof order.address === 'string' ||
+      order.address instanceof mongoose.Types.ObjectId
+    ) {
+      const address = await this.db.address.findById(String(order.address));
       if (address) order.address = address;
     }
 
@@ -173,7 +160,7 @@ export class OrderService {
       conditions.status = status;
     }
 
-    const orders = await this.orderModel
+    const orders = await this.db.order
       .find(conditions)
       .sort({ createdAt: sort === 'desc' ? -1 : 1 })
       .skip((page - 1) * limit)
@@ -189,7 +176,7 @@ export class OrderService {
         orders: [],
       };
 
-    const totalOrders = await this.orderModel.countDocuments(conditions);
+    const totalOrders = await this.db.order.countDocuments(conditions);
 
     return {
       statusCode: HttpStatus.OK,
@@ -199,7 +186,7 @@ export class OrderService {
   }
 
   async updateStatus(id: string, status: string): Promise<ResponseObject> {
-    const order = await this.orderModel.findByIdAndUpdate(
+    const order = await this.db.order.findByIdAndUpdate(
       id,
       {
         status: status,
@@ -218,7 +205,7 @@ export class OrderService {
   }
 
   async cancel(id: string): Promise<ResponseObject> {
-    const alreadyCancelled = await this.orderModel.findOne({
+    const alreadyCancelled = await this.db.order.findOne({
       _id: id,
       status: 'Cancelled',
     });
@@ -227,7 +214,7 @@ export class OrderService {
       throw new NotAcceptableException('Order is already cancelled');
     }
 
-    const order = await this.orderModel.findByIdAndUpdate(
+    const order = await this.db.order.findByIdAndUpdate(
       id,
       {
         status: 'Cancelled',

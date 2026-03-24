@@ -5,7 +5,7 @@ import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 
 @Injectable()
-export class FileService {
+export class UploadService {
   private readonly s3Client: S3Client;
 
   constructor(private readonly configService: ConfigService) {

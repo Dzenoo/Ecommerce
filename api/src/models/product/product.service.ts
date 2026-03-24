@@ -1,18 +1,16 @@
 import {
-  forwardRef,
   HttpStatus,
   Inject,
   Injectable,
   NotAcceptableException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
 
-import { Product } from './schema/product.schema';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '@/common/modules/database/database.types';
 
-import { FileService } from '@/common/modules/file/file.service';
-import { ReviewService } from '../review/review.service';
-import { UserService } from '../user/user.service';
+import { UploadService } from '@/common/modules/upload/upload.service';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -21,34 +19,10 @@ import { GetProductsDto } from './dto/get-products.dto';
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectModel(Product.name) private readonly productModel: Model<Product>,
-    private readonly fileService: FileService,
-    private readonly userService: UserService,
-    @Inject(forwardRef(() => ReviewService))
-    private readonly reviewService: ReviewService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
+    private readonly UploadService: UploadService,
   ) {}
-
-  async findAndUpdateMany(
-    query: FilterQuery<Product> = {},
-    update: UpdateQuery<Product> = {},
-  ): Promise<UpdateWriteOpResult> {
-    return await this.productModel.updateMany(query, update).exec();
-  }
-
-  async countDocuments(query: FilterQuery<Product> = {}): Promise<number> {
-    return await this.productModel.countDocuments(query).exec();
-  }
-
-  async findOneByIdAndUpdate(
-    id: string,
-    update: UpdateQuery<Product> = {},
-  ): Promise<void> {
-    await this.productModel.findByIdAndUpdate(id, update).exec();
-  }
-
-  async findById(id: string): Promise<Product> {
-    return this.productModel.findById(id).lean().exec();
-  }
 
   async create(data: {
     body: CreateProductDto;
@@ -60,7 +34,7 @@ export class ProductService {
       throw new NotAcceptableException('At least one image is required.');
     }
 
-    const uploadedImages = await this.fileService.uploadFiles(
+    const uploadedImages = await this.UploadService.uploadFiles(
       images,
       'product-images',
     );
@@ -73,7 +47,7 @@ export class ProductService {
       );
     }
 
-    const product = await this.productModel.create({
+    const product = await this.db.product.create({
       ...body,
       images: imagesUrls,
     });
@@ -94,13 +68,13 @@ export class ProductService {
   }): Promise<ResponseObject> {
     const { body, id } = data;
 
-    const productExists = await this.productModel.findById(id);
+    const productExists = await this.db.product.findById(id);
 
     if (!productExists) {
       throw new NotAcceptableException('Product does not exist.');
     }
 
-    const product = await this.productModel.findByIdAndUpdate(
+    const product = await this.db.product.findByIdAndUpdate(
       id,
       { $set: body },
       {
@@ -121,7 +95,7 @@ export class ProductService {
   }
 
   async delete(id: string) {
-    const productExists = await this.productModel.findById(id);
+    const productExists = await this.db.product.findById(id);
     if (!productExists)
       throw new NotAcceptableException('Product does not exist.');
 
@@ -129,15 +103,15 @@ export class ProductService {
       image.split('/').pop(),
     );
 
-    await this.fileService.deleteFiles(imageKeys, 'product-images');
+    await this.UploadService.deleteFiles(imageKeys, 'product-images');
 
-    const reviews = await this.reviewService.find({ product: id });
+    const reviews = await this.db.review.find({ product: id });
     const userIds = reviews.map((review) => review.user);
 
     await Promise.all([
-      this.productModel.findByIdAndDelete(id),
-      this.reviewService.findAndDeleteMany({ product: id }),
-      this.userService.findAndUpdateMany(
+      this.db.product.findByIdAndDelete(id),
+      this.db.review.deleteMany({ product: id }),
+      this.db.user.updateMany(
         { _id: { $in: userIds } },
         { $pull: { reviews: { product: id } } },
       ),
@@ -192,7 +166,7 @@ export class ProductService {
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
 
-    const products = await this.productModel
+    const products = await this.db.product
       .find(conditions)
       .sort(sortOptions)
       .skip((page - 1) * limit)
@@ -200,7 +174,7 @@ export class ProductService {
       .lean()
       .exec();
 
-    const totalProducts = await this.productModel.countDocuments(conditions);
+    const totalProducts = await this.db.product.countDocuments(conditions);
 
     return {
       statusCode: HttpStatus.OK,
@@ -210,7 +184,7 @@ export class ProductService {
   }
 
   async getOne(id: string) {
-    const product = await this.productModel.findById(id).lean().exec();
+    const product = await this.db.product.findById(id).lean().exec();
 
     if (!product) {
       throw new NotAcceptableException('Product does not exist.');

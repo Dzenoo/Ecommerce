@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
-import { ProductModule } from '@/models/product/product.module';
+import { ClerkWebhookModule } from './common/modules/clerk/clerk-webhook.module';
+import { DatabaseModule } from './common/modules/database/database.module';
 import { UserModule } from '@/models/user/user.module';
+import { ProductModule } from '@/models/product/product.module';
+import { CartModule } from '@/models/cart/cart.module';
+import { OrderModule } from '@/models/order/order.module';
 import { AddressModule } from '@/models/address/address.module';
 import { ReviewModule } from '@/models/review/review.module';
 import { WishlistModule } from '@/models/wishlist/wishlist.module';
-import { OrderModule } from '@/models/order/order.module';
 import { CouponModule } from '@/models/coupon/coupon.module';
-import { CartModule } from '@/models/cart/cart.module';
 import { AnalyticsModule } from './common/modules/analytics/analytics.module';
-import { ClerkWebhookModule } from './common/modules/clerk/clerk-webhook.module';
-
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -35,16 +35,22 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
         dbName: configService.get<string>('MONGO_DB_NAME'),
       }),
     }),
-    ProductModule,
+    // Shared / Global
+    DatabaseModule,
+
+    // Auth & Security
+    ClerkWebhookModule,
+
+    // Domain
     UserModule,
+    ProductModule,
+    CartModule,
+    OrderModule,
     AddressModule,
     ReviewModule,
     WishlistModule,
-    OrderModule,
     CouponModule,
-    CartModule,
     AnalyticsModule,
-    ClerkWebhookModule,
   ],
   providers: [
     {

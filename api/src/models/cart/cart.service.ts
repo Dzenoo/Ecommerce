@@ -1,52 +1,23 @@
 import {
   BadRequestException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, {
-  FilterQuery,
-  Model,
-  ObjectId,
-  UpdateQuery,
-  UpdateWriteOpResult,
-} from 'mongoose';
+import mongoose from 'mongoose';
 
-import { Cart } from './schema/cart.schema';
-
-import { ProductService } from '../product/product.service';
-import { UserService } from '../user/user.service';
-import { Product } from '../product/schema/product.schema';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '@/common/modules/database/database.types';
 
 @Injectable()
 export class CartService {
   constructor(
-    @InjectModel(Cart.name) private readonly cartModel: Model<Cart>,
-    private readonly productService: ProductService,
-    private readonly userService: UserService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
   ) {}
-
-  async findAndUpdateMany(
-    query: FilterQuery<Cart> = {},
-    update: UpdateQuery<Cart> = {},
-  ): Promise<UpdateWriteOpResult> {
-    return await this.cartModel.updateMany(query, update).exec();
-  }
-
-  async findOneByIdAndUpdate(
-    id: string,
-    update: UpdateQuery<Cart> = {},
-  ): Promise<Cart> {
-    return this.cartModel
-      .findByIdAndUpdate(id, update, { new: true })
-      .lean()
-      .exec();
-  }
-
-  async findOne(query: FilterQuery<Cart>): Promise<Cart> {
-    return this.cartModel.findOne(query).lean().exec();
-  }
 
   async add(
     userId: string,
@@ -54,15 +25,15 @@ export class CartService {
     quantity: number,
     attributes: Record<string, any> = {},
   ): Promise<ResponseObject> {
-    const product = await this.productService.findById(productId);
+    const product = await this.db.product.findById(productId);
     if (!product) {
       throw new NotFoundException('Product not found');
     }
 
-    let cart = await this.cartModel.findOne({ user: userId });
+    let cart = await this.db.cart.findOne({ user: userId });
     if (!cart) {
-      cart = await this.cartModel.create({ user: userId, items: [] });
-      await this.userService.findOneByIdAndUpdate(userId, {
+      cart = await this.db.cart.create({ user: userId, items: [] });
+      await this.db.user.findByIdAndUpdate(userId, {
         $set: { cart: cart._id },
       });
     }
@@ -102,12 +73,12 @@ export class CartService {
   }
 
   async remove(userId: string, itemId: string): Promise<ResponseObject> {
-    const cart = await this.cartModel.findOne({ user: userId });
+    const cart = await this.db.cart.findOne({ user: userId });
     if (!cart) {
       throw new NotFoundException('Cart not found');
     }
 
-    const updatedCart = await this.cartModel.findByIdAndUpdate(
+    const updatedCart = await this.db.cart.findByIdAndUpdate(
       cart._id,
       { $pull: { items: { _id: itemId } } },
       { new: true },
@@ -135,7 +106,7 @@ export class CartService {
     itemId: string,
     action: 'increment' | 'decrement',
   ): Promise<ResponseObject> {
-    const cart = await this.cartModel.findOne({ user: userId });
+    const cart = await this.db.cart.findOne({ user: userId });
     if (!cart) {
       throw new NotFoundException('Cart not found');
     }
@@ -166,7 +137,7 @@ export class CartService {
   }
 
   async get(userId: string): Promise<ResponseObject> {
-    const cart = await this.cartModel.findOne({ user: userId }).populate({
+    const cart = await this.db.cart.findOne({ user: userId }).populate({
       path: 'items.product',
       model: 'Product',
     });
@@ -187,15 +158,15 @@ export class CartService {
   }
 
   async clear(userId: string): Promise<ResponseObject> {
-    const cart = await this.cartModel.findOne({ user: userId });
+    const cart = await this.db.cart.findOne({ user: userId });
     if (!cart) {
       throw new NotFoundException('Cart not found');
     }
 
-    await this.userService.findOneByIdAndUpdate(userId, {
+    await this.db.user.findByIdAndUpdate(userId, {
       $set: { cart: null },
     });
-    await this.cartModel.deleteOne({ user: userId });
+    await this.db.cart.deleteOne({ user: userId });
 
     return {
       statusCode: HttpStatus.OK,
@@ -212,9 +183,7 @@ export class CartService {
   ): Promise<number> {
     let totalPrice = 0;
     for (const item of items) {
-      const product = await this.productService.findById(
-        item.product.toString(),
-      );
+      const product = await this.db.product.findById(item.product.toString());
       if (product) {
         totalPrice += product.price * item.quantity;
       }

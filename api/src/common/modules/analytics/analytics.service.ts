@@ -1,16 +1,18 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { UserService } from '@/models/user/user.service';
-import { ProductService } from '@/models/product/product.service';
-import { OrderService } from '@/models/order/order.service';
-import { OrderDocument } from '@/models/order/schema/order.schema';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '../database/database.types';
+
 import { UserDocument } from '@/models/user/schema/user.schema';
+import { OrderDocument } from '@/models/order/schema/order.schema';
 
 @Injectable()
 export class AnalyticsService {
   constructor(
-    private readonly userService: UserService,
-    private readonly productService: ProductService,
-    private readonly orderService: OrderService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
   ) {}
 
   async getAnalytics(): Promise<ResponseObject> {
@@ -37,28 +39,28 @@ export class AnalyticsService {
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-    const totalOrders = await this.orderService.countDocuments({});
-    const ordersThisMonth = await this.orderService.countDocuments({
+    const totalOrders = await this.db.order.countDocuments({});
+    const ordersThisMonth = await this.db.order.countDocuments({
       createdAt: { $gte: startOfMonth },
     });
 
-    const totalProducts = await this.productService.countDocuments({});
-    const productsThisMonth = await this.productService.countDocuments({
+    const totalProducts = await this.db.product.countDocuments({});
+    const productsThisMonth = await this.db.product.countDocuments({
       createdAt: { $gte: startOfMonth },
     });
 
-    const totalUsers = await this.userService.countDocuments({});
-    const usersThisMonth = await this.userService.countDocuments({
+    const totalUsers = await this.db.user.countDocuments({});
+    const usersThisMonth = await this.db.user.countDocuments({
       createdAt: { $gte: startOfMonth },
     });
 
-    const allOrders = await this.orderService.find({});
+    const allOrders = await this.db.order.find({});
     const totalRevenue = allOrders.reduce(
       (totalAmount, order) => (totalAmount += order.totalPrice),
       0,
     );
 
-    const ordersThisMonthList = await this.orderService.find({
+    const ordersThisMonthList = await this.db.order.find({
       createdAt: { $gte: startOfMonth },
     });
     const revenueThisMonth = ordersThisMonthList.reduce(
@@ -81,7 +83,7 @@ export class AnalyticsService {
   }
 
   private async getSalesPerformance() {
-    const allOrders = await this.orderService.find(
+    const allOrders = await this.db.order.find(
       {},
       'status createdAt totalPrice _id',
     );
@@ -100,7 +102,7 @@ export class AnalyticsService {
   }
 
   private async getOrdersByStatus() {
-    const allOrders = await this.orderService.find({}, 'status _id');
+    const allOrders = await this.db.order.find({}, 'status _id');
 
     const transformedOrders = allOrders.map(
       ({ _id, ...rest }: OrderDocument) => {
@@ -117,11 +119,7 @@ export class AnalyticsService {
   }
 
   private async getTopSellingProducts() {
-    const allOrders = await this.orderService.find(
-      {},
-      'items _id',
-      'items.product',
-    );
+    const allOrders = await this.db.order.find({}, 'items _id');
 
     const transformedOrders = allOrders.map((order: OrderDocument) => {
       return {
@@ -139,7 +137,7 @@ export class AnalyticsService {
   }
 
   private async getCustomerGrowth() {
-    const allUsers = await this.userService.find({}, 'createdAt _id');
+    const allUsers = await this.db.user.find({}, 'createdAt _id');
 
     const transformedUsers = allUsers.map(({ _id, ...rest }: UserDocument) => ({
       id: _id,

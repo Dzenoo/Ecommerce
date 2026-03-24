@@ -1,5 +1,4 @@
 import {
-  forwardRef,
   HttpStatus,
   Inject,
   Injectable,
@@ -7,13 +6,12 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { DeleteResult, FilterQuery, Model } from 'mongoose';
+import mongoose from 'mongoose';
 
-import { Review, ReviewDocument } from './schema/review.schema';
-
-import { ProductService } from '../product/product.service';
-import { UserService } from '../user/user.service';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '@/common/modules/database/database.types';
 
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -22,23 +20,9 @@ import { GetReviewsDto } from './dto/get-reviews.dto';
 @Injectable()
 export class ReviewService {
   constructor(
-    @InjectModel(Review.name) private readonly reviewModel: Model<Review>,
-    private readonly userService: UserService,
-    @Inject(forwardRef(() => ProductService))
-    private readonly productService: ProductService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
   ) {}
-
-  async find(
-    query: FilterQuery<Review> = {},
-  ): Promise<Review[] | ReviewDocument[]> {
-    return await this.reviewModel.find(query).exec();
-  }
-
-  async findAndDeleteMany(
-    query: FilterQuery<Review> = {},
-  ): Promise<DeleteResult> {
-    return await this.reviewModel.deleteMany(query).exec();
-  }
 
   async create(
     body: CreateReviewDto,
@@ -46,14 +30,14 @@ export class ReviewService {
     userId: string,
   ): Promise<ResponseObject> {
     const [user, product] = await Promise.all([
-      this.userService.findById(userId),
-      this.productService.findById(productId),
+      this.db.user.findById(userId),
+      this.db.product.findById(productId),
     ]);
 
     if (!user || !product)
       throw new NotFoundException('User or product not found');
 
-    const existingReview = await this.reviewModel.findOne({
+    const existingReview = await this.db.review.findOne({
       user: userId,
       product: productId,
     });
@@ -62,7 +46,7 @@ export class ReviewService {
       throw new NotAcceptableException('You already reviewed this product.');
     }
 
-    const review = await this.reviewModel.create({
+    const review = await this.db.review.create({
       ...body,
       product: productId,
       user: userId,
@@ -70,10 +54,10 @@ export class ReviewService {
 
     await Promise.all([
       this.calculateAverageRating(productId),
-      this.productService.findOneByIdAndUpdate(productId, {
+      this.db.product.findByIdAndUpdate(productId, {
         $push: { reviews: review._id },
       }),
-      this.userService.findOneByIdAndUpdate(userId, {
+      this.db.user.findByIdAndUpdate(userId, {
         $push: { reviews: review._id },
       }),
     ]);
@@ -90,7 +74,7 @@ export class ReviewService {
     id: string,
     userId: string,
   ): Promise<ResponseObject> {
-    const updatedReview = await this.reviewModel.findOneAndUpdate(
+    const updatedReview = await this.db.review.findOneAndUpdate(
       { _id: id, user: userId },
       body,
       { new: true, runValidators: true },
@@ -114,9 +98,9 @@ export class ReviewService {
     userId: string,
   ): Promise<ResponseObject> {
     const [user, product, review] = await Promise.all([
-      this.userService.findById(userId),
-      this.productService.findById(productId),
-      this.reviewModel.findOne({ _id: id, user: userId }),
+      this.db.user.findById(userId),
+      this.db.product.findById(productId),
+      this.db.review.findOne({ _id: id, user: userId }),
     ]);
 
     if (!user || !product)
@@ -130,11 +114,11 @@ export class ReviewService {
     }
 
     await Promise.all([
-      this.reviewModel.deleteOne({ _id: id, user: userId }),
-      this.productService.findOneByIdAndUpdate(productId, {
+      this.db.review.deleteOne({ _id: id, user: userId }),
+      this.db.product.findByIdAndUpdate(productId, {
         $pull: { reviews: id },
       }),
-      this.userService.findOneByIdAndUpdate(userId, {
+      this.db.user.findByIdAndUpdate(userId, {
         $pull: { reviews: id },
       }),
     ]);
@@ -155,7 +139,7 @@ export class ReviewService {
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
 
-    const reviews = await this.reviewModel
+    const reviews = await this.db.review
       .find({
         product: productId,
       })
@@ -164,7 +148,7 @@ export class ReviewService {
       .limit(limit)
       .sort(sortOptions);
 
-    const totalReviews = await this.reviewModel.countDocuments();
+    const totalReviews = await this.db.review.countDocuments();
 
     return {
       statusCode: HttpStatus.OK,
@@ -183,7 +167,7 @@ export class ReviewService {
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
 
-    const reviews = await this.reviewModel
+    const reviews = await this.db.review
       .find({
         user: new mongoose.Types.ObjectId(userId),
       })
@@ -193,7 +177,7 @@ export class ReviewService {
       .limit(limit)
       .sort(sortOptions);
 
-    const totalReviews = await this.reviewModel.countDocuments({
+    const totalReviews = await this.db.review.countDocuments({
       user: userId,
     });
 
@@ -207,7 +191,7 @@ export class ReviewService {
   }
 
   private async calculateAverageRating(productId: string): Promise<any> {
-    const allReviews = await this.reviewModel
+    const allReviews = await this.db.review
       .find({ product: productId })
       .lean()
       .exec();
@@ -218,7 +202,7 @@ export class ReviewService {
           allReviews.length
         : 0;
 
-    return await this.productService.findOneByIdAndUpdate(productId, {
+    return await this.db.product.findByIdAndUpdate(productId, {
       averageRating: averageRating,
     });
   }

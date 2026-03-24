@@ -1,16 +1,22 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import { UserService } from '@/models/user/user.service';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '../database/database.types';
 
 @Injectable()
 export class ClerkWebhookService {
   private readonly logger = new Logger(ClerkWebhookService.name);
 
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
+  ) {}
 
   async handleUserCreated(userData: any) {
     try {
-      const existingUser = await this.userService.findOne({
+      const existingUser = await this.db.user.findOne({
         clerkId: userData.id,
       });
       if (existingUser) return existingUser;
@@ -19,7 +25,7 @@ export class ClerkWebhookService {
       const username =
         userData.username || userData.first_name || email.split('@')[0];
 
-      return this.userService.createOne({
+      return this.db.user.create({
         clerkId: userData.id,
         email,
         username,
@@ -32,7 +38,7 @@ export class ClerkWebhookService {
 
   async handleUserUpdated(userData: any) {
     try {
-      const user = await this.userService.findOne({ clerkId: userData.id });
+      const user = await this.db.user.findOne({ clerkId: userData.id });
       if (!user) {
         this.logger.warn(`User not found for clerkId: ${userData.id}`);
         return;
@@ -44,7 +50,7 @@ export class ClerkWebhookService {
       if (userData.first_name) update.username = userData.first_name;
 
       if (Object.keys(update).length > 0) {
-        await this.userService.findOneByIdAndUpdate(
+        await this.db.user.findByIdAndUpdate(
           (user as any)._id.toString(),
           update,
         );
@@ -57,13 +63,13 @@ export class ClerkWebhookService {
 
   async handleUserDeleted(userData: any) {
     try {
-      const user = await this.userService.findOne({ clerkId: userData.id });
+      const user = await this.db.user.findOne({ clerkId: userData.id });
       if (!user) {
         this.logger.warn(`User not found for clerkId: ${userData.id}`);
         return;
       }
 
-      await this.userService.deleteOne((user as any)._id.toString());
+      await this.db.user.deleteOne((user as any)._id.toString());
     } catch (error) {
       this.logger.error(`Failed to delete user: ${error.message}`, error.stack);
       throw error;

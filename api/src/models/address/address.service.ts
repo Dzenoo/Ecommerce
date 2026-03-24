@@ -1,10 +1,14 @@
-import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
 
-import { Address } from './schema/address.schema';
-
-import { UserService } from '../user/user.service';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '@/common/modules/database/database.types';
 
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
@@ -13,19 +17,15 @@ import { GetAddressesDto } from './dto/get-addresses.dto';
 @Injectable()
 export class AddressService {
   constructor(
-    @InjectModel(Address.name) private readonly addressModel: Model<Address>,
-    private readonly userService: UserService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
   ) {}
-
-  async findById(id: string) {
-    return this.addressModel.findById(id).lean().exec();
-  }
 
   async create(
     body: CreateAddressDto,
     userId: string,
   ): Promise<ResponseObject> {
-    const address = await this.addressModel.create({
+    const address = await this.db.address.create({
       ...body,
       user: userId,
     });
@@ -33,7 +33,7 @@ export class AddressService {
     if (!address)
       throw new NotAcceptableException('Address could not be created');
 
-    await this.userService.findOneByIdAndUpdate(userId, {
+    await this.db.user.findByIdAndUpdate(userId, {
       $push: { addresses: address._id },
     });
 
@@ -49,7 +49,7 @@ export class AddressService {
     body: UpdateAddressDto,
     userId: string,
   ): Promise<ResponseObject> {
-    const allAddresses = await this.addressModel.find({
+    const allAddresses = await this.db.address.find({
       user: userId,
     });
 
@@ -58,14 +58,14 @@ export class AddressService {
         allAddresses
           .filter((address) => address._id.toString() !== id)
           .map((address) =>
-            this.addressModel.findByIdAndUpdate(address._id, {
+            this.db.address.findByIdAndUpdate(address._id, {
               isDefault: false,
             }),
           ),
       );
     }
 
-    const address = await this.addressModel.findOneAndUpdate(
+    const address = await this.db.address.findOneAndUpdate(
       {
         _id: id,
         user: userId,
@@ -85,12 +85,12 @@ export class AddressService {
   }
 
   async delete(id: string, userId: string): Promise<ResponseObject> {
-    const address = await this.addressModel.findOneAndDelete({
+    const address = await this.db.address.findOneAndDelete({
       _id: id,
       user: userId,
     });
 
-    await this.userService.findOneByIdAndUpdate(userId, {
+    await this.db.user.findByIdAndUpdate(userId, {
       $pull: { addresses: id },
     });
 
@@ -107,7 +107,7 @@ export class AddressService {
     query: GetAddressesDto,
     userId: string,
   ): Promise<ResponseObject> {
-    const addresses = await this.addressModel
+    const addresses = await this.db.address
       .find({ user: userId })
       .select('-user')
       .skip((query.page - 1) * query.limit)

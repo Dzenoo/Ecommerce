@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -8,13 +9,17 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { verifyToken } from '@clerk/backend';
 
-import { UserService } from '@/models/user/user.service';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '../modules/database/database.types';
 
 @Injectable()
 export class ClerkAuthGuard implements CanActivate {
   constructor(
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
     private readonly configService: ConfigService,
-    private readonly userService: UserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -29,7 +34,7 @@ export class ClerkAuthGuard implements CanActivate {
         secretKey: this.configService.get<string>('CLERK_SECRET_KEY'),
       });
 
-      const user = await this.userService.findOne({ clerkId: payload.sub });
+      const user = await this.db.user.findOne({ clerkId: payload.sub });
       if (!user) throw new UnauthorizedException('User not found');
 
       const userDoc = user as any;

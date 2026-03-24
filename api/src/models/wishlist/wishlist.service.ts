@@ -1,42 +1,41 @@
 import {
   HttpStatus,
+  Inject,
   Injectable,
   NotAcceptableException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose from 'mongoose';
 
-import { Wishlist } from './schema/wishlist.schema';
-
-import { ProductService } from '../product/product.service';
-import { UserService } from '../user/user.service';
+import {
+  DATABASE_MODELS_TOKEN,
+  DatabaseModels,
+} from '@/common/modules/database/database.types';
 
 import { GetWishlistDto } from './dto/get-wishlist.dto';
 
 @Injectable()
 export class WishlistService {
   constructor(
-    @InjectModel(Wishlist.name) private readonly wishlistModel: Model<Wishlist>,
-    private readonly productService: ProductService,
-    private readonly userService: UserService,
+    @Inject(DATABASE_MODELS_TOKEN)
+    private readonly db: DatabaseModels,
   ) {}
 
   async add(userId: string, productId: string): Promise<ResponseObject> {
-    const product = await this.productService.findById(productId);
+    const product = await this.db.product.findById(productId);
     if (!product) throw new NotFoundException('Product not found');
 
-    let wishlist = await this.wishlistModel.findOne({ user: userId });
+    let wishlist = await this.db.wishlist.findOne({ user: userId });
     const mongooseProductId = new mongoose.Types.ObjectId(productId);
 
     if (!wishlist) {
-      wishlist = await this.wishlistModel.create({
+      wishlist = await this.db.wishlist.create({
         user: userId,
         products: [mongooseProductId],
       });
 
-      await this.userService.findOneByIdAndUpdate(userId, {
+      await this.db.user.findByIdAndUpdate(userId, {
         wishlist: wishlist._id,
       });
     } else {
@@ -59,7 +58,7 @@ export class WishlistService {
   }
 
   async remove(userId: string, productId: string): Promise<ResponseObject> {
-    const wishlist = await this.wishlistModel.findOne({ user: userId });
+    const wishlist = await this.db.wishlist.findOne({ user: userId });
     if (!wishlist) throw new NotFoundException('Wishlist not found');
 
     if (wishlist.user.toString() !== userId) throw new UnauthorizedException();
@@ -69,7 +68,7 @@ export class WishlistService {
       throw new NotAcceptableException('Product is not in the wishlist');
     }
 
-    const updatedWishlist = await this.wishlistModel.findByIdAndUpdate(
+    const updatedWishlist = await this.db.wishlist.findByIdAndUpdate(
       wishlist._id,
       { $pull: { products: mongooseProductId } },
       { new: true, runValidators: true },
@@ -83,7 +82,7 @@ export class WishlistService {
   }
 
   async get(query: GetWishlistDto, userId: string): Promise<ResponseObject> {
-    const wishlist = await this.wishlistModel
+    const wishlist = await this.db.wishlist
       .findOne({ user: userId })
       .select('_id products')
       .populate({

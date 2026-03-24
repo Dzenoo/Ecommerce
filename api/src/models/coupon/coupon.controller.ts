@@ -49,8 +49,8 @@ export class CouponController {
   @Get('/all')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async getCoupons(@Query('active') active?: boolean) {
-    return this.couponService.getAll(active);
+  async getCoupons() {
+    return this.couponService.getAll();
   }
 
   @Get('/:id')
