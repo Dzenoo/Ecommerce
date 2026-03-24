@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 import { IOrder } from '@shared/types';
 import FieldGroup from '@shared/helpers/FieldGroup';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 
 import {
   Table,
@@ -110,21 +111,21 @@ const DashboardOrderDetailsProducts: React.FC<
         <div className="space-y-4 max-sm:w-full">
           <FieldGroup
             title="Subtotal:"
-            value={`${order.totalPrice}$`}
+            value={formatPrice(order.totalPrice)}
             customStyles={{
               div: 'flex-row gap-40 items-center justify-between max-sm:gap-5',
             }}
           />
           <FieldGroup
             title="Tax(20%):"
-            value={`${tax}$`}
+            value={formatPrice(tax)}
             customStyles={{
               div: 'flex-row gap-40 items-center justify-between max-sm:gap-5',
             }}
           />
           <FieldGroup
             title="Total:"
-            value={`${order.totalPrice + tax}$`}
+            value={formatPrice(order.totalPrice + tax)}
             customStyles={{
               div: 'flex-row gap-40 items-center justify-between font-bold text-xl max-sm:gap-5',
             }}

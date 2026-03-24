@@ -8,6 +8,7 @@ import {
 } from '../../../../../hooks/queries/useProduct.query';
 import { IProduct } from '../../../../../types';
 import { renderRating } from '../../../../../helpers/render-rating';
+import { formatPrice } from '../../../../../lib/utils/currency.utils';
 import Loader from '../../../../ui/info/loader';
 import { getCategory } from '../../../../../lib/utils';
 
@@ -77,7 +78,7 @@ export const SearchResults: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{product.price} $</p>
+                  <p className="text-sm font-medium">{formatPrice(product.price)}</p>
                 </div>
               </div>
             </div>

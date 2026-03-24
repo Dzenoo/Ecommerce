@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { ICart } from '@shared/types';
 import { getCategory } from '@shared/lib/utils';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 import FieldGroup from '@shared/helpers/FieldGroup';
 import CartList from './CartList';
 import CreateOrder from './checkout/CreateOrder';
@@ -45,7 +46,7 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
         {showSummary && <CartList cart={cart} mode="summary" />}
         <FieldGroup
           title="Total Price"
-          value={`${cart.totalPrice} $`}
+          value={formatPrice(cart.totalPrice)}
           customStyles={{
             div: 'flex flex-row justify-between items-center',
             p: 'font-bold text-black text-sm',

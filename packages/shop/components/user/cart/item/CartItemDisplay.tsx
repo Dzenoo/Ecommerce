@@ -4,6 +4,7 @@ import Image from 'next/image';
 
 import { CartDisplayMode, ICartItem } from '@shared/types';
 import { getCategory } from '@shared/lib/utils';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 import { queryClient } from '@shared/context/react-query-client';
 import { useToast } from '@shared/hooks/core/use-toast';
 import {
@@ -136,13 +137,13 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
         <div className="col-span-1">
           {discountPercent > 0 ? (
             <p className="text-sm">
-              {discountedUnitPrice} $
+              {formatPrice(discountedUnitPrice)}
               <span className="ml-2 text-xs text-muted-foreground line-through">
-                {item.product.price} $
+                {formatPrice(item.product.price)}
               </span>
             </p>
           ) : (
-            <p className="text-sm">{item.product.price} $</p>
+            <p className="text-sm">{formatPrice(item.product.price)}</p>
           )}
         </div>
       )}

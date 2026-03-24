@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { IOrder } from '@shared/types';
 import FieldGroup from '@shared/helpers/FieldGroup';
 import { formatDate, getCategory } from '@shared/lib/utils';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 import {
   OrderMutationType,
   useOrderMutation,
@@ -62,7 +63,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
     {
       id: 2,
       title: 'Total',
-      value: order.totalPrice + ' $',
+      value: formatPrice(order.totalPrice),
       customStyles,
     },
     {
@@ -182,7 +183,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                                 ) / 100
                               : basePrice);
 
-                          return `${finalUnitPrice} $`;
+                          return formatPrice(finalUnitPrice);
                         })()
                       }
                       customStyles={customStyles}

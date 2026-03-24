@@ -6,6 +6,7 @@ import { Truck } from 'lucide-react';
 import { IProduct } from '@shared/types';
 import { renderRating } from '@shared/helpers/render-rating';
 import { cn } from '@shared/lib/utils';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 
 import AddToFavorites from '../item/AddToFavorites';
 import AddToCart from '../item/AddToCart';
@@ -77,13 +78,13 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         <div>
           {discountPercent > 0 ? (
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <p className="text-xl font-semibold">{discountedPrice} $</p>
+              <p className="text-xl font-semibold">{formatPrice(discountedPrice)}</p>
               <p className="text-sm text-muted-foreground line-through">
-                {product.price} $
+                {formatPrice(product.price)}
               </p>
             </div>
           ) : (
-            <p className="text-xl font-semibold">{product.price} $</p>
+            <p className="text-xl font-semibold">{formatPrice(product.price)}</p>
           )}
         </div>
 
@@ -157,7 +158,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         <div className="flex w-fit items-center gap-5 rounded-md border bg-white p-5">
           <Truck />{' '}
           <p className="text-sm">
-            Delivery for 1-3 working days, price for deliver 5$
+            Delivery for 1-3 working days, price for delivery {formatPrice(5)}
           </p>
         </div>
       </div>

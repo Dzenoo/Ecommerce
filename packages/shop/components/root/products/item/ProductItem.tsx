@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { IProduct } from '@shared/types';
 import { renderRating } from '@shared/helpers/render-rating';
 import { getCategory } from '@shared/lib/utils';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 import MarkdownRenderer from '@shared/helpers/MarkdownRenderer';
 
 import AddToCart from './AddToCart';
@@ -74,14 +75,14 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           <Button type="button" variant="outline" className="flex-1">
             {discountPercent > 0 ? (
               <span className="flex items-center gap-2">
-                <span>{discountedPrice} $</span>
+                <span>{formatPrice(discountedPrice)}</span>
                 <span className="text-xs text-muted-foreground line-through">
-                  {product.price} $
+                  {formatPrice(product.price)}
                 </span>
               </span>
             ) : (
               <>
-                {product.price} $
+                {formatPrice(product.price)}
               </>
             )}
           </Button>
