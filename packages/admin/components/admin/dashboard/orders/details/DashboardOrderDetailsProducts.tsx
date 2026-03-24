@@ -22,7 +22,7 @@ const DashboardOrderDetailsProducts: React.FC<
   const tax = 400;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-3">
       <div>
         <h1 className="font-semibold">Products</h1>
       </div>
@@ -43,7 +43,7 @@ const DashboardOrderDetailsProducts: React.FC<
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Image
-                      className="h-12 w-12 rounded-full object-cover"
+                      className="h-12 w-12 object-cover"
                       src={item.product.images[0]}
                       alt={item.product.name}
                       width={50}
