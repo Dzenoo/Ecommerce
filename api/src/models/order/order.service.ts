@@ -2,7 +2,6 @@ import {
   HttpStatus,
   Inject,
   Injectable,
-  Logger,
   NotAcceptableException,
 } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
@@ -18,8 +17,6 @@ import { GetOrdersDto } from './dto/get-orders.dto';
 
 @Injectable()
 export class OrderService {
-  private readonly logger = new Logger(OrderService.name);
-
   constructor(
     @Inject(DATABASE_MODELS_TOKEN)
     private readonly db: DatabaseModels,
@@ -32,8 +29,7 @@ export class OrderService {
       user: userId,
     });
     if (!cart) throw new NotAcceptableException('Cart not found');
-    if (!cart.items.length)
-      throw new NotAcceptableException('Cart is empty');
+    if (!cart.items.length) throw new NotAcceptableException('Cart is empty');
 
     let orderAddress;
     if (body.addressId) {
@@ -120,19 +116,12 @@ export class OrderService {
         );
       });
 
-      this.logger.log(
-        `Order ${order.orderNumber} created for user ${userId}. Total: ${cart.totalPrice}`,
-      );
-
       return {
         statusCode: HttpStatus.CREATED,
         order,
         message: 'Order successfully created',
       };
     } catch (error) {
-      this.logger.error(
-        `Order creation failed for user ${userId}: ${error.message}`,
-      );
       throw error;
     } finally {
       session.endSession();

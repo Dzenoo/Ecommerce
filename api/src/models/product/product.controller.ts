@@ -61,7 +61,10 @@ export class ProductController {
   @Patch('/update/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async updateProduct(@Body() body: UpdateProductDto, @Param('id', ParseMongoIdPipe) id: string) {
+  async updateProduct(
+    @Body() body: UpdateProductDto,
+    @Param('id', ParseMongoIdPipe) id: string,
+  ) {
     return await this.productService.update({ body, id });
   }
 

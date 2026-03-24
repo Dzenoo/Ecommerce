@@ -21,7 +21,7 @@ export class ProductService {
   constructor(
     @Inject(DATABASE_MODELS_TOKEN)
     private readonly db: DatabaseModels,
-    private readonly UploadService: UploadService,
+    private readonly uploadService: UploadService,
   ) {}
 
   async create(data: {
@@ -40,7 +40,7 @@ export class ProductService {
       );
     }
 
-    const uploadedImages = await this.UploadService.uploadFiles(
+    const uploadedImages = await this.uploadService.uploadFiles(
       images,
       'product-images',
     );
@@ -99,8 +99,7 @@ export class ProductService {
       _id: id,
       isDeleted: false,
     });
-    if (!product)
-      throw new NotAcceptableException('Product does not exist.');
+    if (!product) throw new NotAcceptableException('Product does not exist.');
 
     await this.db.product.findByIdAndUpdate(id, {
       isDeleted: true,

@@ -3,7 +3,6 @@ import {
   HttpStatus,
   Inject,
   Injectable,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import mongoose from 'mongoose';
@@ -15,8 +14,6 @@ import {
 
 @Injectable()
 export class CartService {
-  private readonly logger = new Logger(CartService.name);
-
   constructor(
     @Inject(DATABASE_MODELS_TOKEN)
     private readonly db: DatabaseModels,
@@ -127,9 +124,7 @@ export class CartService {
     }
 
     if (action === 'increment') {
-      const product = await this.db.product.findById(
-        item.product.toString(),
-      );
+      const product = await this.db.product.findById(item.product.toString());
       if (!product || item.quantity + 1 > product.stock) {
         throw new BadRequestException('Not enough stock.');
       }
@@ -204,9 +199,7 @@ export class CartService {
       _id: { $in: productIds },
     });
 
-    const productMap = new Map(
-      products.map((p) => [p._id.toString(), p]),
-    );
+    const productMap = new Map(products.map((p) => [p._id.toString(), p]));
 
     let totalPrice = 0;
     for (const item of items) {

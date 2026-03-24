@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import {
   DATABASE_MODELS_TOKEN,
@@ -7,8 +7,6 @@ import {
 
 @Injectable()
 export class ClerkWebhookService {
-  private readonly logger = new Logger(ClerkWebhookService.name);
-
   constructor(
     @Inject(DATABASE_MODELS_TOKEN)
     private readonly db: DatabaseModels,
@@ -31,7 +29,7 @@ export class ClerkWebhookService {
         username,
       });
     } catch (error) {
-      this.logger.error(`Failed to create user: ${error.message}`, error.stack);
+      console.error(`Failed to create user: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -40,7 +38,7 @@ export class ClerkWebhookService {
     try {
       const user = await this.db.user.findOne({ clerkId: userData.id });
       if (!user) {
-        this.logger.warn(`User not found for clerkId: ${userData.id}`);
+        console.warn(`User not found for clerkId: ${userData.id}`);
         return;
       }
 
@@ -56,7 +54,7 @@ export class ClerkWebhookService {
         );
       }
     } catch (error) {
-      this.logger.error(`Failed to update user: ${error.message}`, error.stack);
+      console.error(`Failed to update user: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -65,7 +63,7 @@ export class ClerkWebhookService {
     try {
       const user = await this.db.user.findOne({ clerkId: userData.id });
       if (!user) {
-        this.logger.warn(`User not found for clerkId: ${userData.id}`);
+        console.warn(`User not found for clerkId: ${userData.id}`);
         return;
       }
 
@@ -79,9 +77,9 @@ export class ClerkWebhookService {
         this.db.user.deleteOne({ _id: userId }),
       ]);
 
-      this.logger.log(`User ${userId} and related data deleted`);
+      console.log(`User ${userId} and related data deleted`);
     } catch (error) {
-      this.logger.error(`Failed to delete user: ${error.message}`, error.stack);
+      console.error(`Failed to delete user: ${error.message}`, error.stack);
       throw error;
     }
   }

@@ -1,5 +1,4 @@
 import * as sanitizeHtml from 'sanitize-html';
-import { Connection, ClientSession } from 'mongoose';
 
 /**
  * Returns the redirect URL based on the user's role.
@@ -32,23 +31,4 @@ export function sanitizeInput(
   };
 
   return sanitizeHtml(value, options || defaultOptions);
-}
-
-export async function withTransaction<T>(
-  connection: Connection,
-  operation: (session: ClientSession) => Promise<T>,
-): Promise<T> {
-  const session = await connection.startSession();
-  session.startTransaction();
-
-  try {
-    const result = await operation(session);
-    await session.commitTransaction();
-    return result;
-  } catch (error) {
-    await session.abortTransaction();
-    throw error;
-  } finally {
-    session.endSession();
-  }
 }

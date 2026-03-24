@@ -2,7 +2,6 @@ import {
   HttpStatus,
   Inject,
   Injectable,
-  Logger,
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
@@ -19,8 +18,6 @@ import { UpdateCouponDto } from './dto/update-coupon.dto';
 
 @Injectable()
 export class CouponService {
-  private readonly logger = new Logger(CouponService.name);
-
   constructor(
     @Inject(DATABASE_MODELS_TOKEN)
     private readonly db: DatabaseModels,
@@ -99,7 +96,10 @@ export class CouponService {
     const coupon = await this.validateCoupon(couponCode, cart.user.toString());
     if (!coupon) throw new NotFoundException('Invalid or expired coupon');
 
-    if (coupon.minPurchaseAmount && cart.totalPrice < coupon.minPurchaseAmount) {
+    if (
+      coupon.minPurchaseAmount &&
+      cart.totalPrice < coupon.minPurchaseAmount
+    ) {
       throw new NotAcceptableException(
         `Minimum purchase amount of ${coupon.minPurchaseAmount} required to use this coupon`,
       );
@@ -140,10 +140,6 @@ export class CouponService {
         $push: { usedBy: { userId: cart.user.toString(), count: 1 } },
       });
     }
-
-    this.logger.log(
-      `Coupon "${coupon.code}" applied to cart ${cartId}. Discount: ${discountAmount}`,
-    );
 
     return {
       statusCode: HttpStatus.OK,

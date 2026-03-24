@@ -36,7 +36,10 @@ export class CouponController {
   @Patch('/update/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async updateCoupon(@Body() body: UpdateCouponDto, @Param('id', ParseMongoIdPipe) id: string) {
+  async updateCoupon(
+    @Body() body: UpdateCouponDto,
+    @Param('id', ParseMongoIdPipe) id: string,
+  ) {
     return this.couponService.update(id, body);
   }
 

@@ -9,7 +9,6 @@ import { AppModule } from './app.module';
 async function initializeServer() {
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
-    logger: ['error', 'warn', 'log'],
   });
 
   const origins = process.env.CORS_ORIGINS.split(',').map((o) => o.trim());
