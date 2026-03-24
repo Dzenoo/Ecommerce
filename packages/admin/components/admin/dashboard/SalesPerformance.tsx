@@ -30,13 +30,28 @@ type SalesPerformanceProps = {
 };
 
 const aggregateOrdersByMonth = (orders: SalesOrder[]) => {
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June'];
-  const aggregated = monthNames.map((month) => ({ month, totalSales: 0 }));
+  const now = new Date();
+  const months: { key: string; label: string }[] = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({
+      key: `${d.getFullYear()}-${String(d.getMonth()).padStart(2, '0')}`,
+      label: d.toLocaleDateString('en-US', { month: 'short' }),
+    });
+  }
+
+  const aggregated = months.map((m) => ({
+    month: m.label,
+    totalSales: 0,
+    key: m.key,
+  }));
 
   orders.forEach((order) => {
     const date = new Date(order.createdAt);
-    const monthIndex = date.getUTCMonth();
-    aggregated[monthIndex].totalSales += order.totalPrice;
+    const key = `${date.getFullYear()}-${String(date.getMonth()).padStart(2, '0')}`;
+    const entry = aggregated.find((a) => a.key === key);
+    if (entry) entry.totalSales += order.totalPrice;
   });
 
   return aggregated;
@@ -63,7 +78,8 @@ const SalesPerformance: React.FC<SalesPerformanceProps> = ({ data }) => {
           <AreaChart
             data={chartData}
             margin={{
-              left: -20,
+              top: 15,
+              left: -2,
               right: 12,
             }}
           >

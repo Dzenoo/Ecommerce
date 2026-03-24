@@ -10,7 +10,7 @@ import { formatPrice } from '@shared/lib/utils/currency.utils';
 
 import AddToFavorites from '../item/AddToFavorites';
 import AddToCart from '../item/AddToCart';
-import MarkdownRenderer from '@shared/helpers/MarkdownRenderer';
+import HtmlRenderer from '@shared/helpers/HtmlRenderer';
 import PickQuantity from './PickQuantity';
 
 import { Button } from '@shared/components/ui/buttons/button';

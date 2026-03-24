@@ -49,8 +49,7 @@ const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const groupedData = data.reduce((acc: Record<string, number>, order) => {
-    // @ts-ignore
-    acc[order._doc.status] = (acc[order._doc.status] || 0) + 1;
+    acc[order.status] = (acc[order.status] || 0) + 1;
     return acc;
   }, {});
 

@@ -5,8 +5,6 @@ import {
   DatabaseModels,
 } from '../database/database.types';
 
-import { UserDocument } from '@/models/user/schema/user.schema';
-import { OrderDocument } from '@/models/order/schema/order.schema';
 
 @Injectable()
 export class AnalyticsService {
@@ -44,8 +42,9 @@ export class AnalyticsService {
       createdAt: { $gte: startOfMonth },
     });
 
-    const totalProducts = await this.db.product.countDocuments({});
+    const totalProducts = await this.db.product.countDocuments({ isDeleted: { $ne: true } });
     const productsThisMonth = await this.db.product.countDocuments({
+      isDeleted: { $ne: true },
       createdAt: { $gte: startOfMonth },
     });
 
@@ -54,19 +53,16 @@ export class AnalyticsService {
       createdAt: { $gte: startOfMonth },
     });
 
-    const allOrders = await this.db.order.find({});
-    const totalRevenue = allOrders.reduce(
-      (totalAmount, order) => (totalAmount += order.totalPrice),
-      0,
-    );
+    const [totalRevenueResult] = await this.db.order.aggregate([
+      { $group: { _id: null, total: { $sum: '$totalPrice' } } },
+    ]);
+    const totalRevenue = totalRevenueResult?.total ?? 0;
 
-    const ordersThisMonthList = await this.db.order.find({
-      createdAt: { $gte: startOfMonth },
-    });
-    const revenueThisMonth = ordersThisMonthList.reduce(
-      (totalAmount, order) => totalAmount + order.totalPrice,
-      0,
-    );
+    const [revenueThisMonthResult] = await this.db.order.aggregate([
+      { $match: { createdAt: { $gte: startOfMonth } } },
+      { $group: { _id: null, total: { $sum: '$totalPrice' } } },
+    ]);
+    const revenueThisMonth = revenueThisMonthResult?.total ?? 0;
 
     return {
       data: {
@@ -83,53 +79,53 @@ export class AnalyticsService {
   }
 
   private async getSalesPerformance() {
-    const allOrders = await this.db.order.find(
-      {},
-      'status createdAt totalPrice _id',
-    );
-
-    const completedOrders = allOrders
-      .filter((order) => order.status === 'completed')
-      .map(({ _id, ...rest }: OrderDocument) => ({
-        id: _id,
-        ...rest,
-      }));
+    const orders = await this.db.order
+      .find(
+        { status: { $in: ['Delivered', 'Processing', 'Shipped', 'Pending'] } },
+        'status createdAt totalPrice',
+      )
+      .lean()
+      .exec();
 
     return {
       statusCode: HttpStatus.OK,
-      data: completedOrders,
+      data: orders.map((o: any) => ({
+        _id: o._id.toString(),
+        status: o.status,
+        totalPrice: o.totalPrice,
+        createdAt: new Date(o.createdAt).toISOString(),
+      })),
     };
   }
 
   private async getOrdersByStatus() {
-    const allOrders = await this.db.order.find({}, 'status _id');
-
-    const transformedOrders = allOrders.map(
-      ({ _id, ...rest }: OrderDocument) => {
-        return {
-          id: _id,
-          ...rest,
-        };
-      },
-    );
+    const allOrders = await this.db.order
+      .find({}, 'status')
+      .lean()
+      .exec();
 
     return {
-      data: transformedOrders,
+      data: allOrders.map((o: any) => ({
+        id: o._id.toString(),
+        status: o.status,
+      })),
     };
   }
 
   private async getTopSellingProducts() {
-    const allOrders = await this.db.order.find({}, 'items _id');
+    const allOrders = await this.db.order
+      .find({}, 'items')
+      .populate('items.product', 'name')
+      .lean()
+      .exec();
 
-    const transformedOrders = allOrders.map((order: OrderDocument) => {
-      return {
-        id: order._id,
-        items: order.items.map((item) => ({
-          product: item.product.name,
-          quantity: item.quantity,
-        })),
-      };
-    });
+    const transformedOrders = allOrders.map((order) => ({
+      id: order._id.toString(),
+      items: order.items.map((item: any) => ({
+        product: item.product?.name || 'Unknown Product',
+        quantity: item.quantity,
+      })),
+    }));
 
     return {
       data: transformedOrders,
@@ -137,15 +133,16 @@ export class AnalyticsService {
   }
 
   private async getCustomerGrowth() {
-    const allUsers = await this.db.user.find({}, 'createdAt _id');
-
-    const transformedUsers = allUsers.map(({ _id, ...rest }: UserDocument) => ({
-      id: _id,
-      ...rest,
-    }));
+    const allUsers = await this.db.user
+      .find({}, 'createdAt')
+      .lean()
+      .exec();
 
     return {
-      data: transformedUsers,
+      data: allUsers.map((u: any) => ({
+        id: u._id.toString(),
+        createdAt: new Date(u.createdAt).toISOString(),
+      })),
     };
   }
 }

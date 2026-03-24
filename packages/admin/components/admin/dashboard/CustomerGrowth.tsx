@@ -104,7 +104,7 @@ const CustomerGrowth: React.FC<CustomerGrowthProps> = ({ data }) => {
               content={
                 <ChartTooltipContent
                   indicator="line"
-                  nameKey="newCustomers"
+                  nameKey="newCustomers "
                   hideLabel
                 />
               }
