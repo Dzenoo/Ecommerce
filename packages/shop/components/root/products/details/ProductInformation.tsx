@@ -10,7 +10,7 @@ import { formatPrice } from '@shared/lib/utils/currency.utils';
 
 import AddToFavorites from '../item/AddToFavorites';
 import AddToCart from '../item/AddToCart';
-import MarkdownRenderer from '@shared/helpers/MarkdownRenderer';
+import HtmlRenderer from '@shared/helpers/HtmlRenderer';
 import PickQuantity from './PickQuantity';
 
 import { Button } from '@shared/components/ui/buttons/button';
@@ -153,8 +153,8 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
       <div className="space-y-5">
         <div className="space-y-2">
           <label className="text-base font-medium">Description</label>
-          <MarkdownRenderer
-            className="product-details-description-markdown"
+          <HtmlRenderer
+            className="product-details-description-html"
             content={product.description}
           />
         </div>

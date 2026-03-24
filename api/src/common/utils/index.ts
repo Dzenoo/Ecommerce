@@ -1,6 +1,11 @@
 import * as sanitizeHtml from 'sanitize-html';
 import mongoose from 'mongoose';
 
+export const RICH_TEXT_SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li'],
+  allowedAttributes: {},
+};
+
 /**
  * Returns the redirect URL based on the user's role.
  *

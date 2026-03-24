@@ -108,12 +108,24 @@
     @apply list-item;
   }
 
-  .product-item-description-markdown {
-    @apply truncate text-sm font-light text-muted-foreground;
+  .html-content ul {
+    @apply list-disc pl-5;
   }
 
-  .product-details-description-markdown {
-    @apply text-sm font-light text-muted-foreground;
+  .html-content ol {
+    @apply list-decimal pl-5;
+  }
+
+  .html-content li {
+    @apply list-item;
+  }
+
+  .product-item-description-html {
+    @apply truncate text-sm;
+  }
+
+  .product-details-description-html {
+    @apply text-sm;
   }
 
   .image-container button {

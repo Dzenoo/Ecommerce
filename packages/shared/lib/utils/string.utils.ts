@@ -1,4 +1,22 @@
-import sanitizeHtml from 'sanitize-html';
+import sanitizeHtml from "sanitize-html";
+
+export const RICH_TEXT_ALLOWED_TAGS = [
+  "p",
+  "br",
+  "strong",
+  "b",
+  "em",
+  "i",
+  "u",
+  "ul",
+  "ol",
+  "li",
+];
+
+export const RICH_TEXT_SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: RICH_TEXT_ALLOWED_TAGS,
+  allowedAttributes: {},
+};
 
 /**
  * Sanitizes a given input string by removing unwanted HTML tags and attributes.
@@ -10,14 +28,14 @@ export function sanitizeInput(
   value: string,
   options?: sanitizeHtml.IOptions,
 ): string {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return value;
   }
 
   const defaultOptions: sanitizeHtml.IOptions = {
     allowedTags: [],
     allowedAttributes: {},
-    disallowedTagsMode: 'discard',
+    disallowedTagsMode: "discard",
   };
 
   return sanitizeHtml(value, options || defaultOptions).trim();

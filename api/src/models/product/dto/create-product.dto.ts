@@ -11,7 +11,7 @@ import {
   MinLength,
   Validate,
 } from 'class-validator';
-import { sanitizeInput } from '@/common/utils';
+import { sanitizeInput, RICH_TEXT_SANITIZE_OPTIONS } from '@/common/utils';
 import { AttributesValidator } from '@/common/validators/attributes.validator';
 
 export class CreateProductDto {
@@ -33,7 +33,7 @@ export class CreateProductDto {
   @IsNotEmpty()
   @MinLength(10)
   @MaxLength(1000)
-  @Transform(({ value }) => sanitizeInput(value))
+  @Transform(({ value }) => sanitizeInput(value, RICH_TEXT_SANITIZE_OPTIONS))
   description: string;
 
   @IsNumber()

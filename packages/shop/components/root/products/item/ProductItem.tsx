@@ -5,9 +5,7 @@ import { IProduct } from '@shared/types';
 import { renderRating } from '@shared/helpers/render-rating';
 import { getCategory } from '@shared/lib/utils';
 import { formatPrice } from '@shared/lib/utils/currency.utils';
-import MarkdownRenderer from '@shared/helpers/MarkdownRenderer';
 
-import AddToCart from './AddToCart';
 import AddToFavorites from './AddToFavorites';
 
 import { Button } from '@shared/components/ui/buttons/button';
@@ -63,12 +61,6 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               {renderRating(product.averageRating)}
             </div>
           </div>
-          <div className="mt-4 max-h-5 overflow-hidden">
-            <MarkdownRenderer
-              className="product-item-description-markdown"
-              content={product.description}
-            />
-          </div>
         </CardContent>
         <Separator />
         <CardFooter className="flex items-center justify-between gap-2">
@@ -81,9 +73,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 </span>
               </span>
             ) : (
-              <>
-                {formatPrice(product.price)}
-              </>
+              <>{formatPrice(product.price)}</>
             )}
           </Button>
         </CardFooter>

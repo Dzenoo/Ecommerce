@@ -335,13 +335,22 @@ const HandleProductForm: React.FC<HandleProductFormProps> = (props) => {
             />
           )}
 
-          <Button type="submit" disabled={!form.formState.isValid}>
-            {form.formState.isSubmitting && isLoading ? (
-              <Loader type="ScaleLoader" height={20} color="#ffffff" />
-            ) : (
-              'Save'
-            )}
-          </Button>
+          <div className="space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={!form.formState.isValid}>
+              {form.formState.isSubmitting && isLoading ? (
+                <Loader type="ScaleLoader" height={20} color="#ffffff" />
+              ) : (
+                'Save'
+              )}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>
