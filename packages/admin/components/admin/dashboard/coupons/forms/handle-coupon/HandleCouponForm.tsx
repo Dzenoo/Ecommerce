@@ -9,7 +9,10 @@ import { CalendarIcon } from 'lucide-react';
 
 import { CreateCouponDto, ICoupon } from '@shared/types';
 import { useToast } from '@shared/hooks/core/use-toast';
-import { CreateCouponSchema, UpdateCouponSchema } from '@shared/lib/zod/coupon.zod';
+import {
+  CreateCouponSchema,
+  UpdateCouponSchema,
+} from '@shared/lib/zod/coupon.zod';
 import {
   CouponMutationType,
   useCouponMutation,
@@ -59,6 +62,7 @@ const HandleCouponForm: React.FC<HandleCouponFormProps> = (props) => {
       discountType: 'fixed',
       discountValue: 0,
       maxUsage: 0,
+      maxUsagePerUser: 1,
       expirationDate: new Date(),
       minPurchaseAmount: 0,
     },
@@ -165,12 +169,12 @@ const HandleCouponForm: React.FC<HandleCouponFormProps> = (props) => {
                       {
                         options: [
                           {
-                            label: 'percentage',
-                            value: 'Percentage',
+                            label: 'Percentage',
+                            value: 'percentage',
                           },
                           {
-                            label: 'fixed',
-                            value: 'Fixed',
+                            label: 'Fixed',
+                            value: 'fixed',
                           },
                         ],
                       },
@@ -260,11 +264,33 @@ const HandleCouponForm: React.FC<HandleCouponFormProps> = (props) => {
                     type="number"
                     placeholder="Max usage limit. Default is 1"
                     {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
                 <FormDescription>
                   Please enter the maximum number of times this coupon can be
                   used. Default is 1 (once).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="maxUsagePerUser"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Max Usage Per User (optional)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Max times a single user can use this. Default is 1"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormDescription>
+                  How many times a single user can use this coupon. Default is 1.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -281,6 +307,7 @@ const HandleCouponForm: React.FC<HandleCouponFormProps> = (props) => {
                     type="number"
                     placeholder="Min purchase amount. Default is 0"
                     {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
                 <FormDescription>

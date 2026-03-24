@@ -31,7 +31,7 @@ const QueryParamController = <T,>({
     updateQueryParams,
     deleteQueryParam,
   } = useQueryParams();
-  const [internalValue, setInternalValue] = useState<T>(defaultValue as T);
+  const [internalValue, setInternalValue] = useState<T>((defaultValue ?? '' as unknown) as T);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {

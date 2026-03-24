@@ -118,9 +118,21 @@ export class CouponService {
       couponApplied: coupon.code,
     });
 
-    await this.couponModel.findByIdAndUpdate((coupon as CouponDocument)._id, {
-      $inc: { usageCount: 1 },
-    });
+    const userUsage = (coupon as CouponDocument).usedBy?.find(
+      (u) => u.userId === cart.user.toString(),
+    );
+
+    if (userUsage) {
+      await this.couponModel.findOneAndUpdate(
+        { _id: (coupon as CouponDocument)._id, 'usedBy.userId': cart.user.toString() },
+        { $inc: { usageCount: 1, 'usedBy.$.count': 1 } },
+      );
+    } else {
+      await this.couponModel.findByIdAndUpdate((coupon as CouponDocument)._id, {
+        $inc: { usageCount: 1 },
+        $push: { usedBy: { userId: cart.user.toString(), count: 1 } },
+      });
+    }
 
     return {
       statusCode: HttpStatus.OK,
@@ -141,6 +153,13 @@ export class CouponService {
 
     if (coupon.maxUsage && coupon.usageCount >= coupon.maxUsage) {
       throw new NotAcceptableException('Coupon usage limit reached');
+    }
+
+    const userUsage = coupon.usedBy?.find((u) => u.userId === userId);
+    if (userUsage && coupon.maxUsagePerUser && userUsage.count >= coupon.maxUsagePerUser) {
+      throw new NotAcceptableException(
+        `You have already used this coupon the maximum number of times`,
+      );
     }
 
     return coupon;

@@ -17,6 +17,10 @@ export class AddressService {
     private readonly userService: UserService,
   ) {}
 
+  async findById(id: string) {
+    return this.addressModel.findById(id).lean().exec();
+  }
+
   async create(
     body: CreateAddressDto,
     userId: string,

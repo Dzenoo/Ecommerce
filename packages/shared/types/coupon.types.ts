@@ -4,22 +4,24 @@ export type CreateCouponDto = {
   discountValue: number;
   expirationDate: Date;
   maxUsage?: number;
+  maxUsagePerUser?: number;
   active?: boolean;
   minPurchaseAmount?: number;
-  userLimit?: string[];
 };
 
 export interface ICoupon {
   _id: string;
+  couponNumber: string;
   code: string;
   discountType: 'percentage' | 'fixed';
   discountValue: number;
   expirationDate: Date;
   maxUsage: number;
+  maxUsagePerUser: number;
   usageCount: number;
   active: boolean;
   minPurchaseAmount: number;
-  userLimit: string[];
+  usedBy: { userId: string; count: number }[];
   createdAt: Date;
   updatedAt: Date;
 }

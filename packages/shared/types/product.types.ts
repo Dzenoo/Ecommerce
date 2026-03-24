@@ -23,6 +23,7 @@ export type GetProductsDto = {
 
 export interface IProduct {
   _id: string;
+  productNumber: string;
   name: string;
   price: number;
   description: string;

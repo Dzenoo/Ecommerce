@@ -32,9 +32,10 @@ import { SelectWrapper } from '@shared/components/ui/form/select';
 
 type AddressFormProps = {
   addressToEdit?: IAddress | null;
+  onSuccess?: () => void;
 };
 
-const AddressForm: React.FC<AddressFormProps> = ({ addressToEdit = null }) => {
+const AddressForm: React.FC<AddressFormProps> = ({ addressToEdit = null, onSuccess }) => {
   const { toast } = useToast();
   const isEditing = !!addressToEdit;
 
@@ -68,6 +69,8 @@ const AddressForm: React.FC<AddressFormProps> = ({ addressToEdit = null }) => {
         title: 'Success',
         description: response.message,
       });
+
+      onSuccess?.();
     },
   });
 

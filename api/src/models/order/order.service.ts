@@ -4,6 +4,7 @@ import mongoose, { FilterQuery, Model } from 'mongoose';
 
 import { Order } from './schema/order.schema';
 
+import { AddressService } from '../address/address.service';
 import { CartService } from '../cart/cart.service';
 import { UserService } from '../user/user.service';
 import { ProductService } from '../product/product.service';
@@ -15,6 +16,7 @@ import { GetOrdersDto } from './dto/get-orders.dto';
 export class OrderService {
   constructor(
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
+    private readonly addressService: AddressService,
     private readonly cartService: CartService,
     private readonly userService: UserService,
     private readonly productService: ProductService,
@@ -138,11 +140,15 @@ export class OrderService {
       .findById(id)
       .populate('user', 'username email')
       .populate('items.product', 'name images price')
-      .populate('address')
       .lean()
       .exec();
 
     if (!order) throw new NotAcceptableException('Order not found');
+
+    if (typeof order.address === 'string' || order.address instanceof mongoose.Types.ObjectId) {
+      const address = await this.addressService.findById(String(order.address));
+      if (address) order.address = address;
+    }
 
     const isOwner = String(order.user?._id || order.user) === userId;
     if (role !== 'admin' && !isOwner) {

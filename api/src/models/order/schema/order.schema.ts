@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -8,6 +9,14 @@ export type OrderDocument = HydratedDocument<Order>;
 
 @Schema({ timestamps: true })
 export class Order {
+  @Prop({
+    type: String,
+    unique: true,
+    default: () =>
+      `ORD-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+  })
+  orderNumber: string;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

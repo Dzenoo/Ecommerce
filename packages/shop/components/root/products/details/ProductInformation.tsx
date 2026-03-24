@@ -133,7 +133,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         </div>
       </div>
 
-      <div className="space-y-10">
+      <div className="space-y-5">
         <div className="space-y-2">
           <label className="text-base font-medium">Description</label>
           <MarkdownRenderer

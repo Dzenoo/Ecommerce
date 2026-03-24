@@ -49,7 +49,7 @@ const DashboardOrderDetails: React.FC<DashboardOrderDetailsProps> = ({
   return (
     <Card className="shadow-none">
       <CardHeader className="hide-scrollbar space-y-4 overflow-x-scroll whitespace-nowrap">
-        <CardTitle>Order Id: {data.order._id}</CardTitle>
+        <CardTitle>Order: #{data.order.orderNumber}</CardTitle>
         <FieldGroup
           title={formatDate(data.order.createdAt, 'PPPPpppp')}
           customStyles={{

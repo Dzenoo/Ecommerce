@@ -103,9 +103,11 @@ const DashboardCouponsList: React.FC<DashboardCouponsListProps> = ({
         ) : (
           couponsData.coupons.map((coupon) => (
             <TableRow className="whitespace-nowrap" key={coupon._id}>
-              <TableCell>{coupon._id}</TableCell>
+              <TableCell>{coupon.couponNumber}</TableCell>
               <TableCell>{coupon.code}</TableCell>
-              <TableCell>{coupon.discountType}</TableCell>
+              <TableCell className="capitalize">
+                {coupon.discountType}
+              </TableCell>
               <TableCell>
                 {coupon.discountValue}
                 {coupon.discountType === 'fixed' ? 'DIN' : '%'}

@@ -17,7 +17,7 @@ export class Address {
   @Prop({ type: String, required: true, minlength: 5, maxlength: 100 })
   addressLine1: string;
 
-  @Prop({ type: String, minlength: 5, maxlength: 100 })
+  @Prop({ type: String })
   addressLine2?: string;
 
   @Prop({ type: String, required: true, minlength: 2, maxlength: 50 })

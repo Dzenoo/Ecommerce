@@ -71,7 +71,6 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           <Button type="button" variant="outline" className="flex-1">
             {product.price} $
           </Button>
-          <AddToCart product={product} attributes={{}} />
         </CardFooter>
       </Card>
     </li>

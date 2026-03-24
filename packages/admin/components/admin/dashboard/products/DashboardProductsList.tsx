@@ -112,7 +112,7 @@ const DashboardProductsList: React.FC<DashboardProductsListProps> = ({
                   height={50}
                 />
               </TableCell>
-              <TableCell>{product._id}</TableCell>
+              <TableCell>{product.productNumber}</TableCell>
               <TableCell>{product.name}</TableCell>
               <TableCell className="truncate">{product.description}</TableCell>
               <TableCell>{getCategory('id', product.category)?.name}</TableCell>

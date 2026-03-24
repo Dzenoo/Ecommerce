@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -5,6 +6,14 @@ export type CouponDocument = HydratedDocument<Coupon>;
 
 @Schema({ timestamps: true })
 export class Coupon {
+  @Prop({
+    type: String,
+    unique: true,
+    default: () =>
+      `CPN-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+  })
+  couponNumber: string;
+
   @Prop({ type: String, required: true, unique: true })
   code: string;
 
@@ -26,6 +35,15 @@ export class Coupon {
 
   @Prop({ type: Number, default: 0 })
   usageCount: number;
+
+  @Prop({ type: Number, default: 1 })
+  maxUsagePerUser: number;
+
+  @Prop({
+    type: [{ userId: String, count: { type: Number, default: 1 } }],
+    default: [],
+  })
+  usedBy: { userId: string; count: number }[];
 
   @Prop({ type: Number, required: false, default: 0 })
   minPurchaseAmount: number;

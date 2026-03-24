@@ -8,10 +8,16 @@ export const BaseCouponSchema = z.object({
       invalid_type_error: 'Discount value must be a number',
     })
     .positive('Discount value must be a positive number'),
-  expirationDate: z.coerce.date().refine((date) => date > new Date(), {
-    message: 'Expiration date must be in the future',
-  }),
+  expirationDate: z.coerce.date().refine(
+    (date) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return date >= today;
+    },
+    { message: 'Expiration date must be today or in the future' },
+  ),
   maxUsage: z.number().optional(),
+  maxUsagePerUser: z.number().optional(),
   minPurchaseAmount: z.number().optional(),
 });
 

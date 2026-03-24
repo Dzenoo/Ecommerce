@@ -68,12 +68,12 @@ const Reviews: React.FC<ReviewsProps> = ({ productId }) => {
                 {
                   options: [
                     {
-                      label: 'desc',
-                      value: 'Newest',
+                      label: 'Newest',
+                      value: 'desc',
                     },
                     {
-                      label: 'asc',
-                      value: 'Oldest',
+                      label: 'Oldest',
+                      value: 'asc',
                     },
                   ],
                 },

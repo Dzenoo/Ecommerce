@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -7,6 +8,14 @@ export type ProductDocument = HydratedDocument<Product>;
 
 @Schema({ timestamps: true })
 export class Product {
+  @Prop({
+    type: String,
+    unique: true,
+    default: () =>
+      `PRD-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+  })
+  productNumber: string;
+
   @Prop({
     type: String,
     required: true,

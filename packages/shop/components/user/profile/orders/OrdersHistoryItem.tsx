@@ -101,7 +101,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
           <div className="space-y-2">
             <FieldGroup
               title="Order"
-              value={order._id}
+              value={`#${order.orderNumber}`}
               customStyles={{
                 div: 'flex flex-row',
               }}

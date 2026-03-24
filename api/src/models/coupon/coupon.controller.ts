@@ -55,7 +55,7 @@ export class CouponController {
 
   @Get('/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
-  @Roles(Role.User)
+  @Roles(Role.Admin)
   async getCoupon(@Param('id') id: string) {
     return this.couponService.getOne(id);
   }

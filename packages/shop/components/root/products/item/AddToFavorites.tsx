@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { Heart } from 'lucide-react';
 
 import { useToast } from '@shared/hooks/core/use-toast';
@@ -29,6 +30,7 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
 }) => {
   const { toast } = useToast();
   const { user, isAuthenticated } = useCurrentUser();
+  const router = useRouter();
 
   const { data } = useWishlistQuery({
     type: WishlistQueryType.GET_WISHLIST,
@@ -52,7 +54,7 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
     },
   });
 
-  if (!isAuthenticated || user?.role === 'admin') {
+  if (user?.role === 'admin') {
     return null;
   }
 
@@ -61,6 +63,10 @@ const AddToFavorites: React.FC<AddToFavoritesProps> = ({
   );
 
   const handleAddToWishlist = () => {
+    if (!isAuthenticated) {
+      return router.push('/sign-in');
+    }
+
     mutation.mutateAsync({
       type: isAlreadyInWishlist
         ? WishlistMutationType.REMOVE

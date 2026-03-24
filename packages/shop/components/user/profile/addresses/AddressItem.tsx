@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pencil, Trash } from 'lucide-react';
 
 import {
@@ -43,6 +44,7 @@ type AddressItemProps = {
 };
 
 const AddressItem: React.FC<AddressItemProps> = ({ address }) => {
+  const [editOpen, setEditOpen] = useState(false);
   const mutation = useAddressMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['addresses'] });
@@ -67,7 +69,7 @@ const AddressItem: React.FC<AddressItemProps> = ({ address }) => {
             {address.isDefault && <Badge variant="default">Default</Badge>}
           </CardTitle>
           <div className="flex gap-2">
-            <Dialog>
+            <Dialog open={editOpen} onOpenChange={setEditOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline" size="icon">
                   <Pencil size={16} />
@@ -81,7 +83,7 @@ const AddressItem: React.FC<AddressItemProps> = ({ address }) => {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="max-h-96 overflow-y-scroll p-2">
-                  <AddressForm addressToEdit={address} />
+                  <AddressForm addressToEdit={address} onSuccess={() => setEditOpen(false)} />
                 </div>
               </DialogContent>
             </Dialog>

@@ -22,12 +22,12 @@ const SortProducts: React.FC = () => {
             {
               options: [
                 {
-                  label: 'desc',
-                  value: 'Descending',
+                  label: 'Newest',
+                  value: 'desc',
                 },
                 {
-                  label: 'asc',
-                  value: 'Ascending',
+                  label: 'Oldest',
+                  value: 'asc',
                 },
               ],
             },

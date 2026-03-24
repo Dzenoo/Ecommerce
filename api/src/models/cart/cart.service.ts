@@ -119,6 +119,7 @@ export class CartService {
 
     cart.totalPrice = await this.calculateTotalPrice(updatedCart.items);
     cart.isActive = cart.items.length > 0;
+    cart.couponApplied = undefined;
 
     await cart.save();
 

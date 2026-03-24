@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { ShoppingBag } from 'lucide-react';
 
 import { useToast } from '@shared/hooks/core/use-toast';
@@ -28,6 +29,7 @@ const AddToCart: React.FC<AddToCartProps> = ({
 }) => {
   const { toast } = useToast();
   const { user, isAuthenticated } = useCurrentUser();
+  const router = useRouter();
 
   const mutation = useCartMutation({
     onSuccess: (response) => {
@@ -45,11 +47,15 @@ const AddToCart: React.FC<AddToCartProps> = ({
     },
   });
 
-  if (!isAuthenticated || user?.role === 'admin') {
+  if (user?.role === 'admin') {
     return null;
   }
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      return router.push('/sign-in');
+    }
+
     if (
       !Object.keys(attributes).includes('size') &&
       !Object.keys(attributes).includes('color') &&

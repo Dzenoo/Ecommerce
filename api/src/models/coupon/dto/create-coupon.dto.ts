@@ -85,5 +85,10 @@ export class CreateCouponDto {
 
   @IsNumber()
   @IsOptional()
+  @Min(1)
+  maxUsagePerUser?: number;
+
+  @IsNumber()
+  @IsOptional()
   minPurchaseAmount?: number;
 }

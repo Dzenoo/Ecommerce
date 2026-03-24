@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   AddressQueryType,
   useAddressQuery,
@@ -20,6 +21,7 @@ import {
 } from '@shared/components/ui/layout/dialog';
 
 const Addresses: React.FC = () => {
+  const [open, setOpen] = useState(false);
   const { data, isLoading } = useAddressQuery({
     type: AddressQueryType.GET_ADDRESSES,
     params: { query: {} },
@@ -46,7 +48,7 @@ const Addresses: React.FC = () => {
             }}
           />
         </div>
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="max-md:w-full">Add Address</Button>
           </DialogTrigger>
@@ -58,7 +60,7 @@ const Addresses: React.FC = () => {
               </DialogDescription>
             </DialogHeader>
             <div className="max-h-96 overflow-y-scroll p-2">
-              <AddressForm />
+              <AddressForm onSuccess={() => setOpen(false)} />
             </div>
           </DialogContent>
         </Dialog>

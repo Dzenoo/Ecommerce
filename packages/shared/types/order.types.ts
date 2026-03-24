@@ -21,6 +21,7 @@ export type UpdateOrderDto = {
 
 export interface IOrder {
   _id: string;
+  orderNumber: string;
   user: IUser & string;
   items: {
     _id: string;

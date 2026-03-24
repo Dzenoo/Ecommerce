@@ -107,7 +107,7 @@ const DashboardOrdersList: React.FC<DashboardOrdersListProps> = ({
         ) : (
           ordersData.orders.map((order) => (
             <TableRow className="whitespace-nowrap" key={order._id}>
-              <TableCell>#{order._id}</TableCell>
+              <TableCell>#{order.orderNumber}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Image
