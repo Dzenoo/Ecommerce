@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm run --parallel dev:all",
-    "dev:all": "pnpm --filter @ecommerce/storefront dev & pnpm --filter @ecommerce/admin dev & pnpm --filter api start:dev",
-    "dev:storefront": "pnpm --filter @ecommerce/storefront dev",
+    "dev:shop": "pnpm --filter @ecommerce/shop dev",
     "dev:admin": "pnpm --filter @ecommerce/admin dev",
     "dev:api": "pnpm --filter api start:dev",
-    "build:storefront": "pnpm --filter @ecommerce/storefront build",
+    "build:shop": "pnpm --filter @ecommerce/shop build",
     "build:admin": "pnpm --filter @ecommerce/admin build",
     "build:api": "pnpm --filter api build"
   }

@@ -488,7 +488,7 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  packages/storefront:
+  packages/shop:
     dependencies:
       '@clerk/nextjs':
         specifier: ^7.0.6

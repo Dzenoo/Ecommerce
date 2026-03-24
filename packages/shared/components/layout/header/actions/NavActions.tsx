@@ -1,27 +1,25 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { LogOut, User } from 'lucide-react';
-import { useClerk } from '@clerk/nextjs';
+import React from "react";
+import Link from "next/link";
+import { LogOut, User } from "lucide-react";
+import { useClerk } from "@clerk/nextjs";
 
-import { useCurrentUser } from '../../../../hooks/useCurrentUser';
-import { getRoleSpecificData } from '../../../../lib/utils';
+import { useCurrentUser } from "../../../../hooks/useCurrentUser";
 
-import Logo from '../Logo';
-import { NavSearch } from './search/NavSearch';
+import Logo from "../Logo";
+import { NavSearch } from "./search/NavSearch";
 
-import { Button } from '../../../ui/buttons/button';
-import { TooltipWrapper } from '../../../ui/info/tooltip-wrapper';
+import { Button } from "../../../ui/buttons/button";
+import { TooltipWrapper } from "../../../ui/info/tooltip-wrapper";
+import { UserNavbarActions } from "@shared/constants";
+import Loader from "@shared/components/ui/info/loader";
 
 const NavActions: React.FC<{
   showSearch?: boolean;
 }> = ({ showSearch = true }) => {
-  const { user, isAuthenticated } = useCurrentUser();
+  const { isAuthenticated, isLoading } = useCurrentUser();
   const { signOut } = useClerk();
-
-  const isAdmin = user?.role === 'admin';
-  const roleData = getRoleSpecificData(isAdmin);
 
   return (
     <div className="base-padding hide-scrollbar flex items-center justify-between gap-10 bg-white py-5">
@@ -35,29 +33,33 @@ const NavActions: React.FC<{
         </div>
       )}
 
-      <div className="flex items-center gap-5">
-        {isAuthenticated &&
-          roleData.actions.map(({ id, icon, text, href }) => (
-            <TooltipWrapper key={id} tooltip={text}>
-              <Link href={href}>{React.createElement(icon)}</Link>
-            </TooltipWrapper>
-          ))}
+      {isLoading ? (
+        <Loader type="ScaleLoader" height={10} />
+      ) : (
+        <div className="flex items-center gap-5">
+          {isAuthenticated &&
+            UserNavbarActions.map(({ id, icon, text, href }) => (
+              <TooltipWrapper key={id} tooltip={text}>
+                <Link href={href}>{React.createElement(icon)}</Link>
+              </TooltipWrapper>
+            ))}
 
-        {!isAuthenticated && (
-          <Link href="/sign-up">
-            <Button>
-              <User />
-              Sign Up
-            </Button>
-          </Link>
-        )}
+          {!isAuthenticated && (
+            <Link href="/sign-up">
+              <Button>
+                <User />
+                Sign Up
+              </Button>
+            </Link>
+          )}
 
-        {isAuthenticated && (
-          <button onClick={() => signOut()}>
-            <LogOut />
-          </button>
-        )}
-      </div>
+          {isAuthenticated && (
+            <button onClick={() => signOut()}>
+              <LogOut />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

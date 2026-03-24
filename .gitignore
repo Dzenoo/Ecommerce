@@ -55,6 +55,7 @@ pids
 *.pid
 *.seed
 *.pid.lock
+/.clerk/
 
 .vscode
 # Diagnostic reports (https://nodejs.org/api/report.html)

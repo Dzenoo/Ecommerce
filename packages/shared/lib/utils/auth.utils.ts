@@ -1,4 +1,4 @@
-import { AdminNavbarActions, UserNavbarActions } from '../../constants';
+import { AdminNavbarActions, UserNavbarActions } from "../../constants";
 
 export const getRoleSpecificData = (
   isAdmin: boolean,
