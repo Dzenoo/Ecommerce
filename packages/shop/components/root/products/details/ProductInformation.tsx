@@ -10,7 +10,7 @@ import { formatPrice } from '@shared/lib/utils/currency.utils';
 
 import AddToFavorites from '../item/AddToFavorites';
 import AddToCart from '../item/AddToCart';
-import HtmlRenderer from '@shared/helpers/HtmlRenderer';
+import MarkdownRenderer from '@shared/helpers/MarkdownRenderer';
 import PickQuantity from './PickQuantity';
 
 import { Button } from '@shared/components/ui/buttons/button';
@@ -78,13 +78,17 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         <div>
           {discountPercent > 0 ? (
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <p className="text-xl font-semibold">{formatPrice(discountedPrice)}</p>
+              <p className="text-xl font-semibold">
+                {formatPrice(discountedPrice)}
+              </p>
               <p className="text-sm text-muted-foreground line-through">
                 {formatPrice(product.price)}
               </p>
             </div>
           ) : (
-            <p className="text-xl font-semibold">{formatPrice(product.price)}</p>
+            <p className="text-xl font-semibold">
+              {formatPrice(product.price)}
+            </p>
           )}
         </div>
 
