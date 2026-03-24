@@ -49,7 +49,8 @@ const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const groupedData = data.reduce((acc: Record<string, number>, order) => {
-    acc[order.status] = (acc[order.status] || 0) + 1;
+    // @ts-ignore
+    acc[order._doc.status] = (acc[order._doc.status] || 0) + 1;
     return acc;
   }, {});
 
@@ -76,7 +77,6 @@ const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
-              <Legend />
               <Pie
                 data={pieChartData}
                 dataKey="count"
