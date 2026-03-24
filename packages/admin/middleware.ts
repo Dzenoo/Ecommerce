@@ -1,65 +1,34 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-import { getValidUserRole } from '@shared/lib/utils';
+const isAuthRoute = createRouteMatcher(['/sign-in(.*)']);
 
-type UserRole = 'admin' | 'user' | null;
+export default clerkMiddleware(async (auth, request) => {
+  const { userId } = await auth();
+  const currentPath = request.nextUrl.pathname;
 
-const config_ = {
-  protectedRoutes: [
-    {
-      pattern: /^\/dashboard(\/.*)?$/,
-      allowedRoles: new Set(['admin']),
-      redirect: '/login',
-    },
-  ],
-  authPages: new Set(['/login']),
-  defaultRedirect: '/dashboard',
-  authRedirect: '/login',
-} as const;
-
-export default function middleware(req: NextRequest) {
-  const currentPath = req.nextUrl.pathname;
-  const token = req.cookies.get('access_token')?.value;
-  const userRole = getValidUserRole(token);
-
-  // Redirect root to dashboard
+  // Redirect root to dashboard or sign-in
   if (currentPath === '/') {
-    const target = token && userRole === 'admin'
-      ? config_.defaultRedirect
-      : config_.authRedirect;
-    return NextResponse.redirect(new URL(target, req.url));
+    const target = userId ? '/dashboard' : '/sign-in';
+    return NextResponse.redirect(new URL(target, request.url));
   }
 
-  if (!token) return handleUnauthenticated(currentPath, req);
-
-  // Only allow admin role
-  if (userRole !== 'admin') {
-    const response = NextResponse.redirect(
-      new URL(config_.authRedirect, req.url),
-    );
-    response.cookies.delete('access_token');
-    return response;
+  // Authenticated user trying to access sign-in → redirect to dashboard
+  if (userId && isAuthRoute(request)) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  if (isAuthPage(currentPath)) {
-    return NextResponse.redirect(
-      new URL(config_.defaultRedirect, req.url),
-    );
+  // Unauthenticated user trying to access anything except sign-in → redirect to sign-in
+  if (!userId && !isAuthRoute(request)) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
   return NextResponse.next();
-}
-
-function isAuthPage(path: string): boolean {
-  return config_.authPages.has(path);
-}
-
-function handleUnauthenticated(path: string, req: NextRequest): NextResponse {
-  return isAuthPage(path)
-    ? NextResponse.next()
-    : NextResponse.redirect(new URL(config_.authRedirect, req.url));
-}
+});
 
 export const config = {
-  matcher: ['/', '/login', '/dashboard/:path*'],
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
 };

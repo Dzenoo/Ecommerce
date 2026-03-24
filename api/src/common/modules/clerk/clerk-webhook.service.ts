@@ -15,10 +15,14 @@ export class ClerkWebhookService {
       });
       if (existingUser) return existingUser;
 
+      const email = this.extractPrimaryEmail(userData);
+      const username =
+        userData.username || userData.first_name || email.split('@')[0];
+
       return this.userService.createOne({
         clerkId: userData.id,
-        email: this.extractPrimaryEmail(userData),
-        username: userData.first_name,
+        email,
+        username,
       });
     } catch (error) {
       this.logger.error(`Failed to create user: ${error.message}`, error.stack);

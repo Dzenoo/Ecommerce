@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.0.6",
     "@ecommerce/shared": "workspace:*",
     "@hookform/resolvers": "^3.10.0",
     "@tiptap/extension-bold": "^2.11.5",

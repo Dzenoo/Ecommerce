@@ -20,10 +20,7 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    minlength: 5,
-    maxlength: 25,
     trim: true,
-    unique: true,
   })
   username: string;
 

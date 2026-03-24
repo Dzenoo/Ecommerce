@@ -118,7 +118,7 @@ const DashboardOrdersList: React.FC<DashboardOrdersListProps> = ({
                     height={50}
                   />
                   <h1>
-                    {order.user.first_name} {order.user.last_name}
+                    {order.user.username}
                   </h1>
                 </div>
               </TableCell>

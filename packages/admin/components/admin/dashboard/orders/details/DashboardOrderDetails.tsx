@@ -73,8 +73,8 @@ const DashboardOrderDetails: React.FC<DashboardOrderDetailsProps> = ({
             title="Customer"
             fields={[
               {
-                title: 'Full name:',
-                value: `${data.order.user.first_name} ${data.order.user.last_name}`,
+                title: 'Username:',
+                value: data.order.user.username,
               },
               {
                 title: 'Email:',

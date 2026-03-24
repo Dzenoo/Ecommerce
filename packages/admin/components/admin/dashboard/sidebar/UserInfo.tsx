@@ -1,8 +1,7 @@
 'use client';
 
 import { ChevronsUpDown, LogOut } from 'lucide-react';
-
-import { useAuthStore } from '@shared/store/auth.store';
+import { useClerk, useUser } from '@clerk/nextjs';
 
 import {
   SidebarMenu,
@@ -24,7 +23,12 @@ import {
 } from '@shared/components/ui/info/avatar';
 
 const UserInfo: React.FC = () => {
-  const { logout } = useAuthStore();
+  const { signOut } = useClerk();
+  const { user } = useUser();
+
+  const name = user?.firstName || user?.username || 'Admin';
+  const email = user?.emailAddresses?.[0]?.emailAddress || '';
+  const initials = name.slice(0, 2).toUpperCase();
 
   return (
     <SidebarMenu>
@@ -36,14 +40,12 @@ const UserInfo: React.FC = () => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-full">
-                <AvatarImage src={'/images/avatar.png'} alt="Avatar" />
-                <AvatarFallback className="rounded-full">CN</AvatarFallback>
+                <AvatarImage src={user?.imageUrl || '/images/avatar.png'} alt="Avatar" />
+                <AvatarFallback className="rounded-full">{initials}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Dzenis</span>
-                <span className="truncate text-xs">
-                  dzenisgudzevic18@gmail.com
-                </span>
+                <span className="truncate font-semibold">{name}</span>
+                <span className="truncate text-xs">{email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -57,21 +59,17 @@ const UserInfo: React.FC = () => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-full">
-                  <AvatarImage src="/images/avatar.png" alt="Avatar" />
-                  <AvatarFallback className="rounded-full">CN</AvatarFallback>
+                  <AvatarImage src={user?.imageUrl || '/images/avatar.png'} alt="Avatar" />
+                  <AvatarFallback className="rounded-full">{initials}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    Dzenis Gudzevic
-                  </span>
-                  <span className="truncate text-xs">
-                    dzenisgudzevic18@gmail.com
-                  </span>
+                  <span className="truncate font-semibold">{name}</span>
+                  <span className="truncate text-xs">{email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout}>
+            <DropdownMenuItem onClick={() => signOut()}>
               <LogOut />
               Log out
             </DropdownMenuItem>
