@@ -7,7 +7,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname:
-          'ecommerce-application-for-business.s3.eu-north-1.amazonaws.com',
+          'ecommerce-shop-assets-dzenis.s3.eu-central-1.amazonaws.com',
         port: '',
         pathname: '/**',
       },
