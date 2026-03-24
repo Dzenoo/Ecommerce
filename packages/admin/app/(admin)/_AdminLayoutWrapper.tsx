@@ -4,7 +4,10 @@ import DashboardSidebar from '@/components/admin/dashboard/sidebar/DashboardSide
 import AdminHeader from '@/components/admin/dashboard/sidebar/AdminHeader';
 import { AdminGuard } from '@/components/admin/AdminGuard';
 
-import { SidebarInset, SidebarProvider } from '@shared/components/ui/layout/sidebar';
+import {
+  SidebarInset,
+  SidebarProvider,
+} from '@shared/components/ui/layout/sidebar';
 
 const AdminLayoutWrapper: React.FC<{
   children: React.ReactNode;
