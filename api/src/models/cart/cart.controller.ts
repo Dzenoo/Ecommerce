@@ -17,6 +17,7 @@ import { ClerkRolesGuard } from '@/common/guards/clerk-roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '@/types';
 
+import { ParseMongoIdPipe } from '@/common/pipes/parse-mongo-id.pipe';
 import { AddItemDto } from './dto/add-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 
@@ -39,7 +40,7 @@ export class CartController {
   @Roles(Role.User)
   async removeItem(
     @User('userId') userId: string,
-    @Param('itemId') itemId: string,
+    @Param('itemId', ParseMongoIdPipe) itemId: string,
   ) {
     return this.cartService.remove(userId, itemId);
   }
@@ -49,7 +50,7 @@ export class CartController {
   @Roles(Role.User)
   async updateItem(
     @User('userId') userId: string,
-    @Param('itemId') itemId: string,
+    @Param('itemId', ParseMongoIdPipe) itemId: string,
     @Body() { action }: UpdateItemDto,
   ) {
     return this.cartService.update(userId, itemId, action);

@@ -19,6 +19,8 @@ import { Role } from '@/types';
 import { ClerkAuthGuard } from '@/common/guards/clerk-auth.guard';
 import { ClerkRolesGuard } from '@/common/guards/clerk-roles.guard';
 
+import { ParseMongoIdPipe } from '@/common/pipes/parse-mongo-id.pipe';
+
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -50,7 +52,7 @@ export class OrderController {
   @Delete('/delete/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
-  async cancelOrder(@Param('id') id: string) {
+  async cancelOrder(@Param('id', ParseMongoIdPipe) id: string) {
     return this.orderService.cancel(id);
   }
 
@@ -64,7 +66,7 @@ export class OrderController {
   @Get('/:id')
   @UseGuards(ClerkAuthGuard)
   async getOrder(
-    @Param('id') id: string,
+    @Param('id', ParseMongoIdPipe) id: string,
     @User('userId') userId: string,
     @User('role') role: string,
   ) {
@@ -75,7 +77,7 @@ export class OrderController {
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
   async updateOrderStatus(
-    @Param('id') id: string,
+    @Param('id', ParseMongoIdPipe) id: string,
     @Body() body: UpdateOrderDto,
   ) {
     return this.orderService.updateStatus(id, body.status);

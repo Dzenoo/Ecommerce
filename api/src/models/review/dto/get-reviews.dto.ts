@@ -4,8 +4,9 @@ import { IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
 export class GetReviewsDto {
   @IsOptional()
   @IsNumber()
-  @Transform(({ value }) => (value ? Number(value) : 0))
-  readonly page?: number = 0;
+  @Min(1)
+  @Transform(({ value }) => (value ? Number(value) : 1))
+  readonly page?: number = 1;
 
   @IsOptional()
   @IsNumber()

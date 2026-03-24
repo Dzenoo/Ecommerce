@@ -135,20 +135,20 @@ export class ReviewService {
     query: GetReviewsDto,
     productId: string,
   ): Promise<ResponseObject> {
-    const { page = 0, limit = 10, sort = 'desc' } = query;
+    const { page = 1, limit = 10, sort = 'desc' } = query;
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
+    const conditions = { product: productId };
 
-    const reviews = await this.db.review
-      .find({
-        product: productId,
-      })
-      .populate('user', 'username email _id')
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .sort(sortOptions);
-
-    const totalReviews = await this.db.review.countDocuments();
+    const [reviews, totalReviews] = await Promise.all([
+      this.db.review
+        .find(conditions)
+        .populate('user', 'username email _id')
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort(sortOptions),
+      this.db.review.countDocuments(conditions),
+    ]);
 
     return {
       statusCode: HttpStatus.OK,
@@ -163,23 +163,21 @@ export class ReviewService {
     query: GetReviewsDto,
     userId: string,
   ): Promise<ResponseObject> {
-    const { page = 0, limit = 10, sort = 'desc' } = query;
+    const { page = 1, limit = 10, sort = 'desc' } = query;
 
     const sortOptions: any = { createdAt: sort === 'desc' ? -1 : 1 };
+    const conditions = { user: new mongoose.Types.ObjectId(userId) };
 
-    const reviews = await this.db.review
-      .find({
-        user: new mongoose.Types.ObjectId(userId),
-      })
-      .populate('user', 'username email _id')
-      .populate('product')
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .sort(sortOptions);
-
-    const totalReviews = await this.db.review.countDocuments({
-      user: userId,
-    });
+    const [reviews, totalReviews] = await Promise.all([
+      this.db.review
+        .find(conditions)
+        .populate('user', 'username email _id')
+        .populate('product')
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort(sortOptions),
+      this.db.review.countDocuments(conditions),
+    ]);
 
     return {
       statusCode: HttpStatus.OK,
@@ -190,20 +188,16 @@ export class ReviewService {
     };
   }
 
-  private async calculateAverageRating(productId: string): Promise<any> {
-    const allReviews = await this.db.review
-      .find({ product: productId })
-      .lean()
-      .exec();
+  private async calculateAverageRating(productId: string): Promise<void> {
+    const result = await this.db.review.aggregate([
+      { $match: { product: new mongoose.Types.ObjectId(productId) } },
+      { $group: { _id: null, avgRating: { $avg: '$rating' } } },
+    ]);
 
-    const averageRating =
-      allReviews.length > 0
-        ? allReviews.reduce((acc, review) => acc + review.rating, 0) /
-          allReviews.length
-        : 0;
+    const averageRating = result.length > 0 ? result[0].avgRating : 0;
 
-    return await this.db.product.findByIdAndUpdate(productId, {
-      averageRating: averageRating,
+    await this.db.product.findByIdAndUpdate(productId, {
+      averageRating: Math.round(averageRating * 10) / 10,
     });
   }
 }

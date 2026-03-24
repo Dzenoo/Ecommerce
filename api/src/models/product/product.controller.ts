@@ -25,6 +25,8 @@ import { Role } from '@/types';
 import { ClerkRolesGuard } from '@/common/guards/clerk-roles.guard';
 import { ClerkAuthGuard } from '@/common/guards/clerk-auth.guard';
 
+import { ParseMongoIdPipe } from '@/common/pipes/parse-mongo-id.pipe';
+
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetProductsDto } from './dto/get-products.dto';
@@ -59,14 +61,14 @@ export class ProductController {
   @Patch('/update/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async updateProduct(@Body() body: UpdateProductDto, @Param('id') id: string) {
+  async updateProduct(@Body() body: UpdateProductDto, @Param('id', ParseMongoIdPipe) id: string) {
     return await this.productService.update({ body, id });
   }
 
   @Delete('/delete/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async deleteProduct(@Param('id') id: string) {
+  async deleteProduct(@Param('id', ParseMongoIdPipe) id: string) {
     return await this.productService.delete(id);
   }
 
@@ -76,7 +78,7 @@ export class ProductController {
   }
 
   @Get('/:id')
-  async getOneProduct(@Param('id') id: string) {
+  async getOneProduct(@Param('id', ParseMongoIdPipe) id: string) {
     return await this.productService.getOne(id);
   }
 }

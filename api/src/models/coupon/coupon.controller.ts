@@ -18,6 +18,7 @@ import { ClerkRolesGuard } from '@/common/guards/clerk-roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '@/types';
 
+import { ParseMongoIdPipe } from '@/common/pipes/parse-mongo-id.pipe';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
 
@@ -35,14 +36,14 @@ export class CouponController {
   @Patch('/update/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async updateCoupon(@Body() body: UpdateCouponDto, @Param('id') id: string) {
+  async updateCoupon(@Body() body: UpdateCouponDto, @Param('id', ParseMongoIdPipe) id: string) {
     return this.couponService.update(id, body);
   }
 
   @Delete('/delete/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async deleteCoupon(@Param('id') id: string) {
+  async deleteCoupon(@Param('id', ParseMongoIdPipe) id: string) {
     return this.couponService.delete(id);
   }
 
@@ -56,7 +57,7 @@ export class CouponController {
   @Get('/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.Admin)
-  async getCoupon(@Param('id') id: string) {
+  async getCoupon(@Param('id', ParseMongoIdPipe) id: string) {
     return this.couponService.getOne(id);
   }
 
@@ -64,7 +65,7 @@ export class CouponController {
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async applyCoupon(
-    @Param('cartId') cartId: string,
+    @Param('cartId', ParseMongoIdPipe) cartId: string,
     @Body('couponCode') couponCode: string,
   ) {
     return this.couponService.apply(cartId, couponCode);

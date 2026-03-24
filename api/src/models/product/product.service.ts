@@ -30,8 +30,14 @@ export class ProductService {
   }): Promise<ResponseObject> {
     const { body, images } = data;
 
-    if (images.length === 0 || !images) {
+    if (!images || images.length === 0) {
       throw new NotAcceptableException('At least one image is required.');
+    }
+
+    if (body.discount > body.price) {
+      throw new NotAcceptableException(
+        'Discount cannot be greater than price.',
+      );
     }
 
     const uploadedImages = await this.UploadService.uploadFiles(
@@ -40,12 +46,6 @@ export class ProductService {
     );
 
     const imagesUrls = uploadedImages.map((image) => image.url);
-
-    if (body.discount > body.price) {
-      throw new NotAcceptableException(
-        'Discount cannot be greater than price.',
-      );
-    }
 
     const product = await this.db.product.create({
       ...body,
@@ -95,27 +95,17 @@ export class ProductService {
   }
 
   async delete(id: string) {
-    const productExists = await this.db.product.findById(id);
-    if (!productExists)
+    const product = await this.db.product.findOne({
+      _id: id,
+      isDeleted: false,
+    });
+    if (!product)
       throw new NotAcceptableException('Product does not exist.');
 
-    const imageKeys = productExists.images.map((image) =>
-      image.split('/').pop(),
-    );
-
-    await this.UploadService.deleteFiles(imageKeys, 'product-images');
-
-    const reviews = await this.db.review.find({ product: id });
-    const userIds = reviews.map((review) => review.user);
-
-    await Promise.all([
-      this.db.product.findByIdAndDelete(id),
-      this.db.review.deleteMany({ product: id }),
-      this.db.user.updateMany(
-        { _id: { $in: userIds } },
-        { $pull: { reviews: { product: id } } },
-      ),
-    ]);
+    await this.db.product.findByIdAndUpdate(id, {
+      isDeleted: true,
+      deletedAt: new Date(),
+    });
 
     return {
       statusCode: HttpStatus.OK,
@@ -132,7 +122,7 @@ export class ProductService {
     attributes,
     price,
   }: GetProductsDto): Promise<ResponseObject> {
-    const conditions: any = {};
+    const conditions: any = { isDeleted: { $ne: true } };
 
     if (search) {
       const regexSearch = new RegExp(String(search), 'i');
@@ -184,7 +174,10 @@ export class ProductService {
   }
 
   async getOne(id: string) {
-    const product = await this.db.product.findById(id).lean().exec();
+    const product = await this.db.product
+      .findOne({ _id: id, isDeleted: { $ne: true } })
+      .lean()
+      .exec();
 
     if (!product) {
       throw new NotAcceptableException('Product does not exist.');

@@ -69,7 +69,17 @@ export class ClerkWebhookService {
         return;
       }
 
-      await this.db.user.deleteOne((user as any)._id.toString());
+      const userId = (user as any)._id.toString();
+
+      await Promise.all([
+        this.db.cart.deleteMany({ user: userId }),
+        this.db.address.deleteMany({ user: userId }),
+        this.db.wishlist.deleteMany({ user: userId }),
+        this.db.review.deleteMany({ user: userId }),
+        this.db.user.deleteOne({ _id: userId }),
+      ]);
+
+      this.logger.log(`User ${userId} and related data deleted`);
     } catch (error) {
       this.logger.error(`Failed to delete user: ${error.message}`, error.stack);
       throw error;

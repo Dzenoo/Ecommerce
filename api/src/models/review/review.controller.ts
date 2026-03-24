@@ -18,6 +18,8 @@ import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '@/types';
 import { User } from '@/common/decorators/user.decorator';
 
+import { ParseMongoIdPipe } from '@/common/pipes/parse-mongo-id.pipe';
+
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { GetReviewsDto } from './dto/get-reviews.dto';
@@ -32,7 +34,7 @@ export class ReviewController {
   async createReview(
     @Body() body: CreateReviewDto,
     @User('userId') userId: string,
-    @Param('productId') productId: string,
+    @Param('productId', ParseMongoIdPipe) productId: string,
   ) {
     return await this.reviewService.create(body, productId, userId);
   }
@@ -43,7 +45,7 @@ export class ReviewController {
   async updateReview(
     @Body() body: UpdateReviewDto,
     @User('userId') userId: string,
-    @Param('reviewId') reviewId: string,
+    @Param('reviewId', ParseMongoIdPipe) reviewId: string,
   ) {
     return await this.reviewService.update(body, reviewId, userId);
   }
@@ -52,8 +54,8 @@ export class ReviewController {
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async deleteReview(
-    @Param('reviewId') reviewId: string,
-    @Param('productId') productId: string,
+    @Param('reviewId', ParseMongoIdPipe) reviewId: string,
+    @Param('productId', ParseMongoIdPipe) productId: string,
     @User('userId') userId: string,
   ) {
     return await this.reviewService.delete(reviewId, productId, userId);
@@ -62,7 +64,7 @@ export class ReviewController {
   @Get('/all/:productId')
   async getReviews(
     @Query() query: GetReviewsDto,
-    @Param('productId') productId: string,
+    @Param('productId', ParseMongoIdPipe) productId: string,
   ) {
     return await this.reviewService.getAll(query, productId);
   }

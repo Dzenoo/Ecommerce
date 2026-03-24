@@ -2,8 +2,10 @@ import {
   HttpStatus,
   Inject,
   Injectable,
+  Logger,
   NotAcceptableException,
 } from '@nestjs/common';
+import { InjectConnection } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
 import {
@@ -13,14 +15,15 @@ import {
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
-import { CartService } from '../cart/cart.service';
 
 @Injectable()
 export class OrderService {
+  private readonly logger = new Logger(OrderService.name);
+
   constructor(
     @Inject(DATABASE_MODELS_TOKEN)
     private readonly db: DatabaseModels,
-    private readonly cartService: CartService,
+    @InjectConnection() private readonly connection: mongoose.Connection,
   ) {}
 
   async create(body: CreateOrderDto, userId: string): Promise<ResponseObject> {
@@ -29,6 +32,8 @@ export class OrderService {
       user: userId,
     });
     if (!cart) throw new NotAcceptableException('Cart not found');
+    if (!cart.items.length)
+      throw new NotAcceptableException('Cart is empty');
 
     let orderAddress;
     if (body.addressId) {
@@ -41,45 +46,97 @@ export class OrderService {
       );
     }
 
-    const order = await this.db.order.create({
-      user: new mongoose.Types.ObjectId(userId),
-      items: cart.items,
-      totalPrice: cart.totalPrice,
-      address: orderAddress,
-    });
-    if (!order) throw new NotAcceptableException('Order could not be created');
-
-    await this.cartService.clear(userId);
-    await this.db.user.findByIdAndUpdate(userId, {
-      $push: { orders: order._id },
-    });
+    // Validate stock for all items before starting transaction
+    const productIds = cart.items.map((item) => String(item.product));
+    const products = await this.db.product.find({ _id: { $in: productIds } });
+    const productMap = new Map(products.map((p) => [p._id.toString(), p]));
 
     for (const item of cart.items) {
-      const product = await this.db.product.findById(String(item.product));
-
-      if (!product || product.stock < item.quantity) {
+      const product = productMap.get(String(item.product));
+      if (!product) {
         throw new NotAcceptableException(
-          `Not enough stock for ${product?.name}`,
+          `Product not found: ${String(item.product)}`,
         );
       }
-
-      await this.db.product.updateMany(
-        {
-          _id: item.product,
-        },
-        {
-          $inc: {
-            stock: -item.quantity,
-          },
-        },
-      );
+      if (product.stock < item.quantity) {
+        throw new NotAcceptableException(
+          `Not enough stock for "${product.name}". Available: ${product.stock}, requested: ${item.quantity}`,
+        );
+      }
     }
 
-    return {
-      statusCode: HttpStatus.CREATED,
-      order,
-      message: 'Order successfully created',
-    };
+    // Use transaction for atomic order creation + stock deduction
+    const session = await this.connection.startSession();
+
+    try {
+      let order: any;
+
+      await session.withTransaction(async () => {
+        // Atomically decrement stock (fails if stock goes below 0)
+        for (const item of cart.items) {
+          const result = await this.db.product.findOneAndUpdate(
+            {
+              _id: item.product,
+              stock: { $gte: item.quantity },
+            },
+            { $inc: { stock: -item.quantity } },
+            { new: true, session },
+          );
+
+          if (!result) {
+            throw new NotAcceptableException(
+              `Not enough stock for "${productMap.get(String(item.product))?.name}"`,
+            );
+          }
+        }
+
+        // Create order
+        const [created] = await this.db.order.create(
+          [
+            {
+              user: new mongoose.Types.ObjectId(userId),
+              items: cart.items,
+              totalPrice: cart.totalPrice,
+              address: orderAddress,
+            },
+          ],
+          { session },
+        );
+        order = created;
+
+        // Update user's orders array
+        await this.db.user.findByIdAndUpdate(
+          userId,
+          { $push: { orders: order._id } },
+          { session },
+        );
+
+        // Clear cart
+        await this.db.cart.deleteOne({ user: userId }, { session });
+        await this.db.user.findByIdAndUpdate(
+          userId,
+          { $set: { cart: null } },
+          { session },
+        );
+      });
+
+      this.logger.log(
+        `Order ${order.orderNumber} created for user ${userId}. Total: ${cart.totalPrice}`,
+      );
+
+      return {
+        statusCode: HttpStatus.CREATED,
+        order,
+        message: 'Order successfully created',
+      };
+    } catch (error) {
+      this.logger.error(
+        `Order creation failed for user ${userId}: ${error.message}`,
+      );
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 
   async getAll({
@@ -198,7 +255,7 @@ export class OrderService {
       throw new NotAcceptableException('Order cannot be updated right now');
 
     return {
-      statusCode: HttpStatus.CREATED,
+      statusCode: HttpStatus.OK,
       order,
       message: 'Order status updated successfully',
     };

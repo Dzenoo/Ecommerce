@@ -17,6 +17,7 @@ import { Role } from '@/types';
 
 import { User } from '@/common/decorators/user.decorator';
 
+import { ParseMongoIdPipe } from '@/common/pipes/parse-mongo-id.pipe';
 import { GetWishlistDto } from './dto/get-wishlist.dto';
 
 @Controller('/wishlist')
@@ -28,7 +29,7 @@ export class WishlistController {
   @Roles(Role.User)
   async addToWishlist(
     @User('userId') userId: string,
-    @Param('productId') productId: string,
+    @Param('productId', ParseMongoIdPipe) productId: string,
   ) {
     return await this.wishlistService.add(userId, productId);
   }
@@ -38,7 +39,7 @@ export class WishlistController {
   @Roles(Role.User)
   async removeFromWishlist(
     @User('userId') userId: string,
-    @Param('productId') productId: string,
+    @Param('productId', ParseMongoIdPipe) productId: string,
   ) {
     return await this.wishlistService.remove(userId, productId);
   }

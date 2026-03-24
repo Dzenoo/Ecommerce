@@ -3,6 +3,7 @@ import {
   HttpStatus,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import mongoose from 'mongoose';
@@ -14,10 +15,16 @@ import {
 
 @Injectable()
 export class CartService {
+  private readonly logger = new Logger(CartService.name);
+
   constructor(
     @Inject(DATABASE_MODELS_TOKEN)
     private readonly db: DatabaseModels,
   ) {}
+
+  async findOne(query: any) {
+    return this.db.cart.findOne(query);
+  }
 
   async add(
     userId: string,
@@ -28,6 +35,10 @@ export class CartService {
     const product = await this.db.product.findById(productId);
     if (!product) {
       throw new NotFoundException('Product not found');
+    }
+
+    if (quantity <= 0) {
+      throw new BadRequestException('Quantity must be greater than 0.');
     }
 
     let cart = await this.db.cart.findOne({ user: userId });
@@ -44,14 +55,18 @@ export class CartService {
         JSON.stringify(item.attributes) === JSON.stringify(attributes),
     );
 
-    if (quantity > product.stock) {
-      throw new BadRequestException('Not enough stock.');
-    } else if (quantity <= 0) {
-      throw new BadRequestException('Quantity must be greater than 0.');
+    const totalQuantity = existingProduct
+      ? existingProduct.quantity + quantity
+      : quantity;
+
+    if (totalQuantity > product.stock) {
+      throw new BadRequestException(
+        `Not enough stock. Available: ${product.stock}, in cart: ${existingProduct?.quantity || 0}.`,
+      );
     }
 
     if (existingProduct) {
-      existingProduct.quantity += quantity;
+      existingProduct.quantity = totalQuantity;
     } else {
       cart.items.push({
         product: new mongoose.Types.ObjectId(productId),
@@ -62,6 +77,7 @@ export class CartService {
 
     cart.totalPrice = await this.calculateTotalPrice(cart.items);
     cart.isActive = cart.items.length > 0;
+    cart.couponApplied = null;
 
     await cart.save();
 
@@ -78,19 +94,13 @@ export class CartService {
       throw new NotFoundException('Cart not found');
     }
 
-    const updatedCart = await this.db.cart.findByIdAndUpdate(
-      cart._id,
-      { $pull: { items: { _id: itemId } } },
-      { new: true },
+    cart.items = cart.items.filter(
+      (item: any) => item._id.toString() !== itemId,
     );
 
-    if (!updatedCart) {
-      throw new NotFoundException('Cart not found after update');
-    }
-
-    cart.totalPrice = await this.calculateTotalPrice(updatedCart.items);
+    cart.totalPrice = await this.calculateTotalPrice(cart.items);
     cart.isActive = cart.items.length > 0;
-    cart.couponApplied = undefined;
+    cart.couponApplied = null;
 
     await cart.save();
 
@@ -117,6 +127,12 @@ export class CartService {
     }
 
     if (action === 'increment') {
+      const product = await this.db.product.findById(
+        item.product.toString(),
+      );
+      if (!product || item.quantity + 1 > product.stock) {
+        throw new BadRequestException('Not enough stock.');
+      }
       item.quantity += 1;
     } else if (action === 'decrement') {
       if (item.quantity <= 1) {
@@ -181,9 +197,20 @@ export class CartService {
       attributes: Record<string, any>;
     }[],
   ): Promise<number> {
+    if (items.length === 0) return 0;
+
+    const productIds = items.map((item) => item.product.toString());
+    const products = await this.db.product.find({
+      _id: { $in: productIds },
+    });
+
+    const productMap = new Map(
+      products.map((p) => [p._id.toString(), p]),
+    );
+
     let totalPrice = 0;
     for (const item of items) {
-      const product = await this.db.product.findById(item.product.toString());
+      const product = productMap.get(item.product.toString());
       if (product) {
         totalPrice += product.price * item.quantity;
       }

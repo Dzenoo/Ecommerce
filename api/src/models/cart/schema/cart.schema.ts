@@ -39,3 +39,5 @@ export class Cart {
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);
+
+CartSchema.index({ user: 1 }, { unique: true });

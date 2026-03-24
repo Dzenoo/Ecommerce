@@ -18,6 +18,7 @@ import { Roles } from '@/common/decorators/roles.decorator';
 import { Role } from '@/types';
 import { User } from '@/common/decorators/user.decorator';
 
+import { ParseMongoIdPipe } from '@/common/pipes/parse-mongo-id.pipe';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { GetAddressesDto } from './dto/get-addresses.dto';
@@ -41,7 +42,7 @@ export class AddressController {
   @Roles(Role.User)
   async updateAddress(
     @Body() body: UpdateAddressDto,
-    @Param('addressId') addressId: string,
+    @Param('addressId', ParseMongoIdPipe) addressId: string,
     @User('userId') userId: string,
   ) {
     return await this.addressService.update(addressId, body, userId);
@@ -51,7 +52,7 @@ export class AddressController {
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
   async deleteAddress(
-    @Param('addressId') addressId: string,
+    @Param('addressId', ParseMongoIdPipe) addressId: string,
     @User('userId') userId: string,
   ) {
     return await this.addressService.delete(addressId, userId);

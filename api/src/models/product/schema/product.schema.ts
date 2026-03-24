@@ -66,9 +66,16 @@ export class Product {
     default: [],
   })
   reviews: (Review & mongoose.Types.ObjectId)[];
+
+  @Prop({ type: Boolean, default: false })
+  isDeleted: boolean;
+
+  @Prop({ type: Date, default: null })
+  deletedAt: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
 
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ 'attributes.*': 1 });
+ProductSchema.index({ isDeleted: 1 });
