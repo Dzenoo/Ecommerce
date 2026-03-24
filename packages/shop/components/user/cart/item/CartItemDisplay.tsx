@@ -113,6 +113,9 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
         </div>
         <div className="space-y-1.5 text-sm">
           <h2 className="font-medium">{item.product.name}</h2>
+          {!config.showQuantity && (
+            <div className="text-muted-foreground">Qty: {item.quantity}</div>
+          )}
           {config.showAttributes &&
             Object.entries(item.attributes).map(([key, value], i) => (
               <div key={i} className="flex items-center gap-2 capitalize">
@@ -150,7 +153,7 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
 
       {config.showTotal && (
         <div>
-          <p className="text-sm font-bold">{total} $</p>
+          <p className="text-sm font-bold">{formatPrice(total)}</p>
         </div>
       )}
 

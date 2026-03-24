@@ -1,6 +1,18 @@
 import { z } from 'zod';
 
 export const CreateAddressSchema = z.object({
+  fullName: z
+    .string()
+    .nonempty('Full name is required')
+    .min(2, 'Minimum 2 characters')
+    .max(100, 'Maximum 100 characters'),
+
+  phoneNumber: z
+    .string()
+    .nonempty('Phone number is required')
+    .min(6, 'Minimum 6 characters')
+    .max(20, 'Maximum 20 characters'),
+
   addressLine1: z
     .string()
     .nonempty()

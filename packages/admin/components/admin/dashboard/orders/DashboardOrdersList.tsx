@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { MoreHorizontal, View } from 'lucide-react';
 
 import { cn, formatDate } from '@shared/lib/utils';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 import { IOrder } from '@shared/types';
 import {
   OrderMutationType,
@@ -117,9 +118,7 @@ const DashboardOrdersList: React.FC<DashboardOrdersListProps> = ({
                     width={50}
                     height={50}
                   />
-                  <h1>
-                    {order.user.username}
-                  </h1>
+                  <h1>{order.user.username}</h1>
                 </div>
               </TableCell>
               <TableCell className="max-lg:pl-10">
@@ -136,7 +135,7 @@ const DashboardOrdersList: React.FC<DashboardOrdersListProps> = ({
                   {order.status}
                 </div>
               </TableCell>
-              <TableCell>{order.totalPrice}$</TableCell>
+              <TableCell>{formatPrice(order.totalPrice)}</TableCell>
               <TableCell>
                 <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
@@ -180,7 +179,7 @@ const DashboardOrdersList: React.FC<DashboardOrdersListProps> = ({
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={6}>Total</TableCell>
+          <TableCell colSpan={5}>Total</TableCell>
           <TableCell className="text-right">{ordersData.totalOrders}</TableCell>
         </TableRow>
       </TableFooter>

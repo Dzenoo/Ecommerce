@@ -45,6 +45,8 @@ const AddressForm: React.FC<AddressFormProps> = ({ addressToEdit = null, onSucce
   const form = useForm<FormValues>({
     resolver: zodResolver(Schema),
     defaultValues: {
+      fullName: addressToEdit?.fullName || '',
+      phoneNumber: addressToEdit?.phoneNumber || '',
       addressLine1: addressToEdit?.addressLine1 || '',
       addressLine2: addressToEdit?.addressLine2 || '',
       city: addressToEdit?.city || '',
@@ -97,6 +99,40 @@ const AddressForm: React.FC<AddressFormProps> = ({ addressToEdit = null, onSucce
         className="space-y-5"
         onSubmit={form.handleSubmit(handleCreateAddress)}
       >
+        <FormField
+          name="fullName"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name *</FormLabel>
+              <FormControl>
+                <Input placeholder="First and last name" {...field} />
+              </FormControl>
+              <FormDescription>
+                Recipient&apos;s full name for shipping
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="phoneNumber"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number *</FormLabel>
+              <FormControl>
+                <Input placeholder="+381 61 123 4567" {...field} />
+              </FormControl>
+              <FormDescription>
+                Contact number for delivery
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           name="addressLine1"
           control={form.control}

@@ -105,6 +105,14 @@ const DashboardOrderDetails: React.FC<DashboardOrderDetailsProps> = ({
             title="Deliver to"
             fields={[
               {
+                title: 'Full Name:',
+                value: data.order.address.fullName,
+              },
+              {
+                title: 'Phone Number:',
+                value: data.order.address.phoneNumber,
+              },
+              {
                 title: 'Address Line 1:',
                 value: data.order.address.addressLine1,
               },

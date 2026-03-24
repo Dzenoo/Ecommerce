@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { CreateAddressSchema } from './address.zod';
 
 export const CreateOrderSchema = CreateAddressSchema.pick({
+  fullName: true,
+  phoneNumber: true,
   addressLine1: true,
   addressLine2: true,
   city: true,

@@ -69,15 +69,15 @@ const DashboardOrderDetailsProducts: React.FC<
                     return discountPercent > 0 ? (
                       <div className="space-y-0.5">
                         <div>
-                          {finalUnitPrice}$
+                          {formatPrice(finalUnitPrice)}
                         </div>
                         <div className="text-xs text-muted-foreground line-through">
-                          {basePrice}$
+                          {formatPrice(basePrice)}
                         </div>
                       </div>
                     ) : (
                       <>
-                        {basePrice}$
+                        {formatPrice(basePrice)}
                       </>
                     );
                   })()}
@@ -98,9 +98,8 @@ const DashboardOrderDetailsProducts: React.FC<
 
                     const lineTotal =
                       Math.round(finalUnitPrice * item.quantity * 100) / 100;
-                    return lineTotal;
+                    return formatPrice(lineTotal);
                   })()}
-                  $
                 </TableCell>
               </TableRow>
             ))}

@@ -1,6 +1,8 @@
 import { IUser } from './user.types';
 
 export type CreateAddressDto = {
+  fullName: string;
+  phoneNumber: string;
   addressLine1: string;
   addressLine2?: string;
   city: string;

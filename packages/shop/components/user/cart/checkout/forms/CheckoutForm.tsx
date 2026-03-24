@@ -69,6 +69,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(CreateOrderSchema),
     defaultValues: {
+      fullName: '',
+      phoneNumber: '',
       addressLine1: '',
       addressLine2: '',
       city: '',
@@ -171,6 +173,38 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
             onSubmit={form.handleSubmit(handleCreateManualOrder)}
             className="w-full space-y-5"
           >
+            <FormField
+              name="fullName"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name *</FormLabel>
+                  <FormControl>
+                    <Input placeholder="First and last name" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Recipient&apos;s full name for shipping
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="phoneNumber"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number *</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+381 61 123 4567" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Contact number for delivery
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-2 items-center gap-5 max-[400px]:grid-cols-1">
               <FormField
                 name="addressLine1"

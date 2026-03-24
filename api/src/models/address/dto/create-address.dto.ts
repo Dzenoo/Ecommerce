@@ -9,6 +9,16 @@ import {
 export class CreateAddressDto {
   @IsString()
   @IsNotEmpty()
+  @Length(2, 100)
+  fullName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Length(6, 20)
+  phoneNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
   @Length(5, 100)
   addressLine1: string;
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { formatPrice } from '@shared/lib/utils/currency.utils';
 
 import {
   Card,
@@ -77,7 +78,7 @@ const SalesPerformance: React.FC<SalesPerformanceProps> = ({ data }) => {
             <YAxis
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `€${value}`}
+              tickFormatter={(value) => formatPrice(value)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Area

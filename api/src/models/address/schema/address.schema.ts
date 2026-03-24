@@ -14,6 +14,12 @@ export class Address {
   })
   user: User & mongoose.Types.ObjectId;
 
+  @Prop({ type: String, required: true, minlength: 2, maxlength: 100 })
+  fullName: string;
+
+  @Prop({ type: String, required: true, minlength: 6, maxlength: 20 })
+  phoneNumber: string;
+
   @Prop({ type: String, required: true, minlength: 5, maxlength: 100 })
   addressLine1: string;
 
