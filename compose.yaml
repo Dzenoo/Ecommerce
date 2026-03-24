@@ -1,13 +1,13 @@
 version: "3.9"
 services:
-  storefront:
+  shop:
     build:
       context: .
-      dockerfile: packages/storefront/Dockerfile
+      dockerfile: packages/shop/Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./packages/storefront:/app/packages/storefront
+      - ./packages/shop:/app/packages/shop
       - ./packages/shared:/app/packages/shared
       - /app/node_modules
     environment:
