@@ -11,6 +11,7 @@ import {
   DATABASE_MODELS_TOKEN,
   DatabaseModels,
 } from '@/common/modules/database/database.types';
+import { withTransaction } from '@/common/utils';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
@@ -87,70 +88,61 @@ export class OrderService {
     }
 
     // Use transaction for atomic order creation + stock deduction
-    const session = await this.connection.startSession();
+    const order = await withTransaction(this.connection, async (session) => {
+      // Atomically decrement stock (fails if stock goes below 0)
+      for (const item of cart.items) {
+        const result = await this.db.product.findOneAndUpdate(
+          {
+            _id: item.product,
+            stock: { $gte: item.quantity },
+          },
+          { $inc: { stock: -item.quantity } },
+          { new: true, session },
+        );
 
-    try {
-      let order: any;
-
-      await session.withTransaction(async () => {
-        // Atomically decrement stock (fails if stock goes below 0)
-        for (const item of cart.items) {
-          const result = await this.db.product.findOneAndUpdate(
-            {
-              _id: item.product,
-              stock: { $gte: item.quantity },
-            },
-            { $inc: { stock: -item.quantity } },
-            { new: true, session },
+        if (!result) {
+          throw new NotAcceptableException(
+            `Not enough stock for "${productMap.get(String(item.product))?.name}"`,
           );
-
-          if (!result) {
-            throw new NotAcceptableException(
-              `Not enough stock for "${productMap.get(String(item.product))?.name}"`,
-            );
-          }
         }
+      }
 
-        // Create order
-        const [created] = await this.db.order.create(
-          [
-            {
-              user: new mongoose.Types.ObjectId(userId),
-              items: orderItems,
-              totalPrice: Math.round(discountedTotalPrice * 100) / 100,
-              address: orderAddress,
-            },
-          ],
-          { session },
-        );
-        order = created;
+      // Create order
+      const [created] = await this.db.order.create(
+        [
+          {
+            user: new mongoose.Types.ObjectId(userId),
+            items: orderItems,
+            totalPrice: Math.round(discountedTotalPrice * 100) / 100,
+            address: orderAddress,
+          },
+        ],
+        { session },
+      );
 
-        // Update user's orders array
-        await this.db.user.findByIdAndUpdate(
-          userId,
-          { $push: { orders: order._id } },
-          { session },
-        );
+      // Update user's orders array
+      await this.db.user.findByIdAndUpdate(
+        userId,
+        { $push: { orders: created._id } },
+        { session },
+      );
 
-        // Clear cart
-        await this.db.cart.deleteOne({ user: userId }, { session });
-        await this.db.user.findByIdAndUpdate(
-          userId,
-          { $set: { cart: null } },
-          { session },
-        );
-      });
+      // Clear cart
+      await this.db.cart.deleteOne({ user: userId }, { session });
+      await this.db.user.findByIdAndUpdate(
+        userId,
+        { $set: { cart: null } },
+        { session },
+      );
 
-      return {
-        statusCode: HttpStatus.CREATED,
-        order,
-        message: 'Order successfully created',
-      };
-    } catch (error) {
-      throw error;
-    } finally {
-      session.endSession();
-    }
+      return created;
+    });
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      order,
+      message: 'Order successfully created',
+    };
   }
 
   async getAll({

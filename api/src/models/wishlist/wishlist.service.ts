@@ -85,29 +85,30 @@ export class WishlistService {
     const wishlist = await this.db.wishlist
       .findOne({ user: userId })
       .select('_id products')
-      .populate({
-        path: 'products',
-        options: {
-          skip: (query.page - 1) * query.limit,
-          limit: query.limit,
-        },
-      })
+      .lean()
       .exec();
 
     if (!wishlist) {
       return {
         statusCode: HttpStatus.NOT_FOUND,
-        wishlist: {
-          products: [],
-        },
+        wishlist: { products: [] },
         totalProducts: 0,
       };
     }
 
+    const totalProducts = wishlist.products.length;
+    const skip = (query.page - 1) * query.limit;
+    const paginatedIds = wishlist.products.slice(skip, skip + query.limit);
+
+    const products = await this.db.product
+      .find({ _id: { $in: paginatedIds }, isDeleted: { $ne: true } })
+      .lean()
+      .exec();
+
     return {
       statusCode: HttpStatus.OK,
-      wishlist,
-      totalProducts: wishlist.products.length,
+      wishlist: { _id: wishlist._id, products },
+      totalProducts,
     };
   }
 }

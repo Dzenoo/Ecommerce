@@ -34,9 +34,9 @@ export class ProductService {
       throw new NotAcceptableException('At least one image is required.');
     }
 
-    if (body.discount > body.price) {
+    if (body.discount !== undefined && (body.discount < 0 || body.discount > 100)) {
       throw new NotAcceptableException(
-        'Discount cannot be greater than price.',
+        'Discount must be between 0 and 100 (percentage).',
       );
     }
 
