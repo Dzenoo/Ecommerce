@@ -32,14 +32,22 @@ export class Order {
         required: true,
       },
       quantity: { type: Number, required: true, min: 1 },
+      // Snapshot of pricing at the moment the order was created.
+      // This prevents past orders from changing if admin edits product discount later.
+      unitPrice: { type: Number, default: 0 }, // original unit price
+      discountPercent: { type: Number, default: 0 }, // applied discount percent
+      finalUnitPrice: { type: Number, default: 0 }, // discounted unit price
     },
   ])
   items: {
     product: Product & mongoose.Types.ObjectId;
     quantity: number;
+    unitPrice?: number;
+    discountPercent?: number;
+    finalUnitPrice?: number;
   }[];
 
-  @Prop({ type: Number, required: true, min: 0.01 })
+  @Prop({ type: Number, required: true, min: 0 })
   totalPrice: number;
 
   @Prop({

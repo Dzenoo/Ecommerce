@@ -51,7 +51,10 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
   const { toast } = useToast();
 
   const category = getCategory('id', item.product.category);
-  const total = item.product.price * item.quantity;
+  const discountPercent = item.product.discount ?? 0;
+  const discountedUnitPrice =
+    Math.round(item.product.price * (1 - discountPercent / 100) * 100) / 100;
+  const total = Math.round(discountedUnitPrice * item.quantity * 100) / 100;
 
   const mutation = useCartMutation({
     onSuccess: (response) => {
@@ -131,7 +134,16 @@ const CartItemDisplay: React.FC<CartItemDisplayProps> = ({ item, config }) => {
 
       {config.showPrice && (
         <div className="col-span-1">
-          <p className="text-sm">{item.product.price} $</p>
+          {discountPercent > 0 ? (
+            <p className="text-sm">
+              {discountedUnitPrice} $
+              <span className="ml-2 text-xs text-muted-foreground line-through">
+                {item.product.price} $
+              </span>
+            </p>
+          ) : (
+            <p className="text-sm">{item.product.price} $</p>
+          )}
         </div>
       )}
 

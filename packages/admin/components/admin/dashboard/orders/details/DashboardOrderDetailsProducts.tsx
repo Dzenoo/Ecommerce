@@ -53,10 +53,54 @@ const DashboardOrderDetailsProducts: React.FC<
                   </div>
                 </TableCell>
                 <TableCell className="max-sm:pl-5">
-                  {item.product.price}$
+                  {(() => {
+                    const basePrice = item.unitPrice ?? item.product.price;
+                    const discountPercent =
+                      item.discountPercent ?? item.product.discount ?? 0;
+                    const finalUnitPrice =
+                      item.finalUnitPrice ??
+                      (discountPercent > 0
+                        ? Math.round(
+                            basePrice * (1 - discountPercent / 100) * 100,
+                          ) / 100
+                        : basePrice);
+
+                    return discountPercent > 0 ? (
+                      <div className="space-y-0.5">
+                        <div>
+                          {finalUnitPrice}$
+                        </div>
+                        <div className="text-xs text-muted-foreground line-through">
+                          {basePrice}$
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {basePrice}$
+                      </>
+                    );
+                  })()}
                 </TableCell>
                 <TableCell>{item.quantity}</TableCell>
-                <TableCell>{item.product.price * item.quantity}$</TableCell>
+                <TableCell>
+                  {(() => {
+                    const basePrice = item.unitPrice ?? item.product.price;
+                    const discountPercent =
+                      item.discountPercent ?? item.product.discount ?? 0;
+                    const finalUnitPrice =
+                      item.finalUnitPrice ??
+                      (discountPercent > 0
+                        ? Math.round(
+                            basePrice * (1 - discountPercent / 100) * 100,
+                          ) / 100
+                        : basePrice);
+
+                    const lineTotal =
+                      Math.round(finalUnitPrice * item.quantity * 100) / 100;
+                    return lineTotal;
+                  })()}
+                  $
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

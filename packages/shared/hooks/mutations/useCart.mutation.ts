@@ -1,4 +1,8 @@
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import {
   addItem,
@@ -45,6 +49,8 @@ const useCartMutation = (
   >,
 ) => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { onSuccess, onError, ...restOptions } = options || {};
 
   const mutationFn = (payload: CartMutationPayload) => {
     switch (payload.type) {
@@ -63,10 +69,15 @@ const useCartMutation = (
 
   const mutation = useMutation({
     mutationFn,
-    onError: (error: any) => {
-      toast({ title: 'Error', description: error?.response?.data?.message });
+    ...restOptions,
+    onSuccess: async (data, variables, onMutateResult, context) => {
+      await queryClient.invalidateQueries({ queryKey: ['cart'] });
+      onSuccess?.(data, variables, onMutateResult, context);
     },
-    ...options,
+    onError: (error: any, variables, onMutateResult, context) => {
+      toast({ title: 'Error', description: error?.response?.data?.message });
+      onError?.(error, variables, onMutateResult, context);
+    },
   });
 
   return mutation;

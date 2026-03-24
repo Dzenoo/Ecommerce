@@ -24,6 +24,9 @@ type ProductItemProps = {
 
 const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const category = getCategory('id', product.category);
+  const discountPercent = product.discount ?? 0;
+  const discountedPrice =
+    Math.round(product.price * (1 - discountPercent / 100) * 100) / 100;
 
   return (
     <li>
@@ -69,7 +72,18 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         <Separator />
         <CardFooter className="flex items-center justify-between gap-2">
           <Button type="button" variant="outline" className="flex-1">
-            {product.price} $
+            {discountPercent > 0 ? (
+              <span className="flex items-center gap-2">
+                <span>{discountedPrice} $</span>
+                <span className="text-xs text-muted-foreground line-through">
+                  {product.price} $
+                </span>
+              </span>
+            ) : (
+              <>
+                {product.price} $
+              </>
+            )}
           </Button>
         </CardFooter>
       </Card>

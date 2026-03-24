@@ -22,6 +22,9 @@ type ProductInformationProps = {
 const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
   const [attributes, setAttributes] = useState<Record<string, any>>({});
   const isOutOfStock = product.stock === 0;
+  const discountPercent = product.discount ?? 0;
+  const discountedPrice =
+    Math.round(product.price * (1 - discountPercent / 100) * 100) / 100;
 
   const handlePick = ({ key, value }: { key: string; value: any }) => {
     setAttributes((prev) => {
@@ -72,7 +75,16 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         </button>
 
         <div>
-          <p className="text-xl font-semibold">{product.price} $</p>
+          {discountPercent > 0 ? (
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <p className="text-xl font-semibold">{discountedPrice} $</p>
+              <p className="text-sm text-muted-foreground line-through">
+                {product.price} $
+              </p>
+            </div>
+          ) : (
+            <p className="text-xl font-semibold">{product.price} $</p>
+          )}
         </div>
 
         <Separator />

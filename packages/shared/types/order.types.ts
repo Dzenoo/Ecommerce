@@ -27,6 +27,9 @@ export interface IOrder {
     _id: string;
     product: IProduct & string;
     quantity: number;
+    unitPrice?: number;
+    discountPercent?: number;
+    finalUnitPrice?: number;
   }[];
   totalPrice: number;
   status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';

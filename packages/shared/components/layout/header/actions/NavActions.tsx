@@ -6,6 +6,7 @@ import { LogOut, User } from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
 
 import { useCurrentUser } from "../../../../hooks/useCurrentUser";
+import { CartQueryType, useCartQuery } from "@shared/hooks/queries/useCart.query";
 
 import Logo from "../Logo";
 import { NavSearch } from "./search/NavSearch";
@@ -20,15 +21,26 @@ const NavActions: React.FC<{
 }> = ({ showSearch = true }) => {
   const { isAuthenticated, isLoading } = useCurrentUser();
   const { signOut } = useClerk();
+  const { data: cartData } = useCartQuery(
+    {
+      type: CartQueryType.GET_CART,
+    },
+    {
+      enabled: isAuthenticated,
+    },
+  );
+
+  const cartItemsCount =
+    cartData?.cart?.items?.reduce((total, item) => total + item.quantity, 0) || 0;
 
   return (
     <div className="base-padding hide-scrollbar flex items-center justify-between gap-10 bg-white py-5">
-      <div>
+      <div className="max-sm:hidden">
         <Logo />
       </div>
 
       {showSearch && (
-        <div className="basis-1/3">
+        <div className="basis-1/3 max-sm:basis-full">
           <NavSearch />
         </div>
       )}
@@ -40,7 +52,14 @@ const NavActions: React.FC<{
           {isAuthenticated &&
             UserNavbarActions.map(({ id, icon, text, href }) => (
               <TooltipWrapper key={id} tooltip={text}>
-                <Link href={href}>{React.createElement(icon)}</Link>
+                <Link href={href} className="relative inline-block">
+                  {React.createElement(icon)}
+                  {href === "/cart" && cartItemsCount > 0 && (
+                    <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-none text-white">
+                      {cartItemsCount > 99 ? "99+" : cartItemsCount}
+                    </span>
+                  )}
+                </Link>
               </TooltipWrapper>
             ))}
 

@@ -166,7 +166,25 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                   <div>
                     <FieldGroup
                       title="Product Price"
-                      value={item.product.price + ' $'}
+                      value={
+                        (() => {
+                          const basePrice =
+                            item.unitPrice ?? item.product.price;
+                          const discountPercent =
+                            item.discountPercent ??
+                            item.product.discount ??
+                            0;
+                          const finalUnitPrice =
+                            item.finalUnitPrice ??
+                            (discountPercent > 0
+                              ? Math.round(
+                                  basePrice * (1 - discountPercent / 100) * 100,
+                                ) / 100
+                              : basePrice);
+
+                          return `${finalUnitPrice} $`;
+                        })()
+                      }
                       customStyles={customStyles}
                     />
                   </div>

@@ -47,6 +47,16 @@ export class OrderService {
     const products = await this.db.product.find({ _id: { $in: productIds } });
     const productMap = new Map(products.map((p) => [p._id.toString(), p]));
 
+    // Freeze unit pricing/discounts per order item.
+    const orderItems: {
+      product: any;
+      quantity: number;
+      unitPrice: number;
+      discountPercent: number;
+      finalUnitPrice: number;
+    }[] = [];
+
+    let discountedTotalPrice = 0;
     for (const item of cart.items) {
       const product = productMap.get(String(item.product));
       if (!product) {
@@ -59,6 +69,21 @@ export class OrderService {
           `Not enough stock for "${product.name}". Available: ${product.stock}, requested: ${item.quantity}`,
         );
       }
+
+      const discountPercent = product.discount ?? 0;
+      const unitPrice = product.price;
+      const finalUnitPrice =
+        Math.round(unitPrice * (1 - discountPercent / 100) * 100) / 100;
+
+      orderItems.push({
+        product: item.product,
+        quantity: item.quantity,
+        unitPrice,
+        discountPercent,
+        finalUnitPrice,
+      });
+
+      discountedTotalPrice += finalUnitPrice * item.quantity;
     }
 
     // Use transaction for atomic order creation + stock deduction
@@ -91,8 +116,8 @@ export class OrderService {
           [
             {
               user: new mongoose.Types.ObjectId(userId),
-              items: cart.items,
-              totalPrice: cart.totalPrice,
+              items: orderItems,
+              totalPrice: Math.round(discountedTotalPrice * 100) / 100,
               address: orderAddress,
             },
           ],
@@ -148,7 +173,7 @@ export class OrderService {
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('user', 'username email')
-      .populate('items.product', 'name images price')
+      .populate('items.product', 'name images price discount')
       .lean()
       .exec();
 
@@ -169,7 +194,7 @@ export class OrderService {
     const order = await this.db.order
       .findById(id)
       .populate('user', 'username email')
-      .populate('items.product', 'name images price')
+      .populate('items.product', 'name images price discount')
       .lean()
       .exec();
 
@@ -211,7 +236,7 @@ export class OrderService {
       .sort({ createdAt: sort === 'desc' ? -1 : 1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('items.product', 'name images price category')
+      .populate('items.product', 'name images price discount category')
       .populate('user', 'username email _id')
       .lean()
       .exec();

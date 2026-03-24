@@ -160,6 +160,9 @@ export class CartService {
       };
     }
 
+    // Keep cart.totalPrice consistent with current product pricing/discounts.
+    cart.totalPrice = await this.calculateTotalPrice(cart.items);
+
     return {
       statusCode: HttpStatus.OK,
       cart,
@@ -192,7 +195,9 @@ export class CartService {
   ): Promise<number> {
     if (items.length === 0) return 0;
 
-    const productIds = items.map((item) => item.product.toString());
+    const productIds = items.map((item) =>
+      String(item.product?._id ? item.product._id : item.product),
+    );
     const products = await this.db.product.find({
       _id: { $in: productIds },
     });
@@ -201,11 +206,16 @@ export class CartService {
 
     let totalPrice = 0;
     for (const item of items) {
-      const product = productMap.get(item.product.toString());
+      const productId = String(item.product?._id ? item.product._id : item.product);
+      const product = productMap.get(productId);
       if (product) {
-        totalPrice += product.price * item.quantity;
+        const discountPercent = product.discount ?? 0;
+        const discountedUnitPrice =
+          Math.round(product.price * (1 - discountPercent / 100) * 100) / 100;
+        totalPrice += discountedUnitPrice * item.quantity;
       }
     }
-    return totalPrice;
+    // Round to 2 decimals to avoid floating-point drift.
+    return Math.round(totalPrice * 100) / 100;
   }
 }
