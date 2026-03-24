@@ -31,6 +31,7 @@ export class FileService {
         Bucket: this.configService.get('AWS_BUCKET'),
         Key: `${folder}/${key}`,
         Body: file.buffer,
+        ContentType: file.mimetype,
       };
 
       const upload = new Upload({
@@ -59,6 +60,7 @@ export class FileService {
       Bucket: this.configService.get('AWS_BUCKET'),
       Key: `${folder}/${key}`,
       Body: file.buffer,
+      ContentType: file.mimetype,
     };
 
     const upload = new Upload({
