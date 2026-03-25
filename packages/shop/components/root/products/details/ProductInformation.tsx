@@ -13,6 +13,7 @@ import AddToCart from '../item/AddToCart';
 import HtmlRenderer from '@shared/helpers/HtmlRenderer';
 import PickQuantity from './PickQuantity';
 
+import { Badge } from '@shared/components/ui/info/badge';
 import { Button } from '@shared/components/ui/buttons/button';
 import { Separator } from '@shared/components/ui/layout/separator';
 
@@ -77,13 +78,16 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
 
         <div>
           {discountPercent > 0 ? (
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <p className="text-xl font-semibold">
                 {formatPrice(discountedPrice)}
               </p>
               <p className="text-sm text-muted-foreground line-through">
                 {formatPrice(product.price)}
               </p>
+              <Badge variant="destructive" className="rounded-md">
+                -{discountPercent}%
+              </Badge>
             </div>
           ) : (
             <p className="text-xl font-semibold">
@@ -96,28 +100,55 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
 
         <div className="space-y-8">
           {Object.entries(product.attributes).map(([key, value]) => {
+            const isColor = key.toLowerCase() === 'color';
+            const isSelected = (v: any) =>
+              Object.values(attributes).includes(v);
+
             return (
               <div key={key} className="space-y-2">
                 <label className="text-base font-medium capitalize">
                   {key}
+                  {isColor && attributes[key] && (
+                    <span className="ml-2 text-sm font-normal text-muted-foreground">
+                      — {attributes[key]}
+                    </span>
+                  )}
                 </label>
                 <div className="text-sm capitalize">
                   {value instanceof Array ? (
                     <div className="flex flex-wrap items-center gap-2">
-                      {value.map((v, i) => (
-                        <Button
-                          key={i}
-                          className={cn(
-                            'capitalize',
-                            Object.values(attributes).includes(v) &&
-                              'border-blue-500',
-                          )}
-                          variant="outline"
-                          onClick={() => handlePick({ key, value: v })}
-                        >
-                          {v}
-                        </Button>
-                      ))}
+                      {isColor
+                        ? value.map((v, i) => (
+                            <button
+                              key={i}
+                              title={String(v)}
+                              className={cn(
+                                'flex h-9 w-9 items-center justify-center rounded-full border transition-all',
+                                isSelected(v)
+                                  ? 'border-foreground'
+                                  : 'border-transparent hover:border-muted-foreground/50',
+                              )}
+                              onClick={() => handlePick({ key, value: v })}
+                            >
+                              <span
+                                className="h-6 w-6 rounded-full border border-border"
+                                style={{ backgroundColor: String(v) }}
+                              />
+                            </button>
+                          ))
+                        : value.map((v, i) => (
+                            <Button
+                              key={i}
+                              className={cn(
+                                'capitalize',
+                                isSelected(v) && 'border-blue-500',
+                              )}
+                              variant="outline"
+                              onClick={() => handlePick({ key, value: v })}
+                            >
+                              {v}
+                            </Button>
+                          ))}
                     </div>
                   ) : (
                     <p className="text-muted-foreground">{value}</p>

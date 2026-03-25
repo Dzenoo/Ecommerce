@@ -6,8 +6,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname:
-          'ecommerce-shop-assets-dzenis.s3.eu-central-1.amazonaws.com',
+        hostname: 'ecommerce-shop-assets-dzenis.s3.eu-central-1.amazonaws.com',
         port: '',
         pathname: '/**',
       },

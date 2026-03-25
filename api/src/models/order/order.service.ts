@@ -49,7 +49,18 @@ export class OrderService {
       if (!address) {
         throw new NotAcceptableException('Address not found');
       }
-      orderAddress = body.addressId;
+      // Snapshot the full address so the order is self-contained
+      // even if the user later deletes/edits the address.
+      orderAddress = {
+        fullName: address.fullName,
+        phoneNumber: address.phoneNumber,
+        addressLine1: address.addressLine1,
+        addressLine2: address.addressLine2,
+        city: address.city,
+        state: address.state,
+        postalCode: address.postalCode,
+        country: address.country,
+      };
     } else if (body.address) {
       orderAddress = body.address;
     } else {

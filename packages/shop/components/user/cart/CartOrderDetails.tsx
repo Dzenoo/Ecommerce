@@ -56,7 +56,7 @@ const CartOrderDetails: React.FC<CartOrderDetailsProps> = ({
           title="Delivery"
           value={'Shipping costs are calculated during checkout.'}
           customStyles={{
-            div: 'flex flex-row justify-between items-center',
+            div: 'flex flex-row justify-between items-center flex-wrap',
             p: ' text-sm',
           }}
         />

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { GeistSans } from 'geist/font/sans';
+import { Space_Grotesk } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 
 import { QueryContextProvider } from '@shared/context/react-query-client';
@@ -8,6 +8,11 @@ import { Toaster } from '@shared/components/ui/info/toaster';
 
 import '../globals.css';
 import UserLayoutWrapper from './_UserLayoutWrapper';
+
+const sg = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   icons: 'favicon.ico',
@@ -25,7 +30,7 @@ export default function UsersLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={GeistSans.className}>
+        <body className={sg.className}>
           <ClerkTokenProvider>
             <QueryContextProvider>
               <UserLayoutWrapper>{children}</UserLayoutWrapper>

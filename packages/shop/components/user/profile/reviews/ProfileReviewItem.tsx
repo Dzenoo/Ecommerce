@@ -31,14 +31,7 @@ const ProfileReviewItem: React.FC<ProfileReviewItemProps> = ({ review }) => {
             </Link>
           </div>
           <div>
-            <div>
-              <h1 className="font-medium">{review.product.name}</h1>
-            </div>
-            <div>
-              <p className="truncate text-sm text-muted-foreground">
-                {review.product.description}
-              </p>
-            </div>
+            <h1 className="font-medium">{review.product.name}</h1>
           </div>
         </div>
         <div>

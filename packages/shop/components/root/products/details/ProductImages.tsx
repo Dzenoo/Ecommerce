@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+
 import { cn } from '@shared/lib/utils';
 
 type ProductImagesProps = {
@@ -85,7 +86,7 @@ const ProductImages: React.FC<ProductImagesProps> = ({ images }) => {
             height={100}
             className={cn(
               'h-28 w-28 cursor-pointer select-none object-cover shadow-md transition-all',
-              index === currentImage && 'border-2 border-blue-500 opacity-70',
+              index === currentImage && 'border-2 border-gray-800 opacity-70',
             )}
             onClick={() => setCurrentImage(index)}
           />

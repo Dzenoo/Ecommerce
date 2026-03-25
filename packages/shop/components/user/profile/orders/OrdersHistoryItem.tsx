@@ -69,7 +69,16 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
     {
       id: 3,
       title: 'Ship To',
-      value: order.user.username,
+      value:
+        typeof order.address === 'object' && order.address?.city
+          ? `${order.address.city}, ${order.address.country}`
+          : order.user.username,
+      customStyles,
+    },
+    {
+      id: 4,
+      title: 'Status',
+      value: order.status,
       customStyles,
     },
   ];
@@ -186,6 +195,13 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                           return formatPrice(finalUnitPrice);
                         })()
                       }
+                      customStyles={customStyles}
+                    />
+                  </div>
+                  <div>
+                    <FieldGroup
+                      title="Quantity"
+                      value={String(item.quantity)}
                       customStyles={customStyles}
                     />
                   </div>
