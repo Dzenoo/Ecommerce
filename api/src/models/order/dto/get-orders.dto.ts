@@ -24,9 +24,11 @@ export class GetOrdersDto {
 
   @IsOptional()
   @IsEnum(['asc', 'desc'])
+  @Transform(({ value }) => (value === '' ? undefined : value))
   readonly sort?: 'asc' | 'desc';
 
   @IsOptional()
   @IsEnum(['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'])
+  @Transform(({ value }) => (value === '' ? undefined : value))
   readonly status?: string;
 }

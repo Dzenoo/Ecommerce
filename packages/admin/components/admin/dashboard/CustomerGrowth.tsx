@@ -18,33 +18,7 @@ import {
 } from '@shared/components/ui/utilities/chart';
 
 type CustomerGrowthProps = {
-  data: { id: string; createdAt: string }[];
-};
-
-const transformData = (customers: { id: string; createdAt: string }[]) => {
-  const monthlyCounts: Record<string, number> = {};
-
-  customers.forEach((customer) => {
-    const date = new Date(customer.createdAt);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const key = `${year}-${month}`;
-    monthlyCounts[key] = (monthlyCounts[key] || 0) + 1;
-  });
-
-  return Object.keys(monthlyCounts)
-    .sort()
-    .map((key) => {
-      const [year, month] = key.split('-');
-      const date = new Date(parseInt(year), parseInt(month) - 1);
-      return {
-        month: date.toLocaleDateString('en-US', {
-          month: 'short',
-          year: 'numeric',
-        }),
-        newCustomers: monthlyCounts[key],
-      };
-    });
+  data: { _id: { year: number; month: number }; count: number }[];
 };
 
 const chartConfig = {
@@ -55,16 +29,22 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const CustomerGrowth: React.FC<CustomerGrowthProps> = ({ data }) => {
-  let chartData = transformData(data);
+  let chartData = (data || []).map((entry) => {
+    const date = new Date(entry._id.year, entry._id.month - 1);
+    return {
+      month: date.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric',
+      }),
+      newCustomers: entry.count,
+    };
+  });
 
   if (chartData.length === 0) {
     chartData = [
       { month: 'Jan 2025', newCustomers: 0 },
       { month: 'Feb 2025', newCustomers: 0 },
       { month: 'Mar 2025', newCustomers: 0 },
-      { month: 'Apr 2025', newCustomers: 0 },
-      { month: 'May 2025', newCustomers: 0 },
-      { month: 'Jun 2025', newCustomers: 0 },
     ];
   }
 
@@ -104,7 +84,7 @@ const CustomerGrowth: React.FC<CustomerGrowthProps> = ({ data }) => {
               content={
                 <ChartTooltipContent
                   indicator="line"
-                  nameKey="newCustomers "
+                  nameKey="newCustomers"
                   hideLabel
                 />
               }

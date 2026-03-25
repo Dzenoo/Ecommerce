@@ -81,6 +81,7 @@ export class OrderService {
     const orderItems: {
       product: any;
       quantity: number;
+      attributes: Record<string, any>;
       unitPrice: number;
       discountPercent: number;
       finalUnitPrice: number;
@@ -108,6 +109,7 @@ export class OrderService {
       orderItems.push({
         product: item.product,
         quantity: item.quantity,
+        attributes: item.attributes || {},
         unitPrice,
         discountPercent,
         finalUnitPrice,

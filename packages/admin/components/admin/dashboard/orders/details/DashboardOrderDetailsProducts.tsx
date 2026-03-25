@@ -31,7 +31,7 @@ const DashboardOrderDetailsProducts: React.FC<
         <Table>
           <TableHeader>
             <TableRow>
-              {['Product Name', 'Price', 'Quantity', 'Total'].map((header) => (
+              {['Product Name', 'Attributes', 'Price', 'Quantity', 'Total'].map((header) => (
                 <TableHead className="whitespace-nowrap" key={header}>
                   {header}
                 </TableHead>
@@ -52,6 +52,20 @@ const DashboardOrderDetailsProducts: React.FC<
                     />
                     <h1>{item.product.name}</h1>
                   </div>
+                </TableCell>
+                <TableCell>
+                  {item.attributes && Object.keys(item.attributes).length > 0 ? (
+                    <div className="space-y-0.5 text-sm">
+                      {Object.entries(item.attributes).map(([key, value]) => (
+                        <div key={key}>
+                          <span className="capitalize text-muted-foreground">{key}:</span>{' '}
+                          <span className="capitalize">{String(value)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground">—</span>
+                  )}
                 </TableCell>
                 <TableCell className="max-sm:pl-5">
                   {(() => {

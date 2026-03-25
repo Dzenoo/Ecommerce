@@ -58,4 +58,7 @@ export class CreateProductDto {
   @Transform(({ value }) => JSON.parse(value))
   @Validate(AttributesValidator)
   attributes: Record<string, any>;
+
+  @IsOptional()
+  images?: any;
 }

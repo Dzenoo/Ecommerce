@@ -1,6 +1,6 @@
 'use client';
 
-import { Pie, PieChart, Cell, ResponsiveContainer, Legend } from 'recharts';
+import { Pie, PieChart, Cell, ResponsiveContainer } from 'recharts';
 
 import {
   Card,
@@ -19,7 +19,7 @@ import {
 import { useMediaQuery } from '@shared/hooks/core/useMediaQuery.hook';
 
 type OrdersByStatusProps = {
-  data: { id: string; status: string }[];
+  data: { _id: string; count: number }[];
 };
 
 const chartConfig = {
@@ -48,17 +48,12 @@ const chartConfig = {
 const OrdersByStatus: React.FC<OrdersByStatusProps> = ({ data }) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
-  const groupedData = data.reduce((acc: Record<string, number>, order) => {
-    acc[order.status] = (acc[order.status] || 0) + 1;
-    return acc;
-  }, {});
-
-  let pieChartData = Object.entries(groupedData).map(([status, count]) => ({
-    status,
-    count,
+  let pieChartData = (data || []).map((entry) => ({
+    status: entry._id,
+    count: entry.count,
   }));
 
-  if (data.length === 0) {
+  if (pieChartData.length === 0) {
     pieChartData = [{ status: 'No Orders', count: 1 }];
   }
 

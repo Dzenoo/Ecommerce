@@ -27,6 +27,7 @@ export interface IOrder {
     _id: string;
     product: IProduct & string;
     quantity: number;
+    attributes?: Record<string, any>;
     unitPrice?: number;
     discountPercent?: number;
     finalUnitPrice?: number;

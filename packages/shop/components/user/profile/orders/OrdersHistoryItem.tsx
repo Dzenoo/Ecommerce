@@ -15,7 +15,11 @@ import Loader from '@shared/components/ui/info/loader';
 
 import { Button } from '@shared/components/ui/buttons/button';
 import { Separator } from '@shared/components/ui/layout/separator';
-import { Card, CardContent, CardHeader } from '@shared/components/ui/layout/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from '@shared/components/ui/layout/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,8 +74,10 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
       id: 3,
       title: 'Ship To',
       value:
+        // @ts-ignore
         typeof order.address === 'object' && order.address?.city
-          ? `${order.address.city}, ${order.address.country}`
+          ? // @ts-ignore
+            `${order.address.city}, ${order.address.country}`
           : order.user.username,
       customStyles,
     },
@@ -149,7 +155,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
           </div>
         </CardHeader>
         <Separator />
-        <CardContent>
+        <CardContent className="space-y-5">
           {order.items.map((item, i) => (
             <div
               key={i}
@@ -160,8 +166,8 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                   className="min-h-28 w-fit min-w-28 rounded-lg border"
                   src={item.product.images[0]}
                   alt={item.product.name}
-                  width={150}
-                  height={150}
+                  width={100}
+                  height={100}
                 />
               </div>
               <div className="space-y-4">
@@ -176,25 +182,20 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                   <div>
                     <FieldGroup
                       title="Product Price"
-                      value={
-                        (() => {
-                          const basePrice =
-                            item.unitPrice ?? item.product.price;
-                          const discountPercent =
-                            item.discountPercent ??
-                            item.product.discount ??
-                            0;
-                          const finalUnitPrice =
-                            item.finalUnitPrice ??
-                            (discountPercent > 0
-                              ? Math.round(
-                                  basePrice * (1 - discountPercent / 100) * 100,
-                                ) / 100
-                              : basePrice);
+                      value={(() => {
+                        const basePrice = item.unitPrice ?? item.product.price;
+                        const discountPercent =
+                          item.discountPercent ?? item.product.discount ?? 0;
+                        const finalUnitPrice =
+                          item.finalUnitPrice ??
+                          (discountPercent > 0
+                            ? Math.round(
+                                basePrice * (1 - discountPercent / 100) * 100,
+                              ) / 100
+                            : basePrice);
 
-                          return formatPrice(finalUnitPrice);
-                        })()
-                      }
+                        return formatPrice(finalUnitPrice);
+                      })()}
                       customStyles={customStyles}
                     />
                   </div>
@@ -206,6 +207,18 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                     />
                   </div>
                 </div>
+                {item.attributes && Object.keys(item.attributes).length > 0 && (
+                  <div className="flex flex-wrap gap-4">
+                    {Object.entries(item.attributes).map(([key, value]) => (
+                      <FieldGroup
+                        key={key}
+                        title={key.charAt(0).toUpperCase() + key.slice(1)}
+                        value={String(value)}
+                        customStyles={customStyles}
+                      />
+                    ))}
+                  </div>
+                )}
                 <div>
                   <Button asChild>
                     <Link

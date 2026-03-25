@@ -18,40 +18,26 @@ import {
 } from '@shared/components/ui/utilities/chart';
 
 type TopSellingProductsProps = {
-  data: { id: string; items: { product: string; quantity: number }[] }[];
+  data: { product: string; totalQuantity: number }[];
 };
 
 const chartConfig = {
-  quantity: {
+  totalQuantity: {
     label: 'Sales',
     color: '#2563eb',
   },
 } satisfies ChartConfig;
 
 const TopSellingProducts: React.FC<TopSellingProductsProps> = ({ data }) => {
-  const aggregatedSales = data.reduce(
-    (acc, order) => {
-      order.items.forEach((item, index) => {
-        const productKey =
-          item.product || `Product ${index + 1} (Order ${order.id.slice(-4)})`;
-
-        acc[productKey] = (acc[productKey] || 0) + item.quantity;
-      });
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-
-  let chartData = Object.entries(aggregatedSales)
-    .map(([product, quantity]) => ({
-      product,
-      quantity,
+  let chartData = (data || [])
+    .map((item) => ({
+      product: item.product || 'Unknown Product',
+      totalQuantity: item.totalQuantity || 0,
     }))
-    .sort((a, b) => b.quantity - a.quantity)
     .slice(0, 5);
 
   if (chartData.length === 0) {
-    chartData = [{ product: 'No Sales', quantity: 0 }];
+    chartData = [{ product: 'No Sales', totalQuantity: 0 }];
   }
 
   return (
@@ -86,8 +72,8 @@ const TopSellingProducts: React.FC<TopSellingProductsProps> = ({ data }) => {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Bar
-              dataKey="quantity"
-              fill={chartConfig.quantity.color}
+              dataKey="totalQuantity"
+              fill={chartConfig.totalQuantity.color}
               radius={8}
               barSize={30}
             />

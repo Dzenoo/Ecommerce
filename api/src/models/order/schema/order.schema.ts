@@ -32,6 +32,7 @@ export class Order {
         required: true,
       },
       quantity: { type: Number, required: true, min: 1 },
+      attributes: { type: mongoose.Schema.Types.Mixed, default: {} },
       // Snapshot of pricing at the moment the order was created.
       // This prevents past orders from changing if admin edits product discount later.
       unitPrice: { type: Number, default: 0 }, // original unit price
@@ -42,6 +43,7 @@ export class Order {
   items: {
     product: Product & mongoose.Types.ObjectId;
     quantity: number;
+    attributes?: Record<string, any>;
     unitPrice?: number;
     discountPercent?: number;
     finalUnitPrice?: number;

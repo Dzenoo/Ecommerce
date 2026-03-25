@@ -17,5 +17,6 @@ export class GetReviewsDto {
 
   @IsOptional()
   @IsEnum(['asc', 'desc'])
+  @Transform(({ value }) => (value === '' ? undefined : value))
   readonly sort?: 'asc' | 'desc';
 }

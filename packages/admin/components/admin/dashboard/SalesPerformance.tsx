@@ -18,43 +18,12 @@ import {
   ChartTooltipContent,
 } from '@shared/components/ui/utilities/chart';
 
-type SalesOrder = {
-  _id: string;
-  status: string;
-  totalPrice: number;
-  createdAt: string;
-};
-
 type SalesPerformanceProps = {
-  data: SalesOrder[];
-};
-
-const aggregateOrdersByMonth = (orders: SalesOrder[]) => {
-  const now = new Date();
-  const months: { key: string; label: string }[] = [];
-
-  for (let i = 5; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    months.push({
-      key: `${d.getFullYear()}-${String(d.getMonth()).padStart(2, '0')}`,
-      label: d.toLocaleDateString('en-US', { month: 'short' }),
-    });
-  }
-
-  const aggregated = months.map((m) => ({
-    month: m.label,
-    totalSales: 0,
-    key: m.key,
-  }));
-
-  orders.forEach((order) => {
-    const date = new Date(order.createdAt);
-    const key = `${date.getFullYear()}-${String(date.getMonth()).padStart(2, '0')}`;
-    const entry = aggregated.find((a) => a.key === key);
-    if (entry) entry.totalSales += order.totalPrice;
-  });
-
-  return aggregated;
+  data: {
+    _id: { year: number; month: number };
+    totalRevenue: number;
+    orderCount: number;
+  }[];
 };
 
 const chartConfig = {
@@ -65,7 +34,24 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const SalesPerformance: React.FC<SalesPerformanceProps> = ({ data }) => {
-  const chartData = aggregateOrdersByMonth(data);
+  // Build last 6 months as base, then fill in data from API
+  const now = new Date();
+  const months: { key: string; label: string; totalSales: number }[] = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({
+      key: `${d.getFullYear()}-${d.getMonth() + 1}`,
+      label: d.toLocaleDateString('en-US', { month: 'short' }),
+      totalSales: 0,
+    });
+  }
+
+  (data || []).forEach((entry) => {
+    const key = `${entry._id.year}-${entry._id.month}`;
+    const month = months.find((m) => m.key === key);
+    if (month) month.totalSales = entry.totalRevenue;
+  });
 
   return (
     <Card className="shadow-none">
@@ -76,7 +62,7 @@ const SalesPerformance: React.FC<SalesPerformanceProps> = ({ data }) => {
       <CardContent>
         <ChartContainer config={chartConfig}>
           <AreaChart
-            data={chartData}
+            data={months}
             margin={{
               top: 15,
               left: -2,
@@ -85,11 +71,10 @@ const SalesPerformance: React.FC<SalesPerformanceProps> = ({ data }) => {
           >
             <CartesianGrid />
             <XAxis
-              dataKey="month"
+              dataKey="label"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <YAxis
               tickLine={false}

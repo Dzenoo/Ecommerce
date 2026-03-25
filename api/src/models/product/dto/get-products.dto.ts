@@ -48,6 +48,7 @@ export class GetProductsDto {
 
   @IsOptional()
   @IsEnum(['asc', 'desc'])
+  @Transform(({ value }) => (value === '' ? undefined : value))
   readonly sort?: 'asc' | 'desc';
 
   @IsOptional()

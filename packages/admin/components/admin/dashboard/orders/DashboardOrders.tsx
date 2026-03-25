@@ -3,7 +3,10 @@
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-import { OrderQueryType, useOrderQuery } from '@shared/hooks/queries/useOrder.query';
+import {
+  OrderQueryType,
+  useOrderQuery,
+} from '@shared/hooks/queries/useOrder.query';
 
 import FilterDashboardOrders from './filters/FilterDashboardOrders';
 import DashboardOrdersList from './DashboardOrdersList';
