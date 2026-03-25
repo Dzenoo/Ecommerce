@@ -1,12 +1,14 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import {
   ProductQueryType,
   useProductQuery,
 } from '@shared/hooks/queries/useProduct.query';
 import { useCurrentUser } from '@shared/hooks/useCurrentUser';
-
 import { getCategory } from '@shared/lib/utils';
+import { getPixelCurrency, trackMetaPixel } from '@/lib/meta-pixel';
 
 import ProductImages from '@/components/root/products/details/ProductImages';
 import ProductInformation from '@/components/root/products/details/ProductInformation';
@@ -26,6 +28,26 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
     type: ProductQueryType.GET_ONE,
     params: { productId: productId },
   });
+
+  useEffect(() => {
+    if (data?.product) {
+      const product = data.product;
+      const discount = product.discount ?? 0;
+      const finalPrice =
+        Math.round(product.price * (1 - discount / 100) * 100) / 100;
+
+      trackMetaPixel({
+        event: 'ViewContent',
+        data: {
+          content_ids: [product._id],
+          content_name: product.name,
+          content_type: 'product',
+          value: finalPrice,
+          currency: getPixelCurrency(),
+        },
+      });
+    }
+  }, [data?.product]);
 
   if (isLoading) {
     return <LoadingProductDetails />;

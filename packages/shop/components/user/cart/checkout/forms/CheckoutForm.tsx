@@ -18,6 +18,7 @@ import {
 import { useToast } from '@shared/hooks/core/use-toast';
 import { queryClient } from '@shared/context/react-query-client';
 import { cn } from '@shared/lib/utils';
+import { trackMetaPixel, getPixelCurrency } from '@/lib/meta-pixel';
 import FieldGroup from '@shared/helpers/FieldGroup';
 import Empty from '@shared/helpers/Empty';
 import { AddressType } from '../SelectAddress';
@@ -40,9 +41,18 @@ export type CheckoutFormValues = z.infer<typeof CreateOrderSchema>;
 type CheckoutFormProps = {
   cartId: string;
   type: AddressType;
+  cartTotal: number;
+  cartItemIds: string[];
+  cartItemCount: number;
 };
 
-const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
+const CheckoutForm: React.FC<CheckoutFormProps> = ({
+  cartId,
+  type,
+  cartTotal,
+  cartItemIds,
+  cartItemCount,
+}) => {
   const [selectedAddress, setSelectedAddress] = useState('');
 
   const { toast } = useToast();
@@ -82,6 +92,17 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
 
   const mutation = useOrderMutation({
     onSuccess: (response) => {
+      trackMetaPixel({
+        event: 'Purchase',
+        data: {
+          content_ids: cartItemIds,
+          content_type: 'product',
+          num_items: cartItemCount,
+          value: cartTotal,
+          currency: getPixelCurrency(),
+        },
+      });
+
       queryClient.invalidateQueries({ queryKey: ['cart'] });
       form.reset();
       toast({
@@ -198,9 +219,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartId, type }) => {
                   <FormControl>
                     <Input placeholder="+381 61 123 4567" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Contact number for delivery
-                  </FormDescription>
+                  <FormDescription>Contact number for delivery</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

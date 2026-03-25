@@ -6,6 +6,7 @@ import { QueryContextProvider } from '@shared/context/react-query-client';
 import { ClerkTokenProvider } from '@shared/components/shared/ClerkTokenProvider';
 import { Toaster } from '@shared/components/ui/info/toaster';
 
+import MetaPixel from '@/components/meta/MetaPixel';
 import RootLayoutWrapper from './_RootLayoutWrapper';
 import '../globals.css';
 
@@ -30,6 +31,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <MetaPixel />
+        </head>
         <body className={sg.className}>
           <ClerkTokenProvider>
             <QueryContextProvider>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 
@@ -13,6 +14,7 @@ import Empty from '@shared/helpers/Empty';
 import LoadingCheckout from '@shared/components/shared/loading/LoadingCheckout';
 import SelectAddress from './SelectAddress';
 import CheckoutForm from './forms/CheckoutForm';
+import { getPixelCurrency, trackMetaPixel } from '@/lib/meta-pixel';
 
 import { Button } from '@shared/components/ui/buttons/button';
 import { Separator } from '@shared/components/ui/layout/separator';
@@ -48,6 +50,22 @@ const Checkout: React.FC = () => {
   const cart = data.cart;
   const isEmpty = cart.items.length === 0;
 
+  useEffect(() => {
+    if (!isEmpty) {
+      trackMetaPixel({
+        event: 'InitiateCheckout',
+        data: {
+          content_ids: cart.items.map(
+            (item: any) => item.product._id || item.product,
+          ),
+          num_items: cart.items.length,
+          value: cart.totalPrice,
+          currency: getPixelCurrency(),
+        },
+      });
+    }
+  }, [cart._id]);
+
   if (isEmpty)
     return (
       <div className="pt-52">
@@ -76,7 +94,17 @@ const Checkout: React.FC = () => {
         <Separator />
         <CardContent>
           <SelectAddress>
-            {(type) => <CheckoutForm cartId={cart._id} type={type} />}
+            {(type) => (
+              <CheckoutForm
+                cartId={cart._id}
+                type={type}
+                cartTotal={cart.totalPrice}
+                cartItemIds={cart.items.map(
+                  (item: any) => item.product._id || item.product,
+                )}
+                cartItemCount={cart.items.length}
+              />
+            )}
           </SelectAddress>
         </CardContent>
       </Card>

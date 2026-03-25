@@ -7,9 +7,10 @@ import {
   useCartMutation,
   CartMutationType,
 } from '@shared/hooks/mutations/useCart.mutation';
+import { trackMetaPixel, getPixelCurrency } from '@/lib/meta-pixel';
+
 import { IProduct } from '@shared/types';
 import Loader from '@shared/components/ui/info/loader';
-
 import { Button, ButtonProps } from '@shared/components/ui/buttons/button';
 
 type AddToCartProps = React.HTMLAttributes<HTMLButtonElement> &
@@ -33,6 +34,22 @@ const AddToCart: React.FC<AddToCartProps> = ({
 
   const mutation = useCartMutation({
     onSuccess: (response) => {
+      const discount = product.discount ?? 0;
+      const finalPrice =
+        Math.round(product.price * (1 - discount / 100) * 100) / 100;
+
+      trackMetaPixel({
+        event: 'AddToCart',
+        data: {
+          content_ids: [product._id],
+          content_name: product.name,
+          content_type: 'product',
+          value: finalPrice * quantity,
+          currency: getPixelCurrency(),
+          num_items: quantity,
+        },
+      });
+
       toast({
         title: 'Success',
         description:

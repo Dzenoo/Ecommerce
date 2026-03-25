@@ -194,4 +194,72 @@ export class ProductService {
       product,
     };
   }
+
+  async getProductFeed(): Promise<string> {
+    const siteUrl = process.env.SITE_URL || 'http://localhost:3000';
+    const currency = process.env.CURRENCY || 'RSD';
+
+    const products = await this.db.product
+      .find({ isDeleted: { $ne: true }, stock: { $gt: 0 } })
+      .lean()
+      .exec();
+
+    const escapeXml = (str: string) =>
+      str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+
+    const stripHtml = (str: string) => str.replace(/<[^>]*>/g, '');
+
+    const items = products
+      .map((product: any) => {
+        const discount = product.discount ?? 0;
+        const salePrice =
+          Math.round(product.price * (1 - discount / 100) * 100) / 100;
+        const availability = product.stock > 0 ? 'in stock' : 'out of stock';
+        const categoryId = product.category;
+        const productUrl = `${siteUrl}/products/${categoryId}/${product._id}`;
+        const imageUrl = product.images?.[0] || '';
+        const description = stripHtml(product.description).slice(0, 5000);
+
+        let itemXml = `
+          <item>
+          <g:id>${escapeXml(product._id.toString())}</g:id>
+          <g:title>${escapeXml(product.name)}</g:title>
+          <g:description>${escapeXml(description)}</g:description>
+          <g:link>${escapeXml(productUrl)}</g:link>
+          <g:image_link>${escapeXml(imageUrl)}</g:image_link>
+          <g:availability>${availability}</g:availability>
+          <g:price>${product.price} ${currency}</g:price>
+          <g:brand>${escapeXml(siteUrl.replace(/https?:\/\//, ''))}</g:brand>
+          <g:condition>new</g:condition>
+        `;
+
+        if (discount > 0) {
+          itemXml += `\n      <g:sale_price>${salePrice} ${currency}</g:sale_price>`;
+        }
+
+        // Additional images
+        product.images?.slice(1, 11).forEach((img: string) => {
+          itemXml += `\n      <g:additional_image_link>${escapeXml(img)}</g:additional_image_link>`;
+        });
+
+        itemXml += '\n    </item>';
+        return itemXml;
+      })
+      .join('\n');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+            <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+              <channel>
+                <title>Product Feed</title>
+                <link>${siteUrl}</link>
+                <description>Product catalog feed for Meta Commerce Manager</description>
+            ${items}
+              </channel>
+            </rss>`;
+  }
 }

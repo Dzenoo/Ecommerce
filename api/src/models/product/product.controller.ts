@@ -4,6 +4,7 @@ import {
   Delete,
   FileTypeValidator,
   Get,
+  Header,
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
@@ -78,6 +79,12 @@ export class ProductController {
   @Get('/all')
   async getAllProducts(@Query() query: GetProductsDto) {
     return await this.productService.getAll(query);
+  }
+
+  @Get('/feed')
+  @Header('Content-Type', 'application/xml')
+  async getProductFeed() {
+    return await this.productService.getProductFeed();
   }
 
   @Get('/:id')
