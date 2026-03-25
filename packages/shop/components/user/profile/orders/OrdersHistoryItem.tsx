@@ -159,7 +159,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
           {order.items.map((item, i) => (
             <div
               key={i}
-              className="hide-scrollbar flex gap-5 max-sm:overflow-x-scroll"
+              className="hide-scrollbar flex gap-5 max-sm:flex-col max-sm:overflow-x-scroll"
             >
               <div>
                 <Image
@@ -171,7 +171,7 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                 />
               </div>
               <div className="space-y-4">
-                <div className="flex gap-10">
+                <div className="flex flex-wrap gap-10 max-sm:gap-5">
                   <div>
                     <FieldGroup
                       title="Product Name"
@@ -206,19 +206,26 @@ const OrdersHistoryItem: React.FC<OrdersHistoryItemProps> = ({ order }) => {
                       customStyles={customStyles}
                     />
                   </div>
-                </div>
-                {item.attributes && Object.keys(item.attributes).length > 0 && (
-                  <div className="flex flex-wrap gap-4">
-                    {Object.entries(item.attributes).map(([key, value]) => (
-                      <FieldGroup
-                        key={key}
-                        title={key.charAt(0).toUpperCase() + key.slice(1)}
-                        value={String(value)}
-                        customStyles={customStyles}
-                      />
-                    ))}
+                  <div>
+                    {item.attributes &&
+                      Object.keys(item.attributes).length > 0 && (
+                        <div className="flex gap-10">
+                          {Object.entries(item.attributes).map(
+                            ([key, value]) => (
+                              <FieldGroup
+                                key={key}
+                                title={
+                                  key.charAt(0).toUpperCase() + key.slice(1)
+                                }
+                                value={String(value)}
+                                customStyles={customStyles}
+                              />
+                            ),
+                          )}
+                        </div>
+                      )}
                   </div>
-                )}
+                </div>
                 <div>
                   <Button asChild>
                     <Link
