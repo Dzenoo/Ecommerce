@@ -4,7 +4,6 @@ import {
   IsNumber,
   IsOptional,
   IsPositive,
-  IsString,
   Max,
   Min,
 } from 'class-validator';
@@ -24,9 +23,10 @@ export class GetOrdersDto {
   readonly limit?: number = 10;
 
   @IsOptional()
-  @IsString()
-  readonly sort?: string;
+  @IsEnum(['asc', 'desc'])
+  readonly sort?: 'asc' | 'desc';
 
   @IsOptional()
+  @IsEnum(['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'])
   readonly status?: string;
 }

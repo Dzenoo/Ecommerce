@@ -16,6 +16,14 @@ import { withTransaction } from '@/common/utils';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { GetOrdersDto } from './dto/get-orders.dto';
 
+const VALID_STATUS_TRANSITIONS: Record<string, string[]> = {
+  Pending: ['Processing', 'Cancelled'],
+  Processing: ['Shipped', 'Cancelled'],
+  Shipped: ['Delivered'],
+  Delivered: [],
+  Cancelled: [],
+};
+
 @Injectable()
 export class OrderService {
   constructor(
@@ -34,6 +42,13 @@ export class OrderService {
 
     let orderAddress;
     if (body.addressId) {
+      const address = await this.db.address.findOne({
+        _id: body.addressId,
+        user: userId,
+      });
+      if (!address) {
+        throw new NotAcceptableException('Address not found');
+      }
       orderAddress = body.addressId;
     } else if (body.address) {
       orderAddress = body.address;
@@ -45,7 +60,10 @@ export class OrderService {
 
     // Validate stock for all items before starting transaction
     const productIds = cart.items.map((item) => String(item.product));
-    const products = await this.db.product.find({ _id: { $in: productIds } });
+    const products = await this.db.product.find({
+      _id: { $in: productIds },
+      isDeleted: { $ne: true },
+    });
     const productMap = new Map(products.map((p) => [p._id.toString(), p]));
 
     // Freeze unit pricing/discounts per order item.
@@ -249,16 +267,23 @@ export class OrderService {
   }
 
   async updateStatus(id: string, status: string): Promise<ResponseObject> {
-    const order = await this.db.order.findByIdAndUpdate(
-      id,
-      {
-        status: status,
-      },
-      { new: true },
-    );
+    const order = await this.db.order.findById(id);
+    if (!order) throw new NotAcceptableException('Order not found');
 
-    if (!order)
-      throw new NotAcceptableException('Order cannot be updated right now');
+    const allowedTransitions = VALID_STATUS_TRANSITIONS[order.status];
+    if (!allowedTransitions || !allowedTransitions.includes(status)) {
+      throw new NotAcceptableException(
+        `Cannot transition from "${order.status}" to "${status}"`,
+      );
+    }
+
+    // If admin is cancelling, restore stock
+    if (status === 'Cancelled') {
+      await this.restoreStock(order);
+    }
+
+    order.status = status;
+    await order.save();
 
     return {
       statusCode: HttpStatus.OK,
@@ -267,30 +292,43 @@ export class OrderService {
     };
   }
 
-  async cancel(id: string): Promise<ResponseObject> {
-    const alreadyCancelled = await this.db.order.findOne({
+  async cancel(id: string, userId: string): Promise<ResponseObject> {
+    const order = await this.db.order.findOne({
       _id: id,
-      status: 'Cancelled',
+      user: userId,
     });
 
-    if (alreadyCancelled) {
+    if (!order) throw new NotAcceptableException('Order not found');
+
+    if (order.status === 'Cancelled') {
       throw new NotAcceptableException('Order is already cancelled');
     }
 
-    const order = await this.db.order.findByIdAndUpdate(
-      id,
-      {
-        status: 'Cancelled',
-      },
-      { new: true },
-    );
+    const allowedTransitions = VALID_STATUS_TRANSITIONS[order.status];
+    if (!allowedTransitions || !allowedTransitions.includes('Cancelled')) {
+      throw new NotAcceptableException(
+        `Cannot cancel an order with status "${order.status}"`,
+      );
+    }
 
-    if (!order) throw new NotAcceptableException('Order cannot be cancelled');
+    // Restore stock for all items in the order
+    await this.restoreStock(order);
+
+    order.status = 'Cancelled';
+    await order.save();
 
     return {
       statusCode: HttpStatus.OK,
       order,
       message: 'Order canceled successfully',
     };
+  }
+
+  private async restoreStock(order: any): Promise<void> {
+    for (const item of order.items) {
+      await this.db.product.findByIdAndUpdate(item.product, {
+        $inc: { stock: item.quantity },
+      });
+    }
   }
 }

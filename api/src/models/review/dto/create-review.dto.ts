@@ -1,11 +1,14 @@
+import { Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   Max,
+  MaxLength,
   Min,
 } from 'class-validator';
+import { sanitizeInput } from '@/common/utils';
 
 export class CreateReviewDto {
   @IsNumber()
@@ -16,5 +19,7 @@ export class CreateReviewDto {
 
   @IsString()
   @IsOptional()
+  @MaxLength(1000)
+  @Transform(({ value }) => sanitizeInput(value))
   comment: string;
 }

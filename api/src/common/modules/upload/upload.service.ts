@@ -26,7 +26,8 @@ export class UploadService {
     folder: string,
   ): Promise<{ key: string; url: string }[]> {
     const uploadPromises = files.map(async (file) => {
-      const key = `${Date.now()}-${file.originalname}`;
+      const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const key = `${Date.now()}-${safeName}`;
       const uploadParams = {
         Bucket: this.configService.get('AWS_BUCKET'),
         Key: `${folder}/${key}`,

@@ -26,7 +26,7 @@ async function initializeServer() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      forbidNonWhitelisted: false,
+      forbidNonWhitelisted: true,
       forbidUnknownValues: true,
     }),
   );

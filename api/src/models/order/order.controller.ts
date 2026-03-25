@@ -52,8 +52,11 @@ export class OrderController {
   @Delete('/delete/:id')
   @UseGuards(ClerkAuthGuard, ClerkRolesGuard)
   @Roles(Role.User)
-  async cancelOrder(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.orderService.cancel(id);
+  async cancelOrder(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @User('userId') userId: string,
+  ) {
+    return this.orderService.cancel(id, userId);
   }
 
   @Get('/all')

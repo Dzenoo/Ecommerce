@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import mongoose from 'mongoose';
 
 import {
   DATABASE_MODELS_TOKEN,
@@ -69,6 +70,34 @@ export class ClerkWebhookService {
 
       const userId = (user as any)._id.toString();
 
+      // Cancel any active orders and restore stock
+      const activeOrders = await this.db.order.find({
+        user: userId,
+        status: { $in: ['Pending', 'Processing'] },
+      });
+
+      for (const order of activeOrders) {
+        for (const item of order.items) {
+          await this.db.product.findByIdAndUpdate(item.product, {
+            $inc: { stock: item.quantity },
+          });
+        }
+        order.status = 'Cancelled';
+        await order.save();
+      }
+
+      // Remove user reviews, update product review arrays, and recalculate ratings
+      const reviews = await this.db.review.find({ user: userId });
+      const affectedProductIds = [
+        ...new Set(reviews.map((r) => r.product.toString())),
+      ];
+
+      for (const review of reviews) {
+        await this.db.product.findByIdAndUpdate(review.product, {
+          $pull: { reviews: review._id },
+        });
+      }
+
       await Promise.all([
         this.db.cart.deleteMany({ user: userId }),
         this.db.address.deleteMany({ user: userId }),
@@ -76,6 +105,21 @@ export class ClerkWebhookService {
         this.db.review.deleteMany({ user: userId }),
         this.db.user.deleteOne({ _id: userId }),
       ]);
+
+      // Recalculate average ratings for all affected products
+      for (const productId of affectedProductIds) {
+        const result = await this.db.review.aggregate([
+          {
+            $match: {
+              product: new mongoose.Types.ObjectId(productId),
+            },
+          },
+          { $group: { _id: null, avgRating: { $avg: '$rating' } } },
+        ]);
+        const averageRating =
+          result.length > 0 ? Math.round(result[0].avgRating * 10) / 10 : 0;
+        await this.db.product.findByIdAndUpdate(productId, { averageRating });
+      }
 
       console.log(`User ${userId} and related data deleted`);
     } catch (error) {

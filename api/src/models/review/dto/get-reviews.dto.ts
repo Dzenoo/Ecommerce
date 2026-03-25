@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, Max, Min } from 'class-validator';
 
 export class GetReviewsDto {
   @IsOptional()
@@ -16,6 +16,6 @@ export class GetReviewsDto {
   readonly limit?: number = 10;
 
   @IsOptional()
-  @IsString()
-  readonly sort?: string;
+  @IsEnum(['asc', 'desc'])
+  readonly sort?: 'asc' | 'desc';
 }

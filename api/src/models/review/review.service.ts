@@ -31,7 +31,7 @@ export class ReviewService {
   ): Promise<ResponseObject> {
     const [user, product] = await Promise.all([
       this.db.user.findById(userId),
-      this.db.product.findById(productId),
+      this.db.product.findOne({ _id: productId, isDeleted: { $ne: true } }),
     ]);
 
     if (!user || !product)

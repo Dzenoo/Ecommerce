@@ -23,7 +23,10 @@ export class WishlistService {
   ) {}
 
   async add(userId: string, productId: string): Promise<ResponseObject> {
-    const product = await this.db.product.findById(productId);
+    const product = await this.db.product.findOne({
+      _id: productId,
+      isDeleted: { $ne: true },
+    });
     if (!product) throw new NotFoundException('Product not found');
 
     let wishlist = await this.db.wishlist.findOne({ user: userId });
@@ -96,7 +99,11 @@ export class WishlistService {
       };
     }
 
-    const totalProducts = wishlist.products.length;
+    const totalProducts = await this.db.product.countDocuments({
+      _id: { $in: wishlist.products },
+      isDeleted: { $ne: true },
+    });
+
     const skip = (query.page - 1) * query.limit;
     const paginatedIds = wishlist.products.slice(skip, skip + query.limit);
 

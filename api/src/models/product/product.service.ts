@@ -34,7 +34,10 @@ export class ProductService {
       throw new NotAcceptableException('At least one image is required.');
     }
 
-    if (body.discount !== undefined && (body.discount < 0 || body.discount > 100)) {
+    if (
+      body.discount !== undefined &&
+      (body.discount < 0 || body.discount > 100)
+    ) {
       throw new NotAcceptableException(
         'Discount must be between 0 and 100 (percentage).',
       );
@@ -68,7 +71,10 @@ export class ProductService {
   }): Promise<ResponseObject> {
     const { body, id } = data;
 
-    const productExists = await this.db.product.findById(id);
+    const productExists = await this.db.product.findOne({
+      _id: id,
+      isDeleted: { $ne: true },
+    });
 
     if (!productExists) {
       throw new NotAcceptableException('Product does not exist.');
@@ -124,7 +130,8 @@ export class ProductService {
     const conditions: any = { isDeleted: { $ne: true } };
 
     if (search) {
-      const regexSearch = new RegExp(String(search), 'i');
+      const escaped = String(search).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regexSearch = new RegExp(escaped, 'i');
       conditions.$or = [
         { name: { $regex: regexSearch } },
         { description: { $regex: regexSearch } },

@@ -1,6 +1,7 @@
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsEnum,
   IsNumber,
   IsObject,
   IsOptional,
@@ -46,8 +47,8 @@ export class GetProductsDto {
   readonly search?: string;
 
   @IsOptional()
-  @IsString()
-  readonly sort?: string;
+  @IsEnum(['asc', 'desc'])
+  readonly sort?: 'asc' | 'desc';
 
   @IsOptional()
   @IsNumber()

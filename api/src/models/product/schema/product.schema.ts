@@ -77,5 +77,5 @@ export class Product {
 export const ProductSchema = SchemaFactory.createForClass(Product);
 
 ProductSchema.index({ category: 1 });
-ProductSchema.index({ 'attributes.*': 1 });
+ProductSchema.index({ 'attributes.$**': 1 });
 ProductSchema.index({ isDeleted: 1 });

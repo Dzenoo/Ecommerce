@@ -25,7 +25,7 @@ export class Review {
   @Prop({ type: Number, required: true, min: 1, max: 5 })
   rating: number;
 
-  @Prop({ type: String, default: '' })
+  @Prop({ type: String, default: '', maxlength: 1000 })
   comment?: string;
 }
 

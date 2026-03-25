@@ -29,7 +29,10 @@ export class CartService {
     quantity: number,
     attributes: Record<string, any> = {},
   ): Promise<ResponseObject> {
-    const product = await this.db.product.findById(productId);
+    const product = await this.db.product.findOne({
+      _id: productId,
+      isDeleted: { $ne: true },
+    });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
@@ -122,8 +125,14 @@ export class CartService {
     }
 
     if (action === 'increment') {
-      const product = await this.db.product.findById(item.product.toString());
-      if (!product || item.quantity + 1 > product.stock) {
+      const product = await this.db.product.findOne({
+        _id: item.product.toString(),
+        isDeleted: { $ne: true },
+      });
+      if (!product) {
+        throw new NotFoundException('Product not found');
+      }
+      if (item.quantity + 1 > product.stock) {
         throw new BadRequestException('Not enough stock.');
       }
       item.quantity += 1;
@@ -162,6 +171,7 @@ export class CartService {
 
     // Keep cart.totalPrice consistent with current product pricing/discounts.
     cart.totalPrice = await this.calculateTotalPrice(cart.items);
+    await cart.save();
 
     return {
       statusCode: HttpStatus.OK,
@@ -206,7 +216,9 @@ export class CartService {
 
     let totalPrice = 0;
     for (const item of items) {
-      const productId = String(item.product?._id ? item.product._id : item.product);
+      const productId = String(
+        item.product?._id ? item.product._id : item.product,
+      );
       const product = productMap.get(productId);
       if (product) {
         const discountPercent = product.discount ?? 0;

@@ -78,7 +78,7 @@ export class AddressService {
       throw new NotAcceptableException('Address could not be updated');
 
     return {
-      statusCode: HttpStatus.CREATED,
+      statusCode: HttpStatus.OK,
       address,
       message: 'Address updated successfully',
     };
@@ -90,12 +90,12 @@ export class AddressService {
       user: userId,
     });
 
+    if (!address)
+      throw new NotAcceptableException('Address could not be deleted');
+
     await this.db.user.findByIdAndUpdate(userId, {
       $pull: { addresses: id },
     });
-
-    if (!address)
-      throw new NotAcceptableException('Address could not be deleted');
 
     return {
       statusCode: HttpStatus.OK,
@@ -107,19 +107,22 @@ export class AddressService {
     query: GetAddressesDto,
     userId: string,
   ): Promise<ResponseObject> {
-    const addresses = await this.db.address
-      .find({ user: userId })
-      .select('-user')
-      .skip((query.page - 1) * query.limit)
-      .limit(query.limit)
-      .exec();
+    const conditions = { user: userId };
 
-    if (!addresses) throw new NotAcceptableException('Addresses not found');
+    const [addresses, totalAddresses] = await Promise.all([
+      this.db.address
+        .find(conditions)
+        .select('-user')
+        .skip((query.page - 1) * query.limit)
+        .limit(query.limit)
+        .exec(),
+      this.db.address.countDocuments(conditions),
+    ]);
 
     return {
       statusCode: HttpStatus.OK,
       addresses,
-      totalAddresses: addresses.length,
+      totalAddresses,
     };
   }
 }
